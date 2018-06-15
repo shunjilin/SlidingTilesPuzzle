@@ -2,12 +2,17 @@ cmake_minimum_required(VERSION 3.11)
 
 project("24 Puzzle")
 
+# ctest
 enable_testing()
 
 add_subdirectory(test)
+add_subdirectory(tiles)
 
 # executables
 add_executable(24Puzzle main.cpp)
+target_link_libraries(24Puzzle
+  PRIVATE tiles
+  )
 
 # warning flags
 if (MSVC)
@@ -16,3 +21,7 @@ else()
   target_compile_options(24Puzzle PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
+# run ctest on build
+add_custom_command(TARGET 24Puzzle
+                   POST_BUILD
+                   COMMAND ctest --output-on-failure)
