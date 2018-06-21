@@ -21,7 +21,7 @@ else()
   target_compile_options(24Puzzle PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
-# run ctest on build
-add_custom_command(TARGET 24Puzzle
-                   POST_BUILD
-                   COMMAND ctest --output-on-failure)
+## run ctest on build : this does not work if executables have not been compiled
+# add_custom_command(TARGET 24Puzzle
+#                  POST_BUILD
+#                 COMMAND ctest --output-on-failure)
