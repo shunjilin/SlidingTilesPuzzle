@@ -34,6 +34,7 @@ endif()
 add_executable(tilesUnitTest tilesUnitTest.cpp)
 target_link_libraries(tilesUnitTest
   PRIVATE tiles
-  PRIVATE gtest)
+  PRIVATE gtest
+  PRIVATE gmock)
 
 add_test(tilesUnitTest tilesUnitTest)
