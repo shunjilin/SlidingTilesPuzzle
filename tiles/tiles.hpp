@@ -67,6 +67,14 @@ namespace Tiles {
         return new_blank_idxs;
     }
 
+    // swap blank tile with new blank tile to get new board configuration
+    Board getNewBoard(const Board& board, char newBlankIdx) {
+        auto new_board = board;
+        auto tile_to_swap = board.tiles[newBlankIdx];
+        new_board.tiles[getBlankIdx(new_board)] = tile_to_swap;
+        new_board.tiles[newBlankIdx] = 0;
+        return new_board;
+    }
 }
 
 #endif
