@@ -8,4 +8,4 @@ target_link_libraries(search
   PRIVATE tiles
   PRIVATE heuristics)
 
-#target_compile_features(search PUBLIC cxx_std_11)
+target_compile_features(search PUBLIC cxx_std_11)
