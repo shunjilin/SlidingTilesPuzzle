@@ -29,16 +29,18 @@ TEST_F(BoardInitialize, getCorretBlankPosition) {
 
 TEST_F(BoardInitialize, getCorrectNewBlankTileIndexes) {
     auto new_blank_idxs = getNewBlankIdxs(board);
-    EXPECT_EQ(new_blank_idxs.size(), 2);
-    EXPECT_THAT(new_blank_idxs, testing::Contains(3));
-    EXPECT_THAT(new_blank_idxs, testing::Contains(9));
+    std::array<char, 4> expected_new_blank_idxs = {-1, 9, 3, -1};
+    ASSERT_EQ(new_blank_idxs, expected_new_blank_idxs);
 }
 
 TEST_F(BoardInitialize, getCorrectNewBoard) { // on applying action
     auto new_board = getNewBoard(board, 3); // 3 is new blank position
     std::ostringstream oss;
     oss << new_board;
-    ASSERT_EQ(oss.str(), "1 2 3 0 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
+    EXPECT_EQ(oss.str(), "1 2 3 0 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
+    // correct cached blank tiles
+    EXPECT_EQ(new_board.prev_blank_idx, 4);
+    EXPECT_EQ(new_board.cur_blank_idx, 3);
 }
 
 int main(int argc, char *argv[]) {
