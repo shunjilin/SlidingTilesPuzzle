@@ -5,8 +5,9 @@ project("24 Puzzle")
 # ctest
 enable_testing()
 
-add_subdirectory(test)
 add_subdirectory(tiles)
+add_subdirectory(search)
+add_subdirectory(test)
 
 # executables
 add_executable(24Puzzle main.cpp)
