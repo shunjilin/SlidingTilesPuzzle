@@ -4,7 +4,7 @@
 int const WIDTH = 5;
 int const HEIGHT = 5;
 
-TEST(ManhattanHeuristic, correctManhattanDistance) {
+TEST(ManhattanDistance, correctManhattanDistance) {
     EXPECT_EQ(ManhattanDistance(0, 24, WIDTH, HEIGHT), 8);
     EXPECT_EQ(ManhattanDistance(24, 0, WIDTH, HEIGHT), 8);
 }

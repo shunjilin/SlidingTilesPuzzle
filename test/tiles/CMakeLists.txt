@@ -20,3 +20,12 @@ target_link_libraries(manhattan_distance_test
 
 add_test(manhattan_distance_test manhattan_distance_test)
 
+# manhattan heuristic test
+add_executable(manhattan_heuristic_test manhattan_heuristic_test.cpp)
+
+target_link_libraries(manhattan_heuristic_test
+  PRIVATE heuristics
+  PRIVATE gtest
+  PRIVATE gmock)
+
+add_test(manhattan_heuristic_test manhattan_heuristic_test)

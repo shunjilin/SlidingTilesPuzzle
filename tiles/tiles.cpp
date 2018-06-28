@@ -3,8 +3,16 @@
 
 namespace Tiles {
 
-    Board::Board(const std::array<char, N_TILES>& tiles_list) :
-        tiles(tiles_list) {}
+    // TODO: perhaps fix arbitrary goal board
+    auto Board::goal_tiles = std::array<char, N_TILES>
+        ({0 , 1 , 2 , 3 , 4 ,
+          5 , 6 , 7 , 8 , 9 ,
+          10, 11, 12, 13, 14,
+          15, 16, 17, 18, 19,
+          20, 21, 22, 23, 24});
+
+    Board::Board(const std::array<char, N_TILES>& tiles) :
+        tiles(tiles) {}
     
     std::ostream &operator<<(std::ostream& os, const Board& board) {
         for (auto tile : board.tiles) {

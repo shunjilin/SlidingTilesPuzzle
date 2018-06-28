@@ -20,9 +20,12 @@ namespace Tiles {
         char cur_blank_idx = -1;
         char prev_blank_idx = -1;       
 
-        Board(const std::array<char, N_TILES>& tiles_list);
+        Board(const std::array<char, N_TILES>& tiles);
         
-        friend std::ostream &operator<<(std::ostream& os, const Board& board); 
+        friend std::ostream &operator<<(std::ostream& os, const Board& board);
+
+        // goal board configuration
+        static std::array<char, N_TILES> goal_tiles;
     };
 
     // direction that the blank tile moves to get new blank tile position
