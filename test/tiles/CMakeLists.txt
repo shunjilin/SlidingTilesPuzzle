@@ -1,22 +1,22 @@
 # TODO: use custom functions so that DRY
 
-# tilesUnitTest
-add_executable(tilesUnitTest tilesUnitTest.cpp)
+# tiles test
+add_executable(tiles_test tiles_test.cpp)
 
-target_link_libraries(tilesUnitTest
+target_link_libraries(tiles_test
   PRIVATE tiles
   PRIVATE gtest
   PRIVATE gmock)
 
-add_test(tilesUnitTest tilesUnitTest)
+add_test(tiles_test tiles_test)
 
-# manhattanDistanceUnitTest
-add_executable(manhattanDistanceUnitTest manhattanDistanceUnitTest.cpp)
+# manhattan distance test
+add_executable(manhattan_distance_test manhattan_distance_test.cpp)
 
-target_link_libraries(manhattanDistanceUnitTest
+target_link_libraries(manhattan_distance_test
   PRIVATE manhattan_distance
   PRIVATE gtest
   PRIVATE gmock)
 
-add_test(manhattanDistanceUnitTest manhattanDistanceUnitTest)
+add_test(manhattan_distance_test manhattan_distance_test)
 

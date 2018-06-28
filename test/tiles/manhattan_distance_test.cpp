@@ -1,5 +1,4 @@
 #include "manhattan_distance.hpp"
-#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 int const WIDTH = 5;
