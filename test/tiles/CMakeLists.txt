@@ -14,7 +14,7 @@ add_test(tilesUnitTest tilesUnitTest)
 add_executable(manhattanDistanceUnitTest manhattanDistanceUnitTest.cpp)
 
 target_link_libraries(manhattanDistanceUnitTest
-  PRIVATE heuristics
+  PRIVATE manhattan_distance
   PRIVATE gtest
   PRIVATE gmock)
 

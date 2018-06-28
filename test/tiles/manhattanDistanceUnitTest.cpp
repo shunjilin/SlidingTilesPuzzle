@@ -1,11 +1,13 @@
-#include "heuristics.hpp"
+#include "manhattan_distance.hpp"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-using namespace Tiles;
+int const WIDTH = 5;
+int const HEIGHT = 5;
 
 TEST(ManhattanHeuristic, correctManhattanDistance) {
-    ASSERT_EQ(ManhattanDistance(0, 24, WIDTH, HEIGHT), 8);
+    EXPECT_EQ(ManhattanDistance(0, 24, WIDTH, HEIGHT), 8);
+    EXPECT_EQ(ManhattanDistance(24, 0, WIDTH, HEIGHT), 8);
 }
 
 int main(int argc, char *argv[]) {
