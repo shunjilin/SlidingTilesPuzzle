@@ -17,7 +17,9 @@ target_include_directories(heuristics
   )
 
 target_link_libraries(heuristics
-  PRIVATE tiles)
+  PRIVATE tiles
+  PRIVATE manhattan_distance
+  )
 
 target_compile_features(heuristics PUBLIC cxx_std_11)
 
@@ -27,5 +29,3 @@ add_library(manhattan_distance STATIC manhattan_distance.cpp)
 target_include_directories(manhattan_distance
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
   )
-
-

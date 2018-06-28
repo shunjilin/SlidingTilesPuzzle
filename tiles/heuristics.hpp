@@ -14,7 +14,7 @@ namespace Tiles {
     class ManhattanDistanceHeuristic : Heuristic {
     private:
         // 2-D array for calculating each tile's manhattan distance
-        std::array< std::array<char, N_TILES>, N_TILES> table;
+        std::array< std::array<int, N_TILES>, N_TILES> table;
     public:
         ManhattanDistanceHeuristic();
         
