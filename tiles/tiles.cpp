@@ -24,8 +24,7 @@ namespace Tiles {
     }
 
     // free functions to manipulate the board
-    
-    // TODO: consider just caching this
+
     // get index of current blank tile
     char getBlankIdx(const Board& board) {
         auto blank_iter = std::find(board.tiles.begin(), board.tiles.end(), 0);
