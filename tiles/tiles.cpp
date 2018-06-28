@@ -3,7 +3,7 @@
 
 namespace Tiles {
 
-    // TODO: perhaps fix arbitrary goal board
+    // fixed goal state (Richard Korf format)
     auto Board::goal_tiles = std::array<char, N_TILES>
         ({0 , 1 , 2 , 3 , 4 ,
           5 , 6 , 7 , 8 , 9 ,
@@ -11,7 +11,6 @@ namespace Tiles {
           15, 16, 17, 18, 19,
           20, 21, 22, 23, 24});
 
-    // TODO: set blank index?
     Board::Board(const std::array<char, N_TILES>& tiles) :
         tiles(tiles) {}
 
