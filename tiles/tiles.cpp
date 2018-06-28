@@ -37,6 +37,7 @@ namespace Tiles {
 
     // get possible new blank indexes
     // TODO: hardcode and optimize this to reduce branching?
+    // TODO: eliminate operation that gives parent state
     std::array<char, static_cast<int>(DIRECTION::COUNT)>
     getNewBlankIdxs(const Board& board) {
         auto blank_idx = board.cur_blank_idx == -1 ?
