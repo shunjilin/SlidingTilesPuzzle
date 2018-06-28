@@ -31,10 +31,4 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
   include_directories("${gtest_SOURCE_DIR}/include")
 endif()
 
-add_executable(tilesUnitTest tilesUnitTest.cpp)
-target_link_libraries(tilesUnitTest
-  PRIVATE tiles
-  PRIVATE gtest
-  PRIVATE gmock)
-
-add_test(tilesUnitTest tilesUnitTest)
+add_subdirectory(tiles)
