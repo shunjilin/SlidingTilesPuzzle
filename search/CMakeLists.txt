@@ -1,3 +1,5 @@
+add_subdirectory(tiles)
+
 # search
 add_library(search STATIC search.cpp)
 

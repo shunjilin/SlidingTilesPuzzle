@@ -5,7 +5,6 @@ project("24 Puzzle")
 # ctest
 enable_testing()
 
-add_subdirectory(tiles)
 add_subdirectory(search)
 add_subdirectory(test)
 
