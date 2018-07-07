@@ -4,7 +4,7 @@
 namespace Tiles {
 
     // fixed goal state (Richard Korf format)
-    auto Board::goal_tiles = std::array<char, N_TILES>
+    std::array<char, N_TILES> Board::goal_tiles = std::array<char, N_TILES>
         ({0 , 1 , 2 , 3 , 4 ,
           5 , 6 , 7 , 8 , 9 ,
           10, 11, 12, 13, 14,
