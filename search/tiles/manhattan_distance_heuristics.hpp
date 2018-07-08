@@ -1,16 +1,12 @@
-#ifndef HEURISTICS_HPP
-#define HEURISTICS_HPP
+#ifndef MANHATTAN_DISTANCE_HEURISTICS_HPP
+#define MANHATTAN_DISTANCE_HEURISTICS_HPP
 
 #include "tiles.hpp"
+#include "heuristics.hpp"
 #include <array>
 
 namespace Tiles {
-
-    class Heuristic {
-    public:
-        virtual int getHeuristicValue(const Board& board) = 0;
-    };
-
+    
     class ManhattanDistanceHeuristic : Heuristic {
     private:
         // 2-D array for calculating each tile's manhattan distance
@@ -18,7 +14,7 @@ namespace Tiles {
     public:
         ManhattanDistanceHeuristic();
         
-        int getHeuristicValue(const Board& board) override final;
+        int getHeuristicValue(Node const & node) override final;
     };
 }
 

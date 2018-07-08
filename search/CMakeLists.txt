@@ -8,7 +8,6 @@ target_include_directories(search
   )
 
 target_link_libraries(search
-  PRIVATE tiles
   PRIVATE heuristics
   )
 
@@ -22,19 +21,22 @@ target_include_directories(astar
 
 target_link_libraries(astar
   PRIVATE search
-  PRIVATE tiles
   PRIVATE heuristics
   )
 
-# action
+target_compile_features(astar PUBLIC cxx_std_11)
 
-add_library(action STATIC action.cpp)
+# heuristics
 
-target_include_directories(action
-  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+add_library(heuristics STATIC heuristics.cpp)
+
+target_link_libraries(heuristics
+  PRIVATE node
   )
 
-target_compile_features(action PUBLIC cxx_std_14)
+target_include_directories(heuristics
+  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+  )
 
 # node
 
@@ -43,18 +45,3 @@ add_library(node STATIC node.cpp)
 target_include_directories(node
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
   )
-
-# tile node
-
-add_library(tile_node STATIC tile_node.cpp)
-
-target_include_directories(tile_node
-  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
-  )
-
-target_link_libraries(tile_node
-  PRIVATE tiles
-  PRIVATE node
-  )
-
-target_compile_features(tile_node PUBLIC cxx_std_14)

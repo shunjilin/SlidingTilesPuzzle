@@ -1,13 +1,10 @@
 #ifndef TILES_HPP
 #define TILES_HPP
 
+#include "node.hpp"
 #include <vector>
-#include <initializer_list>
-#include <sstream>
-#include <iostream>
-#include <algorithm>
 #include <array>
-#include <string>
+#include <memory>
 
 namespace Tiles {
 
@@ -22,32 +19,30 @@ namespace Tiles {
            20 21 22 23 24 */
         std::array<char, N_TILES> tiles;
 
-        char cur_blank_idx = -1;
-        char prev_blank_idx = -1;       
+        char blank_idx = -1;
 
-        Board(const std::array<char, N_TILES>& tiles);
-        
-        friend std::ostream &operator<<(std::ostream& os, const Board& board);
-
-        // goal board configuration
-        static std::array<char, N_TILES> goal_tiles;
+        Board(std::array<char, N_TILES> tiles);
     };
 
-    // direction that the blank tile moves to get new blank tile position
-    enum DIRECTION { UP, DOWN, LEFT, RIGHT, COUNT };
-
-    // free functions to manipulate the board
-    
-    // TODO: consider just caching this
     // get index of current blank tile
-    char getBlankIdx(const Board& board);
+    char getBlankIdx(Board const & board);
 
-    // get possible new blank indexes
-    std::array<char, DIRECTION::COUNT>
-    getNewBlankIdxs(const Board& board);
+    // get board from new blank index
+    Board getBoardFromBlank(Board const & board, char new_blank_idx);
 
-    // swap blank tile with new blank tile to get new board configuration
-    Board getNewBoard(const Board& board, char newBlankIdx);
+    struct TileNode : Node {
+    
+        Board board;
+        // goal board configuration
+        static Board goal_board;
+        int cost = 0; // g-value
+
+        // caching to regenerate parent node
+        char prev_blank_idx = -1;
+
+        TileNode(Board board, char prev_blank_idx);
+
+        std::vector<std::unique_ptr<Node> > getChildNodes() const override final;
+    };
 }
-
 #endif

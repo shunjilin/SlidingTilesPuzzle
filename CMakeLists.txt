@@ -6,7 +6,7 @@ project("24 Puzzle")
 enable_testing()
 
 add_subdirectory(search)
-add_subdirectory(test)
+#add_subdirectory(test)
 
 # executables
 add_executable(24Puzzle main.cpp)
@@ -14,7 +14,6 @@ add_executable(24Puzzle main.cpp)
 target_compile_features(24Puzzle PUBLIC cxx_std_14)
 
 target_link_libraries(24Puzzle
-  PRIVATE tiles
   )
 
 # warning flags

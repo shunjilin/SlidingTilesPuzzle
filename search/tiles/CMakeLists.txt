@@ -1,26 +1,34 @@
 # TODO: use helper functions so that DRY
 
-# tiles
+# tile node
+
 add_library(tiles STATIC tiles.cpp)
 
 target_include_directories(tiles
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
   )
-target_compile_features(tiles PUBLIC cxx_std_11)
+
+target_link_libraries(tiles
+  #PRIVATE tiles
+  PRIVATE node
+  )
+
+target_compile_features(tiles PUBLIC cxx_std_14)
 
 # heuristics
-add_library(heuristics STATIC heuristics.cpp)
+add_library(manhattan_distance_heuristics STATIC manhattan_distance_heuristics.cpp)
 
-target_include_directories(heuristics
+target_include_directories(manhattan_distance_heuristics
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
   )
 
-target_link_libraries(heuristics
+target_link_libraries(manhattan_distance_heuristics
+  PRIVATE heuristics
   PRIVATE tiles
   PRIVATE manhattan_distance
   )
 
-target_compile_features(heuristics PUBLIC cxx_std_11)
+target_compile_features(manhattan_distance_heuristics PUBLIC cxx_std_11)
 
 # manhattan distance
 add_library(manhattan_distance STATIC manhattan_distance.cpp)

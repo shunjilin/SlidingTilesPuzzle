@@ -1,15 +1,15 @@
 #ifndef SEARCH_HPP
 #define SEARCH_HPP
 
-#include "tiles.hpp"
+#include "node.hpp"
 #include "heuristics.hpp"
 #include <memory>
 
 struct Search {
 
-    virtual std::vector<Tiles::Board>
-    search(Tiles::Board const& initial_board,
-           std::unique_ptr<Tiles::Heuristic> heuristic) = 0;
+    virtual std::vector<Node *>
+    search(Node const & initial_node,
+           std::unique_ptr<Heuristic> heuristic) = 0;
     
 };
 

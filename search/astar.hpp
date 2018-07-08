@@ -8,9 +8,9 @@
 struct AStar : Search {
 
     // perform astar search: lazy with reopenings
-    std::vector<Tiles::Board>
-    search(Tiles::Board const& initial_board,
-           std::unique_ptr<Tiles::Heuristic> heuristic) override final;
+    std::vector<Node *>
+    search(Node const & initial_node,
+           std::unique_ptr<Heuristic> heuristic) override final;
 };
 
 #endif
