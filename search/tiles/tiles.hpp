@@ -1,14 +1,16 @@
 #ifndef TILES_HPP
 #define TILES_HPP
 
-#include "node.hpp"
+#include "tile_dimensions.hpp"
+#include "tile_heuristic.hpp"
+#include "../node.hpp"
 #include <vector>
 #include <array>
 #include <memory>
 
 namespace Tiles {
 
-    constexpr int WIDTH = 5, HEIGHT = 5, N_TILES = WIDTH * HEIGHT;
+    class TileHeuristic;
 
     struct Board {
         // tile values, indexed as follows:
@@ -42,7 +44,14 @@ namespace Tiles {
 
         TileNode(Board board, char prev_blank_idx);
 
+        int getCost() const override final;
+
+        int getHeuristicValue() const override final;
+
         std::vector<std::unique_ptr<Node> > getChildNodes() const override final;
+
+        static std::unique_ptr<TileHeuristic> heuristic;
+
     };
 }
 #endif

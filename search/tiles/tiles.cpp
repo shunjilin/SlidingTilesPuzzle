@@ -1,7 +1,14 @@
 #include "tiles.hpp"
+#include "tile_heuristic.hpp"
 #include <algorithm>
+#include <memory>
 
 namespace Tiles {
+
+    std::unique_ptr<TileHeuristic> TileNode::heuristic =
+        static_cast<std::unique_ptr<TileHeuristic> >(
+            std::make_unique<ManhattanDistanceHeuristic>()
+            );
 
     // constructor for board
     Board::Board(std::array<char, N_TILES> tiles) :
@@ -28,6 +35,14 @@ namespace Tiles {
     // constructor for tile node
     TileNode::TileNode(Board board, char prev_blank_idx) :
         board(std::move(board)) , prev_blank_idx(prev_blank_idx) {}
+
+    int TileNode::getCost() const {
+        return cost;
+    }
+
+    int TileNode::getHeuristicValue() const {
+        return heuristic->getHeuristicValue(board);
+    }
 
     // generate child nodes from current node
     std::vector<std::unique_ptr<Node> > TileNode::getChildNodes() const {
