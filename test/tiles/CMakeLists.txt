@@ -10,22 +10,12 @@
 
 #add_test(tiles_test tiles_test)
 
-# manhattan distance test
-add_executable(manhattan_distance_test manhattan_distance_test.cpp)
-
-target_link_libraries(manhattan_distance_test
-  PRIVATE manhattan_distance
-  PRIVATE gtest
-  PRIVATE gmock)
-
-add_test(manhattan_distance_test manhattan_distance_test)
-
 # manhattan heuristic test
-add_executable(manhattan_heuristic_test manhattan_heuristic_test.cpp)
+add_executable(manhattan_distance_heuristic_test manhattan_distance_heuristic_test.cpp)
 
-target_link_libraries(manhattan_heuristic_test
-  PRIVATE tile_heuristic
+target_link_libraries(manhattan_distance_heuristic_test
+  PRIVATE manhattan_distance_heuristic
   PRIVATE gtest
   PRIVATE gmock)
 
-add_test(manhattan_heuristic_test manhattan_heuristic_test)
+add_test(manhattan_distance_heuristic_test manhattan_distance_heuristic_test)
