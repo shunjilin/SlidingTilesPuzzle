@@ -6,6 +6,8 @@
 
 struct Node {
 
+    virtual ~Node() = 0;
+
     virtual std::vector<std::unique_ptr<Node> > getChildNodes() const = 0;
 
     virtual int getCost() const = 0;
