@@ -1,14 +1,14 @@
 # TODO: use custom functions so that DRY
 
 # tiles test
-add_executable(tiles_test tiles_test.cpp)
+#add_executable(tiles_test tiles_test.cpp)
 
-target_link_libraries(tiles_test
-  PRIVATE tiles
-  PRIVATE gtest
-  PRIVATE gmock)
+#target_link_libraries(tiles_test
+#  PRIVATE tiles
+#  PRIVATE gtest
+#  PRIVATE gmock)
 
-add_test(tiles_test tiles_test)
+#add_test(tiles_test tiles_test)
 
 # manhattan distance test
 add_executable(manhattan_distance_test manhattan_distance_test.cpp)
@@ -24,7 +24,7 @@ add_test(manhattan_distance_test manhattan_distance_test)
 add_executable(manhattan_heuristic_test manhattan_heuristic_test.cpp)
 
 target_link_libraries(manhattan_heuristic_test
-  PRIVATE heuristics
+  PRIVATE tile_heuristic
   PRIVATE gtest
   PRIVATE gmock)
 

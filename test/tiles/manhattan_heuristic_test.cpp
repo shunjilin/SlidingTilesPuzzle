@@ -1,4 +1,4 @@
-#include "heuristics.hpp"
+#include "tile_heuristic.hpp"
 #include <gtest/gtest.h>
 
 using namespace Tiles;
