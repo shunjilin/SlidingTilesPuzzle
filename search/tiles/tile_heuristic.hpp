@@ -10,6 +10,9 @@ namespace Tiles {
 
     class TileHeuristic {
     public:
+	
+	virtual ~TileHeuristic() = 0;
+	
         virtual int getHeuristicValue(Board const &) = 0;
     };    
 }
