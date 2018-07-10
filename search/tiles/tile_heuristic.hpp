@@ -11,18 +11,7 @@ namespace Tiles {
     class TileHeuristic {
     public:
         virtual int getHeuristicValue(Board const &) = 0;
-    };
-
-    class ManhattanDistanceHeuristic : public TileHeuristic {
-    private:
-        // 2-D array for calculating each tile's manhattan distance
-        std::array< std::array<int, N_TILES>, N_TILES> table;
-    public:
-        ManhattanDistanceHeuristic();
-        
-        int getHeuristicValue(Board const & board) override final;
-    };
-    
+    };    
 }
 
 #endif

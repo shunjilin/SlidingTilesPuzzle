@@ -1,5 +1,5 @@
 #include "tiles.hpp"
-#include "tile_heuristic.hpp"
+#include "manhattan_distance_heuristic.hpp"
 #include <algorithm>
 #include <memory>
 
