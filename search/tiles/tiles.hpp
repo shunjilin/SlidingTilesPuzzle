@@ -7,6 +7,7 @@
 #include <vector>
 #include <array>
 #include <memory>
+#include <limits>
 
 namespace Tiles {
 
@@ -21,7 +22,7 @@ namespace Tiles {
            20 21 22 23 24 */
         std::array<char, N_TILES> tiles;
 
-        char blank_idx = -1;
+        char blank_idx = std::numeric_limits<char>::max();
 
         Board(std::array<char, N_TILES> tiles);
     };

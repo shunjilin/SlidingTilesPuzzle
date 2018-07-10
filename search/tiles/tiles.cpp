@@ -2,6 +2,7 @@
 #include "manhattan_distance_heuristic.hpp"
 #include <algorithm>
 #include <memory>
+#include <limits>
 
 namespace Tiles {
 
@@ -16,7 +17,8 @@ namespace Tiles {
 
     // get index of current blank tile
     char getBlankIdx(const Board& board) {
-        if (board.blank_idx != -1) return board.blank_idx; // cached
+        if (board.blank_idx != std::numeric_limits<char>::max())
+	    return board.blank_idx; // cached
         // if not cached, linear scan
         auto blank_iter = std::find(board.tiles.begin(), board.tiles.end(), 0);
         return std::distance(board.tiles.begin(), blank_iter);
