@@ -7,6 +7,7 @@
 #include <memory>
 #include <limits>
 #include <iostream>
+#include <optional>
 
 namespace Tiles {
 
@@ -31,6 +32,12 @@ namespace Tiles {
 
     // get board from new blank index
     Board getBoardFromBlank(Board const & board, char new_blank_idx);
+
+    // board actions
+    std::optional<Board> moveBlankUp(Board const& board);
+    std::optional<Board> moveBlankDown(Board const& board);
+    std::optional<Board> moveBlankLeft(Board const& board);
+    std::optional<Board> moveBlankRight(Board const& board);
 }
 
 //#include "tiles.cpp"

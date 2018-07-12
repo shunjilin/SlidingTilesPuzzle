@@ -28,21 +28,45 @@ public:
        20 21 22 23 24 */
 };
 
-TEST_F(BoardInitialize, InitializeTilesCorrect) {
+TEST_F(BoardInitialize, InitializeTiles) {
     std::ostringstream oss;
     oss << board;
     ASSERT_EQ(oss.str(), "1 2 3 4 0 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
 }
 
-TEST_F(BoardInitialize, getCorretBlankPosition) {
+TEST_F(BoardInitialize, getBlankPosition) {
     ASSERT_EQ(getBlankIdx(board), 4);
 }
 
-TEST_F(BoardInitialize, getCorrectBoardFromNewBlank) {
+TEST_F(BoardInitialize, getBoardFromNewBlank) {
     auto new_board = getBoardFromBlank(board, 3);
     std::ostringstream oss;
     oss << new_board;
     ASSERT_EQ(oss.str(), "1 2 3 0 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
+}
+
+TEST_F(BoardInitialize, getBoardFromMoveBlankUp) {
+    auto new_board = moveBlankUp(board);
+    ASSERT_EQ(new_board.has_value(), false);
+}
+
+TEST_F(BoardInitialize, getBoardFromMoveBlankDown) {
+    auto new_board = moveBlankDown(board);
+    std::ostringstream oss;
+    oss << *new_board;
+    ASSERT_EQ(oss.str(), "1 2 3 4 9 5 6 7 8 0 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
+}
+
+TEST_F(BoardInitialize, getBoardFromMoveBlankLeft) {
+    auto new_board = moveBlankLeft(board);
+    std::ostringstream oss;
+    oss << *new_board;
+    ASSERT_EQ(oss.str(), "1 2 3 0 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
+}
+
+TEST_F(BoardInitialize, getBoardFromMoveBlankRight) {
+    auto new_board = moveBlankRight(board);
+    ASSERT_EQ(new_board.has_value(), false);
 }
 
 int main(int argc, char *argv[]) {

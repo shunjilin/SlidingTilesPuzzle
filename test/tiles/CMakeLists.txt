@@ -21,14 +21,13 @@ target_link_libraries(manhattan_distance_heuristic_test
 
 add_test(manhattan_distance_heuristic_test manhattan_distance_heuristic_test)
 
-# astar2 test
-#add_executable(astar2_test astar2_test.cpp)
+# tile_node test
+add_executable(tile_node_test tile_node_test.cpp)
 
-#target_link_libraries(astar2_test
- # PRIVATE astar2
-  #PRIVATE tiles
-  #PRIVATE manhattan_distance_heuristic
-  #PRIVATE gtest
-  #PRIVATE gmock)
+target_link_libraries(tile_node_test
+  PRIVATE tile_node
+  PRIVATE tiles
+  PRIVATE gtest
+  PRIVATE gmock)
 
-#add_test(astar2_test astar2_test)
+add_test(tile_node_test tile_node_test)
