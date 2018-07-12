@@ -8,25 +8,7 @@ target_include_directories(tiles
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
   )
 
-target_link_libraries(tiles
-  PRIVATE node
-  PRIVATE tile_heuristic
-  )
-
 target_compile_features(tiles PUBLIC cxx_std_14)
-
-# heuristics
-add_library(tile_heuristic STATIC tile_heuristic.cpp)
-
-target_include_directories(tile_heuristic
-  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
-  )
-
-target_link_libraries(tile_heuristic
-  PRIVATE tiles
-  )
-
-target_compile_features(tile_heuristic PUBLIC cxx_std_11)
 
 # manhattan distance heuristic
 add_library(manhattan_distance_heuristic STATIC manhattan_distance_heuristic.cpp)
@@ -34,3 +16,7 @@ add_library(manhattan_distance_heuristic STATIC manhattan_distance_heuristic.cpp
 target_include_directories(manhattan_distance_heuristic
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
   )
+
+target_link_libraries(manhattan_distance_heuristic
+  PRIVATE tiles
+) 

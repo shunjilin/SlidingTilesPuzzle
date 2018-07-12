@@ -1,7 +1,10 @@
 #ifndef MANHATTAN_DISTANCE_HEURISTIC_HPP
 #define MANHATTAN_DISTANCE_HEURISTIC_HPP
 
-#include "tile_heuristic.hpp"
+#include "tiles.hpp"
+#include "tile_dimensions.hpp"
+#include <array>
+
 
 namespace Tiles {
 
@@ -15,14 +18,14 @@ namespace Tiles {
     // width and height
     int manhattanDistance(char index1, char index2, int width, int height);
 
-    class ManhattanDistanceHeuristic : public TileHeuristic {
+    class ManhattanDistanceHeuristic {
     private:
         // 2-D array for calculating each tile's manhattan distance
         std::array< std::array<int, N_TILES>, N_TILES> table;
     public:
         ManhattanDistanceHeuristic();
         
-        int getHeuristicValue(Board const & board) override final;
+        int getHeuristicValue(Board const & board);
     };
 }
 

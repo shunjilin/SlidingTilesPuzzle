@@ -1,15 +1,17 @@
 #ifndef ASTAR_HPP
 #define ASTAR_HPP
 
-#include "search.hpp"
 #include <memory>
 #include <vector>
 
-struct AStar : Search {
+template <typename Node>
+struct AStar {
 
     // perform astar search: lazy with reopenings
-    std::vector<Node *>
-    search(Node const & initial_node) override final;
+    std::vector<Node>
+    search(Node const & initial_node) {
+	return std::vector<Node>();
+    }
 };
 
 #endif
