@@ -1,3 +1,4 @@
+#include "tiles.hpp"
 #include "manhattan_distance_heuristic.hpp"
 #include <gtest/gtest.h>
 

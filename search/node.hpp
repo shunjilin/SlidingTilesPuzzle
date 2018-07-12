@@ -6,7 +6,7 @@
 
 struct Node {
 
-    virtual ~Node() = 0;
+    virtual ~Node() = default;
 
     virtual std::vector<std::unique_ptr<Node> > getChildNodes() const = 0;
 
