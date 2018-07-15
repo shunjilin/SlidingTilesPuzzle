@@ -2,28 +2,34 @@
 #define OPEN_HPP
 
 #include <queue>
-/*
-template <typename Node>
-auto compare = [](Node lhs, Node rhs) {
-    return (lhs.getCost() + lhs.getHeuristicValue()) >
-    (rhs.getCost() + rhs.getHeuristicValue());
-};
+#include <vector>
 
 template <typename Node>
 struct Open {
 
-    std::priority_queue<Node, decltype(compare<Node>)> queue;
+    struct Compare {
+        int operator()(Node const & lhs, Node const & rhs) const {          
+            return (lhs.getCost() + lhs.getHeuristicValue()) >
+                (rhs.getCost() + rhs.getHeuristicValue());
+        }  
+    } compare;
+
+    std::priority_queue<Node, std::vector<Node>, decltype(compare)> queue;
     
     void push(Node node) {
-        priority_queue.push(std::move(node));
+        queue.push(std::move(node));
     }
 
     Node pop() {
-        auto node = priority_queue.top();
-        priority_queue.pop();
+        auto node = queue.top();
+        queue.pop();
         return node;
-    }    
+    }
+
+    bool empty() const {
+        return queue.empty();
+    }
 };
-*/
+
 
 #endif

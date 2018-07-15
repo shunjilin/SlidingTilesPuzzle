@@ -32,3 +32,4 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
 endif()
 
 add_subdirectory(tiles)
+add_subdirectory(search)
