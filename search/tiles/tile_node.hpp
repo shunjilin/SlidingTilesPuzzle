@@ -13,12 +13,12 @@ namespace Tiles {
         static Board goal_board;
         int cost = 0; // g-value
 
-        // caching to regenerate parent node
-        char prev_blank_idx = -1;
+        // caching to prevent regeneration of parent node
+        MOVE prev_move = NONE;
 
         // constructor
         TileNode(Board board,
-		 char prev_blank_idx = std::numeric_limits<char>::max());
+		 MOVE prev_move = NONE);
 
         // get cost of path to node
         int getCost() const;
@@ -27,15 +27,16 @@ namespace Tiles {
         int getHeuristicValue() const;
 
         // get nodes that can be generated from current node
-        std::array<TileNode<Heuristic>, N_MOVES> getChildNodes() const;
+        std::array< std::optional< TileNode<Heuristic> >, N_MOVES >
+        getChildNodes() const;
 
         static Heuristic heuristic;
 
     };
 
     template <typename Heuristic>
-    TileNode<Heuristic>::TileNode(Board board, char prev_blank_idx) :
-        board(std::move(board)) , prev_blank_idx(prev_blank_idx) {}
+    TileNode<Heuristic>::TileNode(Board board, MOVE prev_move) :
+        board(std::move(board)) , prev_move(prev_move) {}
 
     template <typename Heuristic>
     int TileNode<Heuristic>::getCost() const {
@@ -49,13 +50,28 @@ namespace Tiles {
 
     // generate child nodes from current node
     template <typename Heuristic>
-    std::array<TileNode<Heuristic>, N_MOVES>
+    std::array< std::optional< TileNode<Heuristic> >, N_MOVES >
     TileNode<Heuristic>::getChildNodes() const {
-        std::array<TileNode<Heuristic>, N_MOVES > child_nodes;
+        std::array< std::optional< TileNode<Heuristic> >, N_MOVES > child_nodes;
+
+        if (prev_move != DOWN) {
+            child_nodes[0] = moveBlank<UP>(board);
+        }
+
+        if (prev_move != UP) {
+            child_nodes[1] = moveBlank<DOWN>(board);
+        }
+
+        if (prev_move != RIGHT) {
+            child_nodes[2] = moveBlank<LEFT>(board);
+        }
+
+        if (prev_move != LEFT) {
+            child_nodes[3] = moveBlank<RIGHT>(board);
+        }
+        
         return child_nodes;
     }
-
-    
 }
 
 #endif

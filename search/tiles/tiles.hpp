@@ -12,7 +12,7 @@
 namespace Tiles {
 
     enum MOVE : char {
-        UP, DOWN, LEFT, RIGHT  
+        UP, DOWN, LEFT, RIGHT, NONE
     };
 
     struct Board {
