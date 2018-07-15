@@ -23,12 +23,8 @@ target_link_libraries(manhattan_distance_heuristic
 
 # tile node
 
-add_library(tile_node STATIC tile_node.hpp)
+add_library(tile_node INTERFACE)
 
 target_include_directories(tile_node
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
-  )
-
-target_link_libraries(tile_node
-  PRIVATE tiles
   )
