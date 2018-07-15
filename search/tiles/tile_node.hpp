@@ -49,7 +49,7 @@ namespace Tiles {
 
     // generate child nodes from current node
     template <typename Heuristic>
-    std::array<TileNode<Heuristic>, N_MOVES >
+    std::array<TileNode<Heuristic>, N_MOVES>
     TileNode<Heuristic>::getChildNodes() const {
         std::array<TileNode<Heuristic>, N_MOVES > child_nodes;
         return child_nodes;

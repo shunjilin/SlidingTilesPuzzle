@@ -11,7 +11,7 @@
 
 namespace Tiles {
 
-    enum MOVES : char {
+    enum MOVE : char {
         UP, DOWN, LEFT, RIGHT  
     };
 
@@ -38,7 +38,7 @@ namespace Tiles {
     Board getBoardFromBlank(Board const & board, char new_blank_idx);
 
     //board actions
-    template<MOVES MoveDirection>
+    template<MOVE MoveDirection>
     std::optional<Board> moveBlank(Board const& board);
 }
 #endif
