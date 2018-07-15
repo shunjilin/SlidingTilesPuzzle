@@ -55,19 +55,31 @@ namespace Tiles {
         std::array< std::optional< TileNode<Heuristic> >, N_MOVES > child_nodes;
 
         if (prev_move != DOWN) {
-            child_nodes[0] = moveBlank<UP>(board);
+            auto up_move = moveBlank<UP>(board);
+            if (up_move.has_value()) {
+                child_nodes[UP] = {std::move(*up_move), UP};
+            }
         }
 
         if (prev_move != UP) {
-            child_nodes[1] = moveBlank<DOWN>(board);
+            auto down_move = moveBlank<DOWN>(board);
+            if (down_move.has_value()) {
+                child_nodes[DOWN] = {std::move(*down_move), DOWN};
+            }
         }
 
         if (prev_move != RIGHT) {
-            child_nodes[2] = moveBlank<LEFT>(board);
+            auto left_move = moveBlank<LEFT>(board);
+            if (left_move.has_value()) {
+                child_nodes[LEFT] = {std::move(*left_move), LEFT};
+            }
         }
 
         if (prev_move != LEFT) {
-            child_nodes[3] = moveBlank<RIGHT>(board);
+            auto right_move = moveBlank<RIGHT>(board);
+            if (right_move.has_value()) {
+                child_nodes[RIGHT] = {std::move(*right_move), RIGHT};
+            }
         }
         
         return child_nodes;

@@ -39,9 +39,6 @@ public:
        20 21 22 23 24 */
 
     TileNode<DummyHeuristic> node = TileNode<DummyHeuristic>(board);
-
-    TileNode<DummyHeuristic> node_with_prev_move =
-        TileNode<DummyHeuristic>(board, RIGHT);
 };
 
 TEST_F(TileNodeInitialize, InitializeTileNode) {
@@ -70,9 +67,16 @@ TEST_F(TileNodeInitialize, GetChildNodes) {
     EXPECT_FALSE(child_nodes[RIGHT].has_value());
 }
 
+TEST_F(TileNodeInitialize, CachePreviousMove) {
+    auto child_nodes = node.getChildNodes();
+
+    ASSERT_EQ(child_nodes[DOWN]->prev_move, DOWN);
+}
+
 TEST_F(TileNodeInitialize, DoNotRegenerateParentNode) {
-    auto child_nodes = node_with_prev_move.getChildNodes();
-    ASSERT_FALSE(child_nodes[LEFT].has_value());
+    auto child_nodes = node.getChildNodes();
+    auto grandchild_nodes = child_nodes[DOWN]->getChildNodes();
+    ASSERT_FALSE(grandchild_nodes[UP].has_value());
 }
 
 int main(int argc, char *argv[]) {
