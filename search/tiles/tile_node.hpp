@@ -35,6 +35,9 @@ namespace Tiles {
     };
 
     template <typename Heuristic>
+    Heuristic TileNode<Heuristic>::heuristic = Heuristic();
+
+    template <typename Heuristic>
     TileNode<Heuristic>::TileNode(Board board, MOVE prev_move) :
         board(std::move(board)) , prev_move(prev_move) {}
 
