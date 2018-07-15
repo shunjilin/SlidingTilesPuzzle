@@ -46,26 +46,26 @@ TEST_F(BoardInitialize, getBoardFromNewBlank) {
 }
 
 TEST_F(BoardInitialize, getBoardFromMoveBlankUp) {
-    auto new_board = moveBlankUp(board);
+    auto new_board = moveBlank<UP>(board);
     ASSERT_EQ(new_board.has_value(), false);
 }
 
 TEST_F(BoardInitialize, getBoardFromMoveBlankDown) {
-    auto new_board = moveBlankDown(board);
+    auto new_board = moveBlank<DOWN>(board);
     std::ostringstream oss;
     oss << *new_board;
     ASSERT_EQ(oss.str(), "1 2 3 4 9 5 6 7 8 0 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
 }
 
 TEST_F(BoardInitialize, getBoardFromMoveBlankLeft) {
-    auto new_board = moveBlankLeft(board);
+    auto new_board = moveBlank<LEFT>(board);
     std::ostringstream oss;
     oss << *new_board;
     ASSERT_EQ(oss.str(), "1 2 3 0 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
 }
 
 TEST_F(BoardInitialize, getBoardFromMoveBlankRight) {
-    auto new_board = moveBlankRight(board);
+    auto new_board = moveBlank<RIGHT>(board);
     ASSERT_EQ(new_board.has_value(), false);
 }
 

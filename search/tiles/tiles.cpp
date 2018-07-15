@@ -46,25 +46,40 @@ namespace Tiles {
 	}
 	return {};
     }
-
-    std::optional<Board> moveBlankDown(Board const& board) {
-	if (board.blank_idx < (WIDTH * (HEIGHT - 1))) {
-	    return getBoardFromBlank(board, board.blank_idx + WIDTH);
-	}
-	return {};
-    }
-
-    std::optional<Board> moveBlankLeft(Board const& board) {
-        if ((board.blank_idx % WIDTH) != 0) {
-	    return getBoardFromBlank(board, board.blank_idx - 1);
+    
+    template<>
+    std::optional<Board> moveBlank<UP>(Board const& board) {
+        if (board.blank_idx >= WIDTH) {
+            return getBoardFromBlank(board, board.blank_idx - WIDTH);
         }
-	return {};
+        return {};
     }
 
-    std::optional<Board> moveBlankRight(Board const& board) {
-	if ((board.blank_idx % WIDTH) != (WIDTH - 1)) {
-	    return getBoardFromBlank(board, board.blank_idx + 1);
-	}
-	return {};
-    }       
+
+    template<>
+    std::optional<Board> moveBlank<DOWN>(Board const& board) {
+        if (board.blank_idx < (WIDTH * (HEIGHT - 1))) {
+            return getBoardFromBlank(board, board.blank_idx + WIDTH);
+        }
+        return {};
+    }
+
+
+    template<>
+    std::optional<Board> moveBlank<LEFT>(Board const& board) { 
+        if ((board.blank_idx % WIDTH) != 0) {
+            return getBoardFromBlank(board, board.blank_idx - 1);
+        }
+        return {};
+    }
+
+
+    template<>
+    std::optional<Board> moveBlank<RIGHT>(Board const& board) { 
+        if ((board.blank_idx % WIDTH) != (WIDTH - 1)) {
+            return getBoardFromBlank(board, board.blank_idx + 1);
+        }
+        return {};
+    }
+
 };

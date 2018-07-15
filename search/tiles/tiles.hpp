@@ -11,6 +11,10 @@
 
 namespace Tiles {
 
+    enum MOVES : char {
+        UP, DOWN, LEFT, RIGHT  
+    };
+
     struct Board {
         // tile values, indexed as follows:
         /* 0  1  2  3  4 
@@ -33,13 +37,8 @@ namespace Tiles {
     // get board from new blank index
     Board getBoardFromBlank(Board const & board, char new_blank_idx);
 
-    // board actions
-    std::optional<Board> moveBlankUp(Board const& board);
-    std::optional<Board> moveBlankDown(Board const& board);
-    std::optional<Board> moveBlankLeft(Board const& board);
-    std::optional<Board> moveBlankRight(Board const& board);
+    //board actions
+    template<MOVES MoveDirection>
+    std::optional<Board> moveBlank(Board const& board);
 }
-
-//#include "tiles.cpp"
-
 #endif
