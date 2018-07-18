@@ -21,10 +21,13 @@ namespace Tiles {
 		 MOVE prev_move = NONE);
 
         // get cost of path to node
-        int getCost() const;
+        int getG() const;
 
         // get heuristic value of node
-        int getHeuristicValue() const;
+        int getH() const;
+
+        // get g + h value
+        int getF() const; 
 
         // get nodes that can be generated from current node
         std::array< std::optional< TileNode<Heuristic> >, N_MOVES >
@@ -42,13 +45,18 @@ namespace Tiles {
         board(std::move(board)) , prev_move(prev_move) {}
 
     template <typename Heuristic>
-    int TileNode<Heuristic>::getCost() const {
+    int TileNode<Heuristic>::getG() const {
         return cost;
     }
 
     template <typename Heuristic>
-    int TileNode<Heuristic>::getHeuristicValue() const {
-        return heuristic.getHeuristicValue(board);
+    int TileNode<Heuristic>::getH() const {
+        return heuristic.getH(board);
+    }
+
+    template <typename Heuristic>
+    int TileNode<Heuristic>::getF() const {
+        return getG() + getH();
     }
 
     // generate child nodes from current node

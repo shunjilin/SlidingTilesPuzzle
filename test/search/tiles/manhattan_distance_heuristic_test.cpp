@@ -56,7 +56,7 @@ public:
 };
 
 TEST_F(BoardInitialize, correctManhattanHeuristic) {
-    ASSERT_EQ(heuristic.getHeuristicValue(board), 4);
+    ASSERT_EQ(heuristic.getH(board), 4);
 }
 
 int main(int argc, char *argv[]) {

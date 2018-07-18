@@ -12,12 +12,16 @@ struct DummyNode {
         heuristic_value(heuristic_value),
         cost(cost) {}
     
-    int getHeuristicValue() const {
+    int getH() const {
         return heuristic_value;
     }
 
-    int getCost() const {
+    int getG() const {
         return cost;
+    }
+
+    int getF() const {
+        return getG() + getH();
     }
 
     bool operator==(DummyNode const & rhs) const {

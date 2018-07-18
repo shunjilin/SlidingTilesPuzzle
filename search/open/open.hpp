@@ -9,8 +9,7 @@ struct Open {
 
     struct Compare {
         int operator()(Node const & lhs, Node const & rhs) const {          
-            return (lhs.getCost() + lhs.getHeuristicValue()) >
-                (rhs.getCost() + rhs.getHeuristicValue());
+            return lhs.getF() > rhs.getF();
         }  
     } compare;
 

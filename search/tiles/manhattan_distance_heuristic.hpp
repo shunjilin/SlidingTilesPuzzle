@@ -25,7 +25,7 @@ namespace Tiles {
     public:
         ManhattanDistanceHeuristic();
         
-        int getHeuristicValue(Board const & board);
+        int getH(Board const & board);
     };
 }
 

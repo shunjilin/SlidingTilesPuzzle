@@ -34,7 +34,7 @@ namespace Tiles {
         }     
     }
     
-    int ManhattanDistanceHeuristic::getHeuristicValue(const Board & board) {
+    int ManhattanDistanceHeuristic::getH(const Board & board) {
         int heuristic_value = 0;
         for (int idx = 0; idx < N_TILES; ++idx) {
             heuristic_value += table[board.tiles[idx]][idx];

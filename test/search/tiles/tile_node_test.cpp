@@ -11,7 +11,7 @@ using namespace Tiles;
 // dummy heuristic function
 struct DummyHeuristic {
 
-    int getHeuristicValue(Board const & board) const {
+    int getH(Board const & board) const {
         return 0;
     }
     
@@ -48,7 +48,7 @@ TEST_F(TileNodeInitialize, InitializeTileNode) {
 }
 
 TEST_F(TileNodeInitialize, GetHeuristicValue) {
-    ASSERT_EQ(node.getHeuristicValue(), 0);
+    ASSERT_EQ(node.getH(), 0);
 }
 
 TEST_F(TileNodeInitialize, GetChildNodes) {
