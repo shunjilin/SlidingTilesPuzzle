@@ -64,6 +64,12 @@ TEST_F(ClosedInitialize, insertNonUniqueNode) {
     ASSERT_FALSE(closed.insert(node));
 }
 
+// inserting non unique node with lower f-value triggers reopening
+TEST_F(ClosedInitialize, Reopening) {
+    auto node = DummyNode{0, 1, 1};
+    ASSERT_TRUE(closed.insert(node));
+}
+
 int main(int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

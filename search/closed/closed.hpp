@@ -20,7 +20,11 @@ template <typename Node>
 bool Closed<Node>::insert(Node node) {
     auto it = closed.find(node);
     if (it != closed.end()) {
-        return false;
+        if ((node.getHeuristicValue() + node.getCost()) >=
+            (it->getHeuristicValue() + it->getCost())) {
+            return false;
+        }
+        closed.erase(it); // reopening
     }
     closed.insert(std::move(node));
     return true;
