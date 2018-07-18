@@ -8,6 +8,7 @@ struct DummyNode {
     int cost = 0;
 
     DummyNode(int id, int heuristic_value, int cost) :
+        id(id),
         heuristic_value(heuristic_value),
         cost(cost) {}
     
@@ -23,6 +24,20 @@ struct DummyNode {
         return id == rhs.id;
     }    
 };
+
+// overload default hash
+namespace std
+{
+    template<>
+    struct hash<DummyNode>
+    {
+        size_t
+        operator()(const DummyNode& node) const
+        {
+            return hash<int>()(node.id);
+        }
+    };
+}
 
 class ClosedInitialize : public testing::Test {
 public:
@@ -42,6 +57,11 @@ TEST_F(ClosedInitialize, insertUniqueNode) {
     auto node = DummyNode{3, 1, 2};
     // insert return true when node needs to be expanded
     ASSERT_TRUE(closed.insert(node));
+}
+
+TEST_F(ClosedInitialize, insertNonUniqueNode) {
+    auto node = DummyNode{0, 2, 1};
+    ASSERT_FALSE(closed.insert(node));
 }
 
 int main(int argc, char *argv[]) {
