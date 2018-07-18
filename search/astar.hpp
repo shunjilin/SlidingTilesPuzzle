@@ -21,7 +21,7 @@ struct AStar {
 
         while (!open.isEmpty()) {
             auto node = open.pop();
-            if (!closed.isDuplicate(node)) {
+            if (closed.insert(node)) {
                 // check goal node
                 if (node.isGoal()) {
                     // TODO: build path
@@ -35,7 +35,6 @@ struct AStar {
                     }
                 }
             }
-            
         }
 	return std::vector<Node>();
     }

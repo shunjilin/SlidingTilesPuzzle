@@ -1,5 +1,6 @@
 add_subdirectory(tiles)
 add_subdirectory(open)
+add_subdirectory(closed)
 
 # astar
 
@@ -11,6 +12,7 @@ target_include_directories(astar
 
 target_link_libraries(astar
   PRIVATE open
+  PRIVATE closed
   )
 
 target_compile_features(astar PUBLIC cxx_std_11)
