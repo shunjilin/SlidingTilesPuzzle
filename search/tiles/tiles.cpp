@@ -14,6 +14,10 @@ namespace Tiles {
 	blank_idx = getBlankIdx(*this);
     }
 
+    bool Board::operator==(Board const & rhs) const {
+        return tiles == rhs.tiles;
+    }
+
     // get index of current blank tile
     char getBlankIdx(const Board& board) {
         if (board.blank_idx != std::numeric_limits<char>::max())
@@ -81,5 +85,4 @@ namespace Tiles {
         }
         return {};
     }
-
 };

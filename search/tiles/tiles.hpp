@@ -28,6 +28,8 @@ namespace Tiles {
 
         Board(std::array<char, N_TILES> tiles);
 
+        bool operator==(Board const & rhs) const;
+
 	friend std::ostream& operator<<(std::ostream& os, Board const & board);
     };
 
@@ -40,5 +42,24 @@ namespace Tiles {
     //board actions
     template<MOVE MoveDirection>
     std::optional<Board> moveBlank(Board const& board);
+    
+}
+
+// overload default hash
+namespace std
+{
+    template<>
+    struct hash<Tiles::Board>
+    {
+        size_t
+        operator() (const Tiles::Board& board) const
+        {
+            size_t result = 0;
+            for (auto i = 0; i < Tiles::N_TILES; ++i) {
+                result = result * 31 + hash<int>()(board.tiles[i]);
+            }
+            return result;
+        }
+    };
 }
 #endif

@@ -1,6 +1,8 @@
 #ifndef TILE_NODE_HPP
 #define TILE_NODE_HPP
 
+#include <array>
+#include <optional>
 #include "tiles.hpp"
 
 namespace Tiles {
@@ -33,8 +35,15 @@ namespace Tiles {
         std::array< std::optional< TileNode<Heuristic> >, N_MOVES >
         getChildNodes() const;
 
-        static Heuristic heuristic;
+        // get parent node
+        std::optional<TileNode<Heuristic> >
+        getParent() const;
 
+        bool operator==(TileNode<Heuristic> const & rhs) const {
+            return board == rhs.board;
+        }
+        
+        static Heuristic heuristic;
     };
 
     template <typename Heuristic>
@@ -95,6 +104,38 @@ namespace Tiles {
         
         return child_nodes;
     }
+
+    template <typename Heuristic>
+    std::optional< TileNode<Heuristic> >
+    TileNode<Heuristic>::getParent() const {
+        if (prev_move == UP) {
+            return TileNode<Heuristic>{*moveBlank<DOWN>(board), NONE};
+        }
+        if (prev_move == DOWN) {
+            return TileNode<Heuristic>{*moveBlank<UP>(board), NONE};
+        }
+        if (prev_move == LEFT) {
+            return TileNode<Heuristic>{*moveBlank<RIGHT>(board), NONE};
+        }
+        if (prev_move == RIGHT) {
+            return TileNode<Heuristic>{*moveBlank<LEFT>(board), NONE};
+        }
+        return {};
+    }
+}
+
+// overload default hash
+namespace std
+{
+    template<typename Heuristic>
+    struct hash<Tiles::TileNode<Heuristic> >
+    {
+        size_t
+        operator() (const Tiles::TileNode<Heuristic>& node) const
+        {
+            return hash<Tiles::Board>()(node.board);
+        }
+    };
 }
 
 #endif

@@ -79,6 +79,11 @@ TEST_F(TileNodeInitialize, DoNotRegenerateParentNode) {
     ASSERT_FALSE(grandchild_nodes[UP].has_value());
 }
 
+TEST_F(TileNodeInitialize, GetParentNode) {
+    auto child_node = *node.getChildNodes()[DOWN];
+    ASSERT_EQ(*child_node.getParent(), node);
+}
+
 int main(int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
