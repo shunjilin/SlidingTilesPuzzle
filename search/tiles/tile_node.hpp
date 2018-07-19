@@ -11,8 +11,6 @@ namespace Tiles {
     struct TileNode {
 
         Board board;
-        // goal board configuration
-        static Board goal_board;
         int cost = 0; // g-value
 
         // caching to prevent regeneration of parent node
@@ -40,15 +38,24 @@ namespace Tiles {
         std::optional<TileNode<Heuristic> >
         getParent() const;
 
+        // check if node is goal node
+        bool isGoal() const;
+
         bool operator==(TileNode<Heuristic> const & rhs) const {
             return board == rhs.board;
         }
         
         static Heuristic heuristic;
+        
+        // goal board configuration
+        static Board goal_board;
     };
 
     template <typename Heuristic>
     Heuristic TileNode<Heuristic>::heuristic = Heuristic();
+
+    template <typename Heuristic>
+    Board TileNode<Heuristic>::goal_board = Board({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24});
 
     template <typename Heuristic>
     TileNode<Heuristic>::TileNode(Board board, int cost, MOVE prev_move) :
@@ -67,6 +74,11 @@ namespace Tiles {
     template <typename Heuristic>
     int TileNode<Heuristic>::getF() const {
         return getG() + getH();
+    }
+
+    template <typename Heuristic>
+    bool TileNode<Heuristic>::isGoal() const {
+        return board == goal_board;
     }
 
     // generate child nodes from current node
