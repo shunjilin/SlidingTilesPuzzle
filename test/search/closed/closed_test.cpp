@@ -1,27 +1,23 @@
 #include "closed.hpp"
+#include <memory>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 struct DummyNode {
     int id;
-    int heuristic_value = 0;
-    int cost = 0;
+    int f_value = 0;
+    std::shared_ptr<DummyNode> parent_node = nullptr;
 
-    DummyNode(int id, int heuristic_value, int cost) :
+    DummyNode(int id, int f_value) :
         id(id),
-        heuristic_value(heuristic_value),
-        cost(cost) {}
-    
-    int getH() const {
-        return heuristic_value;
-    }
-
-    int getG() const {
-        return cost;
-    }
+        f_value(f_value) {}
 
     int getF() const {
-        return getG() + getH();
+        return f_value;
+    }
+
+    std::shared_ptr<DummyNode> getParentPtr() const {
+        return parent_node;
     }
 
     bool operator==(DummyNode const & rhs) const {
@@ -45,34 +41,48 @@ namespace std
 
 class ClosedInitialize : public testing::Test {
 public:
-    DummyNode node1 = DummyNode{0, 1, 2}; // f-value 3
-    DummyNode node2 = DummyNode{1, 1, 2}; // f-value 3
-    DummyNode node3 = DummyNode{2, 1, 2}; // f-value 3
+    DummyNode node0 = DummyNode{0, 3}; // f-value 3
+    DummyNode node1 = DummyNode{1, 3}; // f-value 3
+    DummyNode node2 = DummyNode{2, 3}; // f-value 3
     Closed<DummyNode> closed;
 
     virtual void SetUp() {
-        closed.insert(node3);
-        closed.insert(node1);
         closed.insert(node2);
+        closed.insert(node0);
+        closed.insert(node1);
     }
 };
 
 TEST_F(ClosedInitialize, insertUniqueNode) {
-    auto node = DummyNode{3, 1, 2};
+    auto node = DummyNode{3, 3};
     // insert return true when node needs to be expanded
     ASSERT_TRUE(closed.insert(node));
 }
 
 TEST_F(ClosedInitialize, insertNonUniqueNode) {
-    auto node = DummyNode{0, 2, 1};
+    auto node = DummyNode{0, 3};
     ASSERT_FALSE(closed.insert(node));
 }
 
 // inserting non unique node with lower f-value triggers reopening
 TEST_F(ClosedInitialize, Reopening) {
-    auto node = DummyNode{0, 1, 1};
+    auto node = DummyNode{0, 2};
     ASSERT_TRUE(closed.insert(node));
 }
+
+TEST_F(ClosedInitialize, RebuildPath) {
+    DummyNode node3 = DummyNode{3, 0};
+    DummyNode node4 = DummyNode{4, 0};
+    node4.parent_node = std::make_shared<DummyNode>(node3);
+    DummyNode node5 = DummyNode{5, 0};
+    node5.parent_node = std::make_shared<DummyNode>(node4);
+    EXPECT_TRUE(closed.insert(node3));
+    EXPECT_TRUE(closed.insert(node4));
+    EXPECT_TRUE(closed.insert(node5));
+    ASSERT_THAT(closed.getPath(node5),
+                testing::ElementsAre(node3, node4, node5));
+}
+
 
 int main(int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
