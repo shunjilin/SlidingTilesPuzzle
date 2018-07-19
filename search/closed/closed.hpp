@@ -39,11 +39,11 @@ std::vector<Node> Closed<Node>::getPath(Node const &node) const {
     auto found = closed.find(node);
     while (found != closed.end()) {
         path.push_back(*found);
-        auto parent_ptr = found->getParentPtr();
-        if (!parent_ptr) {
+        auto parent = found->getParent();
+        if (!parent.has_value()) {
             break;
         }
-        found = closed.find(*parent_ptr);
+        found = closed.find(*parent);
     }
     std::reverse(path.begin(), path.end());
     return path;

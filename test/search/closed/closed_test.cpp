@@ -1,5 +1,6 @@
 #include "closed.hpp"
 #include <memory>
+#include <optional>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -16,8 +17,11 @@ struct DummyNode {
         return f_value;
     }
 
-    std::shared_ptr<DummyNode> getParentPtr() const {
-        return parent_node;
+    std::optional<DummyNode> getParent() const {
+        if (parent_node) {
+            return *parent_node;
+        }
+        return {};
     }
 
     bool operator==(DummyNode const & rhs) const {

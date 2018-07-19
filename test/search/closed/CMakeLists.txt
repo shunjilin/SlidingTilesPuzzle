@@ -7,6 +7,6 @@ target_link_libraries(closed_test
   PRIVATE gmock
   )
 
-target_compile_features(closed_test PUBLIC cxx_std_11)
+target_compile_features(closed_test PUBLIC cxx_std_17)
 
 add_test(closed_test closed_test)
