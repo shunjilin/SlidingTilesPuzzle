@@ -20,6 +20,7 @@ namespace Tiles {
 
         // constructor
         TileNode(Board board,
+                 int cost = 0,
 		 MOVE prev_move = NONE);
 
         // get cost of path to node
@@ -50,8 +51,8 @@ namespace Tiles {
     Heuristic TileNode<Heuristic>::heuristic = Heuristic();
 
     template <typename Heuristic>
-    TileNode<Heuristic>::TileNode(Board board, MOVE prev_move) :
-        board(std::move(board)) , prev_move(prev_move) {}
+    TileNode<Heuristic>::TileNode(Board board, int cost, MOVE prev_move) :
+        board(std::move(board)), cost(cost), prev_move(prev_move) {}
 
     template <typename Heuristic>
     int TileNode<Heuristic>::getG() const {
@@ -77,28 +78,28 @@ namespace Tiles {
         if (prev_move != DOWN) {
             auto up_move = moveBlank<UP>(board);
             if (up_move.has_value()) {
-                child_nodes[UP] = {std::move(*up_move), UP};
+                child_nodes[UP] = {std::move(*up_move),  cost + 1, UP};
             }
         }
 
         if (prev_move != UP) {
             auto down_move = moveBlank<DOWN>(board);
             if (down_move.has_value()) {
-                child_nodes[DOWN] = {std::move(*down_move), DOWN};
+                child_nodes[DOWN] = {std::move(*down_move), cost + 1, DOWN};
             }
         }
 
         if (prev_move != RIGHT) {
             auto left_move = moveBlank<LEFT>(board);
             if (left_move.has_value()) {
-                child_nodes[LEFT] = {std::move(*left_move), LEFT};
+                child_nodes[LEFT] = {std::move(*left_move), cost + 1, LEFT};
             }
         }
 
         if (prev_move != LEFT) {
             auto right_move = moveBlank<RIGHT>(board);
             if (right_move.has_value()) {
-                child_nodes[RIGHT] = {std::move(*right_move), RIGHT};
+                child_nodes[RIGHT] = {std::move(*right_move),  cost + 1, RIGHT};
             }
         }
         

@@ -24,10 +24,8 @@ struct AStar {
             if (closed.insert(node)) {
                 // check goal node
                 if (node.isGoal()) {
-                    // TODO: build path
-                    break;
+                    return closed.getPath(node);
                 }
-                
                 auto child_nodes = node.getChildNodes();
                 for (auto child_node : child_nodes) {
                     if (child_node.has_value()) {
@@ -36,7 +34,6 @@ struct AStar {
                 }
             }
         }
-	return std::vector<Node>();
     }
 };
 

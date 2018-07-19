@@ -47,6 +47,10 @@ TEST_F(TileNodeInitialize, InitializeTileNode) {
     ASSERT_EQ(oss.str(), "1 2 3 4 0 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
 }
 
+TEST_F(TileNodeInitialize, GetCost) {
+    ASSERT_EQ(node.getG(), 0);
+}
+
 TEST_F(TileNodeInitialize, GetHeuristicValue) {
     ASSERT_EQ(node.getH(), 0);
 }
@@ -65,6 +69,11 @@ TEST_F(TileNodeInitialize, GetChildNodes) {
     ASSERT_EQ(oss_left.str(),  "1 2 3 0 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
 
     EXPECT_FALSE(child_nodes[RIGHT].has_value());
+}
+
+TEST_F(TileNodeInitialize, ChildNodesIncreaseCost) {
+    auto child_nodes = node.getChildNodes();
+    ASSERT_EQ(child_nodes[DOWN]->getG(), node.getG() + 1);
 }
 
 TEST_F(TileNodeInitialize, CachePreviousMove) {
