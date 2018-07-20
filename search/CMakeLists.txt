@@ -4,15 +4,15 @@ add_subdirectory(closed)
 
 # astar
 
-add_library(astar STATIC astar.cpp)
+add_library(astar INTERFACE)
 
 target_include_directories(astar
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
   )
 
 target_link_libraries(astar
-  PRIVATE open
-  PRIVATE closed
+  INTERFACE open
+  INTERFACE closed
   )
 
-target_compile_features(astar PUBLIC cxx_std_11)
+target_compile_features(astar INTERFACE cxx_std_11)
