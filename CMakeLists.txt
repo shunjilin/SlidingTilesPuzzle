@@ -7,13 +7,21 @@ enable_testing()
 
 add_subdirectory(search)
 add_subdirectory(test)
+add_subdirectory(utils)
 
 # executables
 add_executable(24Puzzle main.cpp)
 
 target_compile_features(24Puzzle PUBLIC cxx_std_14)
 
+# TODO: make factory library to handle search configuration
 target_link_libraries(24Puzzle
+  PRIVATE cxxopts
+  PRIVATE astar
+  PRIVATE open
+  PRIVATE closed
+  PRIVATE manhattan_distance_heuristic
+  PRIVATE tile_node
   )
 
 # warning flags
