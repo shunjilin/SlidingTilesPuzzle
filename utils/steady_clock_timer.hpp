@@ -28,7 +28,7 @@ public :
 	m_start = steady_clock::now();
     }
 
-    // get the number of milliseconds since timer started
+    // get the elapsed time since timer started
     template<typename TimeUnit>
     milliseconds::rep getElapsedTime() {
 	if (isStarted()) {
