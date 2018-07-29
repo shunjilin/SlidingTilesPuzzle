@@ -1,7 +1,6 @@
 #ifndef TILES_HPP
 #define TILES_HPP
 
-#include "tile_dimensions.hpp"
 #include <vector>
 #include <array>
 #include <memory>
@@ -10,6 +9,11 @@
 #include <optional>
 
 namespace Tiles {
+
+    constexpr int WIDTH = 5,
+        HEIGHT = 5,
+        N_TILES = WIDTH * HEIGHT,
+        N_MOVES = 4;
 
     enum MOVE : char {
         UP, DOWN, LEFT, RIGHT, NONE

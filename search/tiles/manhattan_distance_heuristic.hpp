@@ -2,9 +2,7 @@
 #define MANHATTAN_DISTANCE_HEURISTIC_HPP
 
 #include "tiles.hpp"
-#include "tile_dimensions.hpp"
 #include <array>
-
 
 namespace Tiles {
 
