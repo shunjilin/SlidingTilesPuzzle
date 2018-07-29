@@ -5,6 +5,7 @@
 #include <limits>
 #include <iostream>
 #include <optional>
+#include <iomanip>
 
 namespace Tiles {
 
@@ -39,9 +40,13 @@ namespace Tiles {
     }
 
     std::ostream& operator<<(std::ostream& os, Board const & board) {
-	for (int tile : board.tiles) {
-	    os << tile << " ";
-	}
+        for (int row = 0; row < HEIGHT; ++row) {
+            for (int col = 0; col < WIDTH; ++ col) {
+                os << std::setw(2) <<
+                    static_cast<int>(board.tiles[row * HEIGHT + col]) << " ";
+            }
+            os << "\n";
+        }
 	return os;
     }
 
