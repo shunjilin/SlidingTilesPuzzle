@@ -10,11 +10,13 @@
 
 namespace Tiles {
 
+    // board dimensions
     constexpr int WIDTH = 5,
         HEIGHT = 5,
         N_TILES = WIDTH * HEIGHT,
         N_MOVES = 4;
 
+    // board moves; blank moved in the specified direction
     enum MOVE : char {
         UP, DOWN, LEFT, RIGHT, NONE
     };
@@ -26,14 +28,19 @@ namespace Tiles {
            10 11 12 13 14
            15 16 17 18 19
            20 21 22 23 24 */
+        
+        // tile at each index
         std::array<char, N_TILES> tiles;
 
+        // index of blank
         char blank_idx = std::numeric_limits<char>::max();
 
+        // construct board from array of tiles
         Board(std::array<char, N_TILES> tiles);
 
         bool operator==(Board const & rhs) const;
 
+        // pretty print board
 	friend std::ostream& operator<<(std::ostream& os, Board const & board);
     };
 
@@ -43,7 +50,7 @@ namespace Tiles {
     // get board from new blank index
     Board getBoardFromBlank(Board const & board, char new_blank_idx);
 
-    //board actions
+    // get new board from moving blank in MoveDirection
     template<MOVE MoveDirection>
     std::optional<Board> moveBlank(Board const& board);
     

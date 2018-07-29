@@ -39,6 +39,7 @@ namespace Tiles {
         return new_board;
     }
 
+    // pretty print board
     std::ostream& operator<<(std::ostream& os, Board const & board) {
         for (int row = 0; row < HEIGHT; ++row) {
             for (int col = 0; col < WIDTH; ++ col) {
