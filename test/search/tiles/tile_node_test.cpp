@@ -102,6 +102,10 @@ TEST_F(TileNodeInitialize, GetParentNode) {
     ASSERT_EQ(*child_node.getParent(), node);
 }
 
+TEST_F(TileNodeInitialize, Node28Bytes) {
+    ASSERT_EQ(sizeof(node), 28);
+}
+
 int main(int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

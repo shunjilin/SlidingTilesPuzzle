@@ -11,15 +11,16 @@ namespace Tiles {
     struct TileNode {
 
         Board board;
-        int cost = 0; // g-value
 
         // caching to prevent regeneration of parent node
         MOVE prev_move = NONE;
+        
+        unsigned char cost = 0; // g-value
 
         // constructor
         TileNode(Board board,
-                 int cost = 0,
-		 MOVE prev_move = NONE);
+		 MOVE prev_move = NONE,
+                 unsigned char cost = 0);
 
         // get cost of path to node
         int getG() const;
@@ -58,12 +59,12 @@ namespace Tiles {
     Board TileNode<Heuristic>::goal_board = Board({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24});
 
     template <typename Heuristic>
-    TileNode<Heuristic>::TileNode(Board board, int cost, MOVE prev_move) :
-        board(std::move(board)), cost(cost), prev_move(prev_move) {}
+    TileNode<Heuristic>::TileNode(Board board, MOVE prev_move, unsigned char cost) :
+        board(std::move(board)), prev_move(prev_move), cost(cost) {}
 
     template <typename Heuristic>
     int TileNode<Heuristic>::getG() const {
-        return cost;
+        return static_cast<int>(cost);
     }
 
     template <typename Heuristic>
@@ -81,6 +82,8 @@ namespace Tiles {
         return board == goal_board;
     }
 
+    using uchar = unsigned char;
+    
     // generate child nodes from current node
     template <typename Heuristic>
     std::array< std::optional< TileNode<Heuristic> >, N_MOVES >
@@ -90,28 +93,32 @@ namespace Tiles {
         if (prev_move != DOWN) {
             auto up_move = moveBlank<UP>(board);
             if (up_move.has_value()) {
-                child_nodes[UP] = {std::move(*up_move),  cost + 1, UP};
+                child_nodes[UP] = {std::move(*up_move),  UP,
+                                   static_cast<uchar>(cost + 1)};
             }
         }
 
         if (prev_move != UP) {
             auto down_move = moveBlank<DOWN>(board);
             if (down_move.has_value()) {
-                child_nodes[DOWN] = {std::move(*down_move), cost + 1, DOWN};
+                child_nodes[DOWN] = {std::move(*down_move), DOWN,
+                                     static_cast<uchar>(cost + 1)};
             }
         }
 
         if (prev_move != RIGHT) {
             auto left_move = moveBlank<LEFT>(board);
             if (left_move.has_value()) {
-                child_nodes[LEFT] = {std::move(*left_move), cost + 1, LEFT};
+                child_nodes[LEFT] = {std::move(*left_move), LEFT,
+                                     static_cast<uchar>(cost + 1)};
             }
         }
 
         if (prev_move != LEFT) {
             auto right_move = moveBlank<RIGHT>(board);
             if (right_move.has_value()) {
-                child_nodes[RIGHT] = {std::move(*right_move),  cost + 1, RIGHT};
+                child_nodes[RIGHT] = {std::move(*right_move), RIGHT,
+                                      static_cast<uchar>(cost + 1)};
             }
         }
         
