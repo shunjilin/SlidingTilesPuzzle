@@ -29,9 +29,12 @@ public:
 };
 
 TEST_F(BoardInitialize, InitializeTiles) {
-    std::ostringstream oss;
-    oss << board;
-    ASSERT_EQ(oss.str(), "1 2 3 4 0 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
+    ASSERT_THAT(board.tiles,
+                testing::ElementsAre(1, 2, 3, 4, 0,
+                                     5, 6, 7, 8, 9,
+                                     10, 11, 12, 13, 14,
+                                     15, 16, 17, 18, 19,
+                                     20, 21, 22, 23, 24));
 }
 
 TEST_F(BoardInitialize, getBlankPosition) {
@@ -40,9 +43,12 @@ TEST_F(BoardInitialize, getBlankPosition) {
 
 TEST_F(BoardInitialize, getBoardFromNewBlank) {
     auto new_board = getBoardFromBlank(board, 3);
-    std::ostringstream oss;
-    oss << new_board;
-    ASSERT_EQ(oss.str(), "1 2 3 0 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
+    ASSERT_THAT(new_board.tiles,
+                testing::ElementsAre(1, 2, 3, 0, 4,
+                                     5, 6, 7, 8, 9,
+                                     10, 11, 12, 13, 14,
+                                     15, 16, 17, 18, 19,
+                                     20, 21, 22, 23, 24));
 }
 
 TEST_F(BoardInitialize, getBoardFromMoveBlankUp) {
@@ -52,16 +58,22 @@ TEST_F(BoardInitialize, getBoardFromMoveBlankUp) {
 
 TEST_F(BoardInitialize, getBoardFromMoveBlankDown) {
     auto new_board = moveBlank<DOWN>(board);
-    std::ostringstream oss;
-    oss << *new_board;
-    ASSERT_EQ(oss.str(), "1 2 3 4 9 5 6 7 8 0 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
+    ASSERT_THAT(new_board->tiles,
+                testing::ElementsAre(1, 2, 3, 4, 9,
+                                     5, 6, 7, 8, 0,
+                                     10, 11, 12, 13, 14,
+                                     15, 16, 17, 18, 19,
+                                     20, 21, 22, 23, 24));
 }
 
 TEST_F(BoardInitialize, getBoardFromMoveBlankLeft) {
     auto new_board = moveBlank<LEFT>(board);
-    std::ostringstream oss;
-    oss << *new_board;
-    ASSERT_EQ(oss.str(), "1 2 3 0 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
+    ASSERT_THAT(new_board->tiles,
+                testing::ElementsAre(1, 2, 3, 0, 4,
+                                     5, 6, 7, 8, 9,
+                                     10, 11, 12, 13, 14,
+                                     15, 16, 17, 18, 19,
+                                     20, 21, 22, 23, 24));
 }
 
 TEST_F(BoardInitialize, getBoardFromMoveBlankRight) {
