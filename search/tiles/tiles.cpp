@@ -28,7 +28,8 @@ namespace Tiles {
     }
 
     // swap blank tile with new blank tile to get new board configuration
-    Board getBoardFromBlank(Board const & board, char new_blank_idx) {
+    Board getBoardFromBlank(Board const & board,
+                            char new_blank_idx) {
         auto new_board = board;
         // move blank tile
         std::swap(new_board.tiles[board.blank_idx],
@@ -85,4 +86,15 @@ namespace Tiles {
         }
         return {};
     }
-};
+    
+}
+
+namespace std {
+    size_t hash<Tiles::Board>::operator() (const Tiles::Board& board) const {
+        size_t result = 0;
+        for (auto i = 0; i < Tiles::N_TILES; ++i) {
+            result = result * 31 + hash<int>()(board.tiles[i]);
+        }
+        return result;
+    }
+}

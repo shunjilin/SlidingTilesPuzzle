@@ -51,15 +51,9 @@ namespace std
     template<>
     struct hash<Tiles::Board>
     {
-        size_t
-        operator() (const Tiles::Board& board) const
-        {
-            size_t result = 0;
-            for (auto i = 0; i < Tiles::N_TILES; ++i) {
-                result = result * 31 + hash<int>()(board.tiles[i]);
-            }
-            return result;
-        }
+        size_t operator() (const Tiles::Board& board) const;
     };
 }
+
+
 #endif
