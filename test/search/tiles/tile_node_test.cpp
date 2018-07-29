@@ -42,9 +42,12 @@ public:
 };
 
 TEST_F(TileNodeInitialize, InitializeTileNode) {
-    std::ostringstream oss;
-    oss << node.board;
-    ASSERT_EQ(oss.str(), "1 2 3 4 0 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
+    ASSERT_THAT(node.board.tiles,
+                testing::ElementsAre(1, 2, 3, 4, 0,
+                                     5, 6, 7, 8, 9,
+                                     10, 11, 12, 13, 14,
+                                     15, 16, 17, 18, 19,
+                                     20, 21, 22, 23, 24));
 }
 
 TEST_F(TileNodeInitialize, GetCost) {
@@ -60,14 +63,20 @@ TEST_F(TileNodeInitialize, GetChildNodes) {
     
     EXPECT_FALSE(child_nodes[UP].has_value());
 
-    std::ostringstream oss_down;
-    oss_down << (*child_nodes[DOWN]).board;
-    ASSERT_EQ(oss_down.str(),  "1 2 3 4 9 5 6 7 8 0 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
+    EXPECT_THAT(child_nodes[DOWN]->board.tiles,
+                testing::ElementsAre(1, 2, 3, 4, 9,
+                                     5, 6, 7, 8, 0,
+                                     10, 11, 12, 13, 14,
+                                     15, 16, 17, 18, 19,
+                                     20, 21, 22, 23, 24));
 
-    std::ostringstream oss_left;
-    oss_left << (*child_nodes[LEFT]).board;
-    ASSERT_EQ(oss_left.str(),  "1 2 3 0 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 ");
-
+    EXPECT_THAT(child_nodes[LEFT]->board.tiles,
+                testing::ElementsAre(1, 2, 3, 0, 4,
+                                     5, 6, 7, 8, 9,
+                                     10, 11, 12, 13, 14,
+                                     15, 16, 17, 18, 19,
+                                     20, 21, 22, 23, 24));
+            
     EXPECT_FALSE(child_nodes[RIGHT].has_value());
 }
 
