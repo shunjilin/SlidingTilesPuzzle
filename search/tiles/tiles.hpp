@@ -7,20 +7,26 @@
 #include <limits>
 #include <iostream>
 #include <optional>
+#include <iomanip>
+#include <algorithm>
 
 namespace Tiles {
 
-    // board dimensions
-    constexpr int WIDTH = 5,
-        HEIGHT = 5,
-        N_TILES = WIDTH * HEIGHT,
-        N_MOVES = 4;
+    template<int WIDTH, int HEIGHT>
+    std::array<char, WIDTH*HEIGHT> getDefaultTiles() {
+        std::array<char, WIDTH*HEIGHT> tiles;
+        for (int i = 0; i < WIDTH*HEIGHT; ++i) {
+            tiles[i] = i;
+        }
+        return tiles;
+    }
 
     // board moves; blank moved in the specified direction
     enum MOVE : char {
-        UP, DOWN, LEFT, RIGHT, NONE
+        UP, DOWN, LEFT, RIGHT, N_MOVES, NONE
     };
 
+    template<int WIDTH, int HEIGHT=WIDTH>
     struct Board {
         // tile values, indexed as follows:
         /* 0  1  2  3  4 
@@ -30,41 +36,85 @@ namespace Tiles {
            20 21 22 23 24 */
         
         // tile at each index
-        std::array<char, N_TILES> tiles;
+        std::array<char, WIDTH*HEIGHT> tiles = std::array<char, WIDTH*HEIGHT>();
 
         // index of blank
         char blank_idx = std::numeric_limits<char>::max();
-
+        
         // construct board from array of tiles
-        Board(std::array<char, N_TILES> tiles);
+        Board(std::array<char, WIDTH*HEIGHT> tiles) : tiles(std::move(tiles)) {
+            getBlankIdx();
+        }
 
-        bool operator==(Board const & rhs) const;
+        bool operator==(Board<WIDTH, HEIGHT> const & rhs) const {
+            return tiles == rhs.tiles;
+        }
 
-        // pretty print board
-	friend std::ostream& operator<<(std::ostream& os, Board const & board);
+        // get index of current blank tile
+        char getBlankIdx() {
+            // not cached, do linear scan
+            if (blank_idx == std::numeric_limits<char>::max()) {
+                 auto blank_iter = std::find(tiles.begin(), tiles.end(), 0);
+                 blank_idx = std::distance(tiles.begin(), blank_iter);
+            }
+            return blank_idx;
+        }
+
+        // swap blank tile with new blank tile to get new board configuration
+        Board<WIDTH, HEIGHT> getBoardFromBlank(char new_blank_idx) const {
+            auto new_board = *this;
+            // move blank tile
+            std::swap(new_board.tiles[blank_idx],
+                      new_board.tiles[new_blank_idx]);
+            new_board.blank_idx = new_blank_idx;
+            return new_board;
+        }
+
+        // get new board from moving blank
+        // partial template specializations for functions note allowed!
+        // fall back to switch statements
+        std::optional<Board<WIDTH, HEIGHT> > moveBlank(MOVE move) const {
+            switch(move) {
+            case UP :
+                if (blank_idx >= WIDTH) {
+                    return getBoardFromBlank(blank_idx - WIDTH);
+                }
+                break;
+            case DOWN:
+                if (blank_idx < (WIDTH * (HEIGHT - 1))) {
+                    return getBoardFromBlank(blank_idx + WIDTH);
+                }
+                break;
+            case LEFT:
+                if ((blank_idx % WIDTH) != 0) {
+                    return getBoardFromBlank(blank_idx - 1);
+                }
+                break;
+            case RIGHT:
+                if ((blank_idx % WIDTH) != (WIDTH - 1)) {
+                    return getBoardFromBlank(blank_idx + 1);   
+                }
+                break;
+            default:
+                break;
+            }
+            return {};
+        }
     };
 
-    // get index of current blank tile
-    char getBlankIdx(Board const & board);
-
-    // get board from new blank index
-    Board getBoardFromBlank(Board const & board, char new_blank_idx);
-
-    // get new board from moving blank in MoveDirection
-    template<MOVE MoveDirection>
-    std::optional<Board> moveBlank(Board const& board);
-    
+    // pretty print board
+    template<int WIDTH, int HEIGHT>
+    std::ostream& operator<< (std::ostream& os,
+                              Board<WIDTH, HEIGHT> const & board) {
+        for (int row = 0; row < HEIGHT; ++row) {
+            for (int col = 0; col < WIDTH; ++ col) {
+                os << std::setw(2) <<
+                    static_cast<int>(board.tiles[row * HEIGHT + col]) << " ";
+            }
+            os << "\n";
+        }
+	return os;
+    }
 }
-
-// overload default hash
-namespace std
-{
-    template<>
-    struct hash<Tiles::Board>
-    {
-        size_t operator() (const Tiles::Board& board) const;
-    };
-}
-
 
 #endif

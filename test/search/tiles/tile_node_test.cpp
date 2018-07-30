@@ -9,21 +9,121 @@
 using namespace Tiles;
 
 // dummy heuristic function
+template<int WIDTH, int HEIGHT>
 struct DummyHeuristic {
 
-    int getH(Board const & board) const {
+    int getH(Board<WIDTH, HEIGHT> const & board) const {
         return 0;
     }
     
 };
 
-class TileNodeInitialize: public testing::Test {
+class FifteenPuzzleNode: public testing::Test {
 public:
+
+    static int const WIDTH = 4;
+    static int const HEIGHT = 4;
+    static int const N_TILES = WIDTH*HEIGHT;
+    
+    std::array<char, N_TILES> initial_tiles = std::array<char, N_TILES>
+        ({{1, 2, 3, 7, 4, 5, 6, 0, 8, 9, 10, 11, 12, 13, 14, 15}});
+    
+    Board<WIDTH, HEIGHT> board = Board<WIDTH, HEIGHT>(initial_tiles);
+    // initial board
+    /* 1  2  3  7
+       4  5  6  0
+       8  9  10 11
+       12 13 14 15 */
+    
+    // goal board
+    /* 0  1  2  3
+       4  5  6  7
+       8  9  10 11
+       12 13 14 15 */
+
+    TileNode<WIDTH, HEIGHT, DummyHeuristic<WIDTH, HEIGHT> > node =
+        TileNode<WIDTH, HEIGHT, DummyHeuristic<WIDTH, HEIGHT> >(board);
+};
+
+TEST_F(FifteenPuzzleNode, InitializeTileNode) {
+    ASSERT_THAT(node.board.tiles,
+                testing::ElementsAre(1, 2, 3, 7,
+                                     4, 5, 6, 0,
+                                     8, 9, 10, 11,
+                                     12, 13, 14, 15));
+}
+
+TEST_F(FifteenPuzzleNode, GetCost) {
+    ASSERT_EQ(node.getG(), 0);
+}
+
+TEST_F(FifteenPuzzleNode, GetHeuristicValue) {
+    ASSERT_EQ(node.getH(), 0);
+}
+
+TEST_F(FifteenPuzzleNode, GetChildNodes) {
+    auto child_nodes = node.getChildNodes();
+
+    EXPECT_THAT(child_nodes[UP]->board.tiles,
+                testing::ElementsAre(1, 2, 3, 0,
+                                     4, 5, 6, 7,
+                                     8, 9, 10, 11,
+                                     12, 13, 14, 15));
+
+    EXPECT_THAT(child_nodes[DOWN]->board.tiles,
+                testing::ElementsAre(1, 2, 3, 7,
+                                     4, 5, 6, 11,
+                                     8, 9, 10, 0,
+                                     12, 13, 14, 15));
+
+    EXPECT_THAT(child_nodes[LEFT]->board.tiles,
+                testing::ElementsAre(1, 2, 3, 7,
+                                     4, 5, 0, 6,
+                                     8, 9, 10, 11,
+                                     12, 13, 14, 15));
+            
+    EXPECT_FALSE(child_nodes[RIGHT].has_value());
+}
+
+TEST_F(FifteenPuzzleNode, ChildNodesIncreaseCost) {
+    auto child_nodes = node.getChildNodes();
+    ASSERT_EQ(child_nodes[DOWN]->getG(), node.getG() + 1);
+}
+
+TEST_F(FifteenPuzzleNode, CachePreviousMove) {
+    auto child_nodes = node.getChildNodes();
+
+    ASSERT_EQ(child_nodes[DOWN]->prev_move, DOWN);
+}
+
+TEST_F(FifteenPuzzleNode, DoNotRegenerateParentNode) {
+    auto child_nodes = node.getChildNodes();
+    auto grandchild_nodes = child_nodes[DOWN]->getChildNodes();
+    ASSERT_FALSE(grandchild_nodes[UP].has_value());
+}
+
+TEST_F(FifteenPuzzleNode, GetParentNode) {
+    auto child_node = *node.getChildNodes()[DOWN];
+    ASSERT_EQ(*child_node.getParent(), node);
+}
+
+TEST_F(FifteenPuzzleNode, Node19Bytes) {
+    ASSERT_EQ(sizeof(node), 19);
+}
+
+
+class TwentyFourPuzzleNode: public testing::Test {
+public:
+
+    static int const WIDTH = 5;
+    static int const HEIGHT = 5;
+    static int const N_TILES = WIDTH*HEIGHT;
+    
     std::array<char, N_TILES> initial_tiles = std::array<char, N_TILES>
         ({{1, 2, 3, 4, 0, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
            15, 16, 17, 18, 19, 20, 21, 22, 23, 24}});
     
-    Board board = Board(initial_tiles);
+    Board<WIDTH, HEIGHT> board = Board<WIDTH, HEIGHT>(initial_tiles);
     // initial board
     /* 1  2  3  4  0
        5  6  7  8  9
@@ -38,10 +138,11 @@ public:
        15 16 17 18 19
        20 21 22 23 24 */
 
-    TileNode<DummyHeuristic> node = TileNode<DummyHeuristic>(board);
+    TileNode<WIDTH, HEIGHT, DummyHeuristic<WIDTH, HEIGHT> > node =
+        TileNode<WIDTH, HEIGHT, DummyHeuristic<WIDTH, HEIGHT> >(board);
 };
 
-TEST_F(TileNodeInitialize, InitializeTileNode) {
+TEST_F(TwentyFourPuzzleNode, InitializeTileNode) {
     ASSERT_THAT(node.board.tiles,
                 testing::ElementsAre(1, 2, 3, 4, 0,
                                      5, 6, 7, 8, 9,
@@ -50,15 +151,15 @@ TEST_F(TileNodeInitialize, InitializeTileNode) {
                                      20, 21, 22, 23, 24));
 }
 
-TEST_F(TileNodeInitialize, GetCost) {
+TEST_F(TwentyFourPuzzleNode, GetCost) {
     ASSERT_EQ(node.getG(), 0);
 }
 
-TEST_F(TileNodeInitialize, GetHeuristicValue) {
+TEST_F(TwentyFourPuzzleNode, GetHeuristicValue) {
     ASSERT_EQ(node.getH(), 0);
 }
 
-TEST_F(TileNodeInitialize, GetChildNodes) {
+TEST_F(TwentyFourPuzzleNode, GetChildNodes) {
     auto child_nodes = node.getChildNodes();
     
     EXPECT_FALSE(child_nodes[UP].has_value());
@@ -80,29 +181,29 @@ TEST_F(TileNodeInitialize, GetChildNodes) {
     EXPECT_FALSE(child_nodes[RIGHT].has_value());
 }
 
-TEST_F(TileNodeInitialize, ChildNodesIncreaseCost) {
+TEST_F(TwentyFourPuzzleNode, ChildNodesIncreaseCost) {
     auto child_nodes = node.getChildNodes();
     ASSERT_EQ(child_nodes[DOWN]->getG(), node.getG() + 1);
 }
 
-TEST_F(TileNodeInitialize, CachePreviousMove) {
+TEST_F(TwentyFourPuzzleNode, CachePreviousMove) {
     auto child_nodes = node.getChildNodes();
 
     ASSERT_EQ(child_nodes[DOWN]->prev_move, DOWN);
 }
 
-TEST_F(TileNodeInitialize, DoNotRegenerateParentNode) {
+TEST_F(TwentyFourPuzzleNode, DoNotRegenerateParentNode) {
     auto child_nodes = node.getChildNodes();
     auto grandchild_nodes = child_nodes[DOWN]->getChildNodes();
     ASSERT_FALSE(grandchild_nodes[UP].has_value());
 }
 
-TEST_F(TileNodeInitialize, GetParentNode) {
+TEST_F(TwentyFourPuzzleNode, GetParentNode) {
     auto child_node = *node.getChildNodes()[DOWN];
     ASSERT_EQ(*child_node.getParent(), node);
 }
 
-TEST_F(TileNodeInitialize, Node28Bytes) {
+TEST_F(TwentyFourPuzzleNode, Node28Bytes) {
     ASSERT_EQ(sizeof(node), 28);
 }
 

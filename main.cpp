@@ -11,6 +11,9 @@
 #include <sstream>
 
 int main(int argc, char *argv[]) {
+    int const WIDTH = 5;
+    int const HEIGHT = 5;
+    int const N_TILES = WIDTH*HEIGHT;
     
     cxxopts::Options options("24 Puzzle Search",
                              "Search algorithms for solving the 24 puzzle.");
@@ -21,21 +24,24 @@ int main(int argc, char *argv[]) {
         ("i,initial_state", "initial state configuration",
          cxxopts::value<std::string>());
 
+    std::array<char, N_TILES> initial_tiles;
+    
     // parse command line
     auto result = options.parse(argc, argv);
 
-    std::array<char, Tiles::N_TILES> initial_tiles;
     auto initial_tiles_string = result["initial_state"].as<std::string>();
     std::istringstream iss(initial_tiles_string);
+
     
-    for (int i = 0; i < Tiles::N_TILES; ++i) {
+    for (int i = 0; i < N_TILES; ++i) {
         std::string tile_string;
         iss >> tile_string;
         initial_tiles[i] = std::stoi(tile_string);
     }
-
-    auto board = Tiles::Board(initial_tiles);
-    using Node = Tiles::TileNode<Tiles::ManhattanDistanceHeuristic>;
+    
+    auto board = Tiles::Board<WIDTH, HEIGHT>(initial_tiles);
+    using Heuristic = Tiles::ManhattanDistanceHeuristic<WIDTH, HEIGHT>;
+    using Node = Tiles::TileNode<WIDTH, HEIGHT, Heuristic>;
     auto initial_node = Node(board);
     auto astar = AStar<Node, Open<Node>, Closed<Node> >();
 

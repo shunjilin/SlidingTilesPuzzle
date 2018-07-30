@@ -3,14 +3,33 @@
 
 #include <array>
 #include <optional>
+#include <numeric>
 #include "tiles.hpp"
 
 namespace Tiles {
+
+    using uchar = unsigned char;
+
+    // returns goal board, where value at each index = index
+    template<int WIDTH, int HEIGHT>
+    Board<WIDTH, HEIGHT> getGoalBoard() {
+        std::array<char, WIDTH*HEIGHT> tiles;
+        for (int i = 0; i < WIDTH*HEIGHT; ++i) {
+            tiles[i] = i;
+        }
+        return Board<WIDTH, HEIGHT>(tiles);
+    }
     
-    template <typename Heuristic>
+    template <int WIDTH, int HEIGHT, typename Heuristic>
     struct TileNode {
 
-        Board board;
+        // Heuristic function used
+        static Heuristic heuristic;
+        
+        // goal board configuration
+        static Board<WIDTH, HEIGHT> goal_board;
+
+        Board<WIDTH, HEIGHT> board;
 
         // caching to prevent regeneration of parent node
         MOVE prev_move = NONE;
@@ -18,142 +37,115 @@ namespace Tiles {
         unsigned char cost = 0; // g-value
 
         // constructor
-        TileNode(Board board,
+        TileNode(Board<WIDTH, HEIGHT> board,
 		 MOVE prev_move = NONE,
-                 unsigned char cost = 0);
+                 unsigned char cost = 0) :
+            board(std::move(board)), prev_move(prev_move), cost(cost) {}
 
         // get cost of path to node
-        int getG() const;
+        int getG() const {
+            return static_cast<int>(cost);
+        }
 
         // get heuristic value of node
-        int getH() const;
+        int getH() const {
+            return heuristic.getH(board);
+        }
 
         // get g + h value
-        int getF() const; 
-
-        // get nodes that can be generated from current node
-        std::array< std::optional< TileNode<Heuristic> >, N_MOVES >
-        getChildNodes() const;
-
-        // get parent node
-        std::optional<TileNode<Heuristic> >
-        getParent() const;
+        int getF() const {
+             return getG() + getH();
+        }
 
         // check if node is goal node
-        bool isGoal() const;
+        bool isGoal() const {
+            return board == goal_board;
+        }
 
-        bool operator==(TileNode<Heuristic> const & rhs) const {
+        bool operator==(TileNode<WIDTH, HEIGHT, Heuristic> const & rhs) const {
             return board == rhs.board;
         }
-        
-        static Heuristic heuristic;
-        
-        // goal board configuration
-        static Board goal_board;
+
+        // get nodes that can be generated from current node
+        std::array< std::optional< TileNode<WIDTH, HEIGHT, Heuristic> >, N_MOVES >
+        getChildNodes() const {
+            std::array<
+                std::optional< TileNode<WIDTH, HEIGHT, Heuristic> >, N_MOVES
+                > child_nodes;
+            if (prev_move != DOWN) {
+                auto child_node = board.moveBlank(UP);
+                if (child_node.has_value()) {
+                    child_nodes[UP] = {std::move(*child_node),  UP,
+                                       static_cast<uchar>(cost + 1)};
+                }
+            }
+            if (prev_move != UP) {
+                auto child_board = board.moveBlank(DOWN);
+                if (child_board.has_value()) {
+                    child_nodes[DOWN] = {std::move(*child_board), DOWN,
+                                         static_cast<uchar>(cost + 1)};
+                }
+            }
+            if (prev_move != RIGHT) {
+                auto child_board = board.moveBlank(LEFT);
+                if (child_board.has_value()) {
+                    child_nodes[LEFT] = {std::move(*child_board), LEFT,
+                                         static_cast<uchar>(cost + 1)};
+                }
+            }
+            if (prev_move != LEFT) {
+                auto child_board = board.moveBlank(RIGHT);
+                if (child_board.has_value()) {
+                    child_nodes[RIGHT] = {std::move(*child_board), RIGHT,
+                                          static_cast<uchar>(cost + 1)};
+                }
+            }
+            return child_nodes;   
+        }
+
+        // get parent node
+        std::optional<TileNode<WIDTH, HEIGHT, Heuristic> >
+        getParent() const {     
+            if (prev_move == UP) {
+                return TileNode<WIDTH, HEIGHT, Heuristic>{*board.moveBlank(DOWN), NONE};
+            }
+            if (prev_move == DOWN) {
+                return TileNode<WIDTH, HEIGHT, Heuristic>{*board.moveBlank(UP), NONE};
+            }
+            if (prev_move == LEFT) {
+                return TileNode<WIDTH, HEIGHT, Heuristic>{*board.moveBlank(RIGHT), NONE};
+            }
+            if (prev_move == RIGHT) {
+                return TileNode<WIDTH, HEIGHT, Heuristic>{*board.moveBlank(LEFT), NONE};
+            }
+            return {};
+        }
     };
 
-    template <typename Heuristic>
-    Heuristic TileNode<Heuristic>::heuristic = Heuristic();
-
-    template <typename Heuristic>
-    Board TileNode<Heuristic>::goal_board = Board({0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24});
-
-    template <typename Heuristic>
-    TileNode<Heuristic>::TileNode(Board board, MOVE prev_move, unsigned char cost) :
-        board(std::move(board)), prev_move(prev_move), cost(cost) {}
-
-    template <typename Heuristic>
-    int TileNode<Heuristic>::getG() const {
-        return static_cast<int>(cost);
-    }
-
-    template <typename Heuristic>
-    int TileNode<Heuristic>::getH() const {
-        return heuristic.getH(board);
-    }
-
-    template <typename Heuristic>
-    int TileNode<Heuristic>::getF() const {
-        return getG() + getH();
-    }
-
-    template <typename Heuristic>
-    bool TileNode<Heuristic>::isGoal() const {
-        return board == goal_board;
-    }
-
-    using uchar = unsigned char;
-    
-    // generate child nodes from current node
-    template <typename Heuristic>
-    std::array< std::optional< TileNode<Heuristic> >, N_MOVES >
-    TileNode<Heuristic>::getChildNodes() const {
-        std::array< std::optional< TileNode<Heuristic> >, N_MOVES > child_nodes;
-
-        if (prev_move != DOWN) {
-            auto up_move = moveBlank<UP>(board);
-            if (up_move.has_value()) {
-                child_nodes[UP] = {std::move(*up_move),  UP,
-                                   static_cast<uchar>(cost + 1)};
-            }
-        }
-
-        if (prev_move != UP) {
-            auto down_move = moveBlank<DOWN>(board);
-            if (down_move.has_value()) {
-                child_nodes[DOWN] = {std::move(*down_move), DOWN,
-                                     static_cast<uchar>(cost + 1)};
-            }
-        }
-
-        if (prev_move != RIGHT) {
-            auto left_move = moveBlank<LEFT>(board);
-            if (left_move.has_value()) {
-                child_nodes[LEFT] = {std::move(*left_move), LEFT,
-                                     static_cast<uchar>(cost + 1)};
-            }
-        }
-
-        if (prev_move != LEFT) {
-            auto right_move = moveBlank<RIGHT>(board);
-            if (right_move.has_value()) {
-                child_nodes[RIGHT] = {std::move(*right_move), RIGHT,
-                                      static_cast<uchar>(cost + 1)};
-            }
-        }
-        
-        return child_nodes;
-    }
-
-    template <typename Heuristic>
-    std::optional< TileNode<Heuristic> >
-    TileNode<Heuristic>::getParent() const {
-        if (prev_move == UP) {
-            return TileNode<Heuristic>{*moveBlank<DOWN>(board), NONE};
-        }
-        if (prev_move == DOWN) {
-            return TileNode<Heuristic>{*moveBlank<UP>(board), NONE};
-        }
-        if (prev_move == LEFT) {
-            return TileNode<Heuristic>{*moveBlank<RIGHT>(board), NONE};
-        }
-        if (prev_move == RIGHT) {
-            return TileNode<Heuristic>{*moveBlank<LEFT>(board), NONE};
-        }
-        return {};
-    }
 }
+
+template <int WIDTH, int HEIGHT, typename Heuristic>
+Heuristic Tiles::TileNode<WIDTH, HEIGHT, Heuristic>::heuristic = Heuristic();
+
+template <int WIDTH, int HEIGHT, typename Heuristic>
+Tiles::Board<WIDTH, HEIGHT> Tiles::TileNode<WIDTH, HEIGHT, Heuristic>::goal_board =
+    Tiles::getGoalBoard<WIDTH, HEIGHT>();
+
 
 // overload default hash
 namespace std
 {
-    template<typename Heuristic>
-    struct hash<Tiles::TileNode<Heuristic> >
+    template<int WIDTH, int HEIGHT, typename Heuristic>
+    struct hash<Tiles::TileNode<WIDTH, HEIGHT, Heuristic> >
     {
         size_t
-        operator() (const Tiles::TileNode<Heuristic>& node) const
+        operator() (const Tiles::TileNode<WIDTH, HEIGHT, Heuristic>& node) const
         {
-            return hash<Tiles::Board>()(node.board);
+            size_t result = 0;
+            for (auto i = 0; i < WIDTH*HEIGHT; ++i) {
+                result = result * 31 + hash<int>()(node.board.tiles[i]);
+            }
+            return result;
         }
     };
 }

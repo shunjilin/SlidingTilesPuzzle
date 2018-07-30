@@ -16,3 +16,4 @@ target_link_libraries(astar_test
   )
 
 add_test(astar_test astar_test)
+

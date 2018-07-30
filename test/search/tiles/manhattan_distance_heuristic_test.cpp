@@ -7,6 +7,7 @@ using namespace Tiles;
 // test manhattan distance functions
 int const WIDTH = 5;
 int const HEIGHT = 5;
+int const N_TILES = WIDTH*HEIGHT;
 
 TEST(ManhattanDistance, correctRowIdx) {
     EXPECT_EQ(getRowIdx(0, ::HEIGHT), 0);
@@ -38,7 +39,7 @@ public:
         ({{1, 2, 3, 4, 0, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
            15, 16, 17, 18, 19, 20, 21, 22, 23, 24}});
     
-    Board board = Board(initial_tiles);
+    Board<WIDTH, HEIGHT> board = Board<WIDTH, HEIGHT>(initial_tiles);
     // initial board
     /* 1  2  3  4  0
        5  6  7  8  9
@@ -52,7 +53,8 @@ public:
        10 11 12 13 14
        15 16 17 18 19
        20 21 22 23 24 */
-    ManhattanDistanceHeuristic heuristic = ManhattanDistanceHeuristic();
+    ManhattanDistanceHeuristic<WIDTH, HEIGHT> heuristic =
+        ManhattanDistanceHeuristic<WIDTH, HEIGHT>();
 };
 
 TEST_F(BoardInitialize, correctManhattanHeuristic) {
