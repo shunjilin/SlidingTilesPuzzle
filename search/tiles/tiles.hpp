@@ -11,16 +11,7 @@
 #include <algorithm>
 
 namespace Tiles {
-
-    template<int WIDTH, int HEIGHT>
-    std::array<char, WIDTH*HEIGHT> getDefaultTiles() {
-        std::array<char, WIDTH*HEIGHT> tiles;
-        for (int i = 0; i < WIDTH*HEIGHT; ++i) {
-            tiles[i] = i;
-        }
-        return tiles;
-    }
-
+    
     // board moves; blank moved in the specified direction
     enum MOVE : char {
         UP, DOWN, LEFT, RIGHT, N_MOVES, NONE
