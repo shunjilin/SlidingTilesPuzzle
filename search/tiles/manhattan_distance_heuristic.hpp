@@ -44,7 +44,12 @@ namespace Tiles {
             
         }
         
-        int getH(Board<WIDTH, HEIGHT> const & board) {
+        // just for type deduction
+        ManhattanDistanceHeuristic(Board<WIDTH, HEIGHT> const & board) {
+            (void)(board);
+        }
+        
+        int getH(Board<WIDTH, HEIGHT> const & board) const {
             int heuristic_value = 0;
             for (int idx = 0; idx < WIDTH*HEIGHT; ++idx) {
                 heuristic_value += table[board.tiles[idx]][idx];

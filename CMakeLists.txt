@@ -10,9 +10,9 @@ add_subdirectory(test)
 add_subdirectory(utils)
 
 # executables
-add_executable(24Puzzle main.cpp)
+add_executable(24Puzzle solver.cpp)
 
-target_compile_features(24Puzzle PUBLIC cxx_std_14)
+target_compile_features(24Puzzle PUBLIC cxx_std_17)
 
 # TODO: make factory library to handle search configuration
 target_link_libraries(24Puzzle

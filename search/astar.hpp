@@ -4,16 +4,18 @@
 #include <memory>
 #include <vector>
 
-template <typename Node, typename Open, typename Closed>
+template <typename Node, typename Heuristic, typename Open, typename Closed>
 struct AStar {
 
     // perform astar search: lazy with reopenings
     // return path to solution
     std::vector<Node>
+    
     search(Node initial_node) {
 
         Open open;
         Closed closed;
+        Heuristic const heuristic;
         
         open.push(std::move(initial_node));
 
@@ -27,12 +29,13 @@ struct AStar {
                 auto child_nodes = node.getChildNodes();
                 for (auto child_node : child_nodes) {
                     if (child_node.has_value()) {
+                        evalH(*child_node, heuristic);
                         open.push(std::move(*child_node));
                     }
                 }
             }
         }
-        return std::vector<Node>();
+        return std::vector<Node>(); // no path found
     }
 };
 

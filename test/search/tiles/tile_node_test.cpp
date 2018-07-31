@@ -8,16 +8,6 @@
 
 using namespace Tiles;
 
-// dummy heuristic function
-template<int WIDTH, int HEIGHT>
-struct DummyHeuristic {
-
-    int getH(Board<WIDTH, HEIGHT> const & board) const {
-        return 0;
-    }
-    
-};
-
 class FifteenPuzzleNode: public testing::Test {
 public:
 
@@ -41,8 +31,8 @@ public:
        8  9  10 11
        12 13 14 15 */
 
-    TileNode<WIDTH, HEIGHT, DummyHeuristic<WIDTH, HEIGHT> > node =
-        TileNode<WIDTH, HEIGHT, DummyHeuristic<WIDTH, HEIGHT> >(board);
+    TileNode<WIDTH, HEIGHT> node =
+        TileNode<WIDTH, HEIGHT>(board);
 };
 
 TEST_F(FifteenPuzzleNode, InitializeTileNode) {
@@ -54,10 +44,6 @@ TEST_F(FifteenPuzzleNode, InitializeTileNode) {
 }
 
 TEST_F(FifteenPuzzleNode, GetCost) {
-    ASSERT_EQ(getG(node), 0);
-}
-
-TEST_F(FifteenPuzzleNode, GetHeuristicValue) {
     ASSERT_EQ(getG(node), 0);
 }
 
@@ -107,8 +93,8 @@ TEST_F(FifteenPuzzleNode, GetParentNode) {
     ASSERT_EQ(*child_node.getParent(), node);
 }
 
-TEST_F(FifteenPuzzleNode, Node19Bytes) {
-    ASSERT_EQ(sizeof(node), 19);
+TEST_F(FifteenPuzzleNode, Node20Bytes) {
+    ASSERT_EQ(sizeof(node), 20);
 }
 
 
@@ -138,8 +124,8 @@ public:
        15 16 17 18 19
        20 21 22 23 24 */
 
-    TileNode<WIDTH, HEIGHT, DummyHeuristic<WIDTH, HEIGHT> > node =
-        TileNode<WIDTH, HEIGHT, DummyHeuristic<WIDTH, HEIGHT> >(board);
+    TileNode<WIDTH, HEIGHT> node =
+        TileNode<WIDTH, HEIGHT>(board);
 };
 
 TEST_F(TwentyFourPuzzleNode, InitializeTileNode) {
@@ -153,10 +139,6 @@ TEST_F(TwentyFourPuzzleNode, InitializeTileNode) {
 
 TEST_F(TwentyFourPuzzleNode, GetCost) {
     ASSERT_EQ(getG(node), 0);
-}
-
-TEST_F(TwentyFourPuzzleNode, GetHeuristicValue) {
-    ASSERT_EQ(getH(node), 0);
 }
 
 TEST_F(TwentyFourPuzzleNode, GetChildNodes) {
@@ -203,8 +185,8 @@ TEST_F(TwentyFourPuzzleNode, GetParentNode) {
     ASSERT_EQ(*child_node.getParent(), node);
 }
 
-TEST_F(TwentyFourPuzzleNode, Node28Bytes) {
-    ASSERT_EQ(sizeof(node), 28);
+TEST_F(TwentyFourPuzzleNode, Node29Bytes) {
+    ASSERT_EQ(sizeof(node), 29);
 }
 
 int main(int argc, char *argv[]) {

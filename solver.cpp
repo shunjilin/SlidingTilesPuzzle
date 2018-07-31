@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     auto initial_tiles_string = result["initial_state"].as<std::string>();
     std::istringstream iss(initial_tiles_string);
 
-    
+    // read tiles
     for (int i = 0; i < N_TILES; ++i) {
         std::string tile_string;
         iss >> tile_string;
@@ -40,10 +40,10 @@ int main(int argc, char *argv[]) {
     }
     
     auto board = Tiles::Board<WIDTH, HEIGHT>(initial_tiles);
-    using Heuristic = Tiles::ManhattanDistanceHeuristic<WIDTH, HEIGHT>;
-    using Node = Tiles::TileNode<WIDTH, HEIGHT, Heuristic>;
-    auto initial_node = Node(board);
-    auto astar = AStar<Node, Open<Node>, Closed<Node> >();
+    auto initial_node = Tiles::TileNode(board);
+    using Node = decltype(initial_node);
+    using Heuristic = decltype(Tiles::ManhattanDistanceHeuristic(board));
+    auto astar = AStar<Node, Heuristic, Open<Node>, Closed<Node> >();
 
     auto timer = SteadyClockTimer();
     timer.start();

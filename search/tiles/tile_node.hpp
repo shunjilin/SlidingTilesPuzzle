@@ -4,6 +4,7 @@
 #include <array>
 #include <optional>
 #include <numeric>
+#include <limits>
 #include "tiles.hpp"
 
 namespace Tiles {
@@ -20,11 +21,8 @@ namespace Tiles {
         return Board<WIDTH, HEIGHT>(tiles);
     }
     
-    template <int WIDTH, int HEIGHT, typename Heuristic>
+    template <int WIDTH, int HEIGHT>
     struct TileNode {
-
-        // Heuristic function used
-        static Heuristic heuristic;
         
         // goal board configuration
         static Board<WIDTH, HEIGHT> goal_board;
@@ -35,22 +33,28 @@ namespace Tiles {
         MOVE prev_move = NONE;
         
         unsigned char cost = 0; // g-value
+         // cached h_val;
+        unsigned char h = std::numeric_limits<unsigned char>::max();
 
+        bool isHCached() const {
+            return h != std::numeric_limits<unsigned char>::max();
+        }
+        
         // constructor
         TileNode(Board<WIDTH, HEIGHT> board,
 		 MOVE prev_move = NONE,
                  unsigned char cost = 0) :
             board(std::move(board)), prev_move(prev_move), cost(cost) {}
 
-        bool operator==(TileNode<WIDTH, HEIGHT, Heuristic> const & rhs) const {
+        bool operator==(TileNode<WIDTH, HEIGHT> const & rhs) const {
             return board == rhs.board;
         }
 
         // get nodes that can be generated from current node
-        std::array< std::optional< TileNode<WIDTH, HEIGHT, Heuristic> >, N_MOVES >
+        std::array< std::optional< TileNode<WIDTH, HEIGHT> >, N_MOVES >
         getChildNodes() const {
             std::array<
-                std::optional< TileNode<WIDTH, HEIGHT, Heuristic> >, N_MOVES
+                std::optional< TileNode<WIDTH, HEIGHT> >, N_MOVES
                 > child_nodes;
             if (prev_move != DOWN) {
                 auto child_node = board.moveBlank(UP);
@@ -84,54 +88,60 @@ namespace Tiles {
         }
 
         // get parent node
-        std::optional<TileNode<WIDTH, HEIGHT, Heuristic> >
+        std::optional<TileNode<WIDTH, HEIGHT> >
         getParent() const {     
             if (prev_move == UP) {
-                return TileNode<WIDTH, HEIGHT, Heuristic>{*board.moveBlank(DOWN), NONE};
+                return TileNode<WIDTH, HEIGHT>{*board.moveBlank(DOWN), NONE};
             }
             if (prev_move == DOWN) {
-                return TileNode<WIDTH, HEIGHT, Heuristic>{*board.moveBlank(UP), NONE};
+                return TileNode<WIDTH, HEIGHT>{*board.moveBlank(UP), NONE};
             }
             if (prev_move == LEFT) {
-                return TileNode<WIDTH, HEIGHT, Heuristic>{*board.moveBlank(RIGHT), NONE};
+                return TileNode<WIDTH, HEIGHT>{*board.moveBlank(RIGHT), NONE};
             }
             if (prev_move == RIGHT) {
-                return TileNode<WIDTH, HEIGHT, Heuristic>{*board.moveBlank(LEFT), NONE};
+                return TileNode<WIDTH, HEIGHT>{*board.moveBlank(LEFT), NONE};
             }
             return {};
         }
     };
 
-    template <int WIDTH, int HEIGHT, typename Heuristic>
-    Heuristic TileNode<WIDTH, HEIGHT, Heuristic>::heuristic = Heuristic();
-
-    template <int WIDTH, int HEIGHT, typename Heuristic>
-    Board<WIDTH, HEIGHT> TileNode<WIDTH, HEIGHT, Heuristic>::goal_board =
+    template <int WIDTH, int HEIGHT>
+    Board<WIDTH, HEIGHT> TileNode<WIDTH, HEIGHT>::goal_board =
         Tiles::getGoalBoard<WIDTH, HEIGHT>();
 
-    // free functions, loose coupling, take advantage of argument dependent lookup
+    // free functions, loose coupling, take advantage of argument dependent
+    // lookup
 
-    // get cost of path to node
+    // evalutate and cache h value
     template <int WIDTH, int HEIGHT, typename Heuristic>
-    int getG(TileNode<WIDTH, HEIGHT, Heuristic> const & node) {
+    void evalH(TileNode<WIDTH, HEIGHT> & node, Heuristic const & heuristic) {
+        if (!node.isHCached()) {
+            node.h = heuristic.getH(node.board);
+        }
+    }
+    
+    // get cost of path to node
+    template <int WIDTH, int HEIGHT>
+    int getG(TileNode<WIDTH, HEIGHT> const & node) {
         return static_cast<int>(node.cost);
     }
 
     // get heuristic value of node
-    template<int WIDTH, int HEIGHT, typename Heuristic>
-    int getH(TileNode<WIDTH, HEIGHT, Heuristic> const & node) {
-        return node.heuristic.getH(node.board);
+    template<int WIDTH, int HEIGHT>
+    int getH(TileNode<WIDTH, HEIGHT> const & node) {
+        return static_cast<int>(node.h);
     }
 
     // get g + h value
-    template<int WIDTH, int HEIGHT, typename Heuristic>
-    int getF(TileNode<WIDTH, HEIGHT, Heuristic> const & node) {
+    template<int WIDTH, int HEIGHT>
+    int getF(TileNode<WIDTH, HEIGHT> const & node) {
         return getG(node) + getH(node);
     }
 
     // check if node is goal node
-    template<int WIDTH, int HEIGHT, typename Heuristic>
-    bool isGoal(TileNode<WIDTH, HEIGHT, Heuristic> const & node) {
+    template<int WIDTH, int HEIGHT>
+    bool isGoal(TileNode<WIDTH, HEIGHT> const & node) {
         return node.board == node.goal_board;
     }
 }
@@ -139,11 +149,11 @@ namespace Tiles {
 // overload default hash
 namespace std
 {
-    template<int WIDTH, int HEIGHT, typename Heuristic>
-    struct hash<Tiles::TileNode<WIDTH, HEIGHT, Heuristic> >
+    template<int WIDTH, int HEIGHT>
+    struct hash<Tiles::TileNode<WIDTH, HEIGHT> >
     {
         size_t
-        operator() (const Tiles::TileNode<WIDTH, HEIGHT, Heuristic>& node) const
+        operator() (const Tiles::TileNode<WIDTH, HEIGHT>& node) const
         {
             size_t result = 0;
             for (auto i = 0; i < WIDTH*HEIGHT; ++i) {

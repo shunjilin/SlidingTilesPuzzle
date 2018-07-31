@@ -12,7 +12,8 @@ int const WIDTH = 5;
 int const HEIGHT = 5;
 int const N_TILES = WIDTH*HEIGHT;
 
-using Node = TileNode<WIDTH, HEIGHT, ManhattanDistanceHeuristic<WIDTH, HEIGHT> >;
+using Node = TileNode<WIDTH, HEIGHT>;
+using Heuristic = ManhattanDistanceHeuristic<WIDTH, HEIGHT>;
 
 class AStarInitialize: public testing::Test {
 public:
@@ -35,10 +36,12 @@ public:
        20 21 22 23 24 */
     Node initial_node =
         Node(initial_board);
+    Heuristic heuristic = Heuristic(initial_board);
+    
 };
 
 TEST_F(AStarInitialize, AStarReturnsCorrectPath) {
-    auto astar = AStar<Node, Open<Node>, Closed<Node> >();
+    auto astar = AStar<Node, Heuristic, Open<Node>, Closed<Node> >();
     auto path = astar.search(initial_node);
     EXPECT_EQ(getG(*(path.end() - 1)), 4);
     ASSERT_EQ(astar.search(initial_node).size(), 5);
