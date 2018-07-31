@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project("24 Puzzle")
+project("Search")
 
 # ctest
 enable_testing()
@@ -10,12 +10,12 @@ add_subdirectory(test)
 add_subdirectory(utils)
 
 # executables
-add_executable(24Puzzle solver.cpp)
+add_executable(Solver solver.cpp)
 
-target_compile_features(24Puzzle PUBLIC cxx_std_17)
+target_compile_features(Solver PUBLIC cxx_std_17)
 
 # TODO: make factory library to handle search configuration
-target_link_libraries(24Puzzle
+target_link_libraries(Solver
   PRIVATE cxxopts
   PRIVATE astar
   PRIVATE open
@@ -26,9 +26,9 @@ target_link_libraries(24Puzzle
 
 # warning flags
 if (MSVC)
-  target_compile_options(24Puzzle PRIVATE /W4)
+  target_compile_options(Solver PRIVATE /W4)
 else()
-  target_compile_options(24Puzzle PRIVATE -Wall -Wextra -Wpedantic)
+  target_compile_options(Solver PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
 ## run ctest on build : this does not work if executables have not been compiled

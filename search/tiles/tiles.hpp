@@ -101,7 +101,7 @@ namespace Tiles {
         for (int row = 0; row < HEIGHT; ++row) {
             for (int col = 0; col < WIDTH; ++ col) {
                 os << std::setw(2) <<
-                    static_cast<int>(board.tiles[row * HEIGHT + col]) << " ";
+                    static_cast<int>(board.tiles[row * WIDTH + col]) << " ";
             }
             os << "\n";
         }
