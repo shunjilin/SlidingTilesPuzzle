@@ -9,7 +9,7 @@ struct Open {
 
     struct Compare {
         int operator()(Node const & lhs, Node const & rhs) const {          
-            return lhs.getF() > rhs.getF();
+            return getF(lhs) > getF(rhs);
         }  
     } compare;
 

@@ -40,7 +40,7 @@ public:
 TEST_F(AStarInitialize, AStarReturnsCorrectPath) {
     auto astar = AStar<Node, Open<Node>, Closed<Node> >();
     auto path = astar.search(initial_node);
-    EXPECT_EQ((path.end() - 1)->getG(), 4);
+    EXPECT_EQ(getG(*(path.end() - 1)), 4);
     ASSERT_EQ(astar.search(initial_node).size(), 5);
 }
 

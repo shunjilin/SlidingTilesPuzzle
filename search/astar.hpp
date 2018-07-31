@@ -21,7 +21,7 @@ struct AStar {
             auto node = open.pop();
             if (closed.insert(node)) {
                 // check goal node
-                if (node.isGoal()) {
+                if (isGoal(node)) {
                     return closed.getPath(node);
                 }
                 auto child_nodes = node.getChildNodes();

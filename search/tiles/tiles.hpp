@@ -17,9 +17,10 @@ namespace Tiles {
         UP, DOWN, LEFT, RIGHT, N_MOVES, NONE
     };
 
+    // board of WIDTH * HEIGHT dimension
     template<int WIDTH, int HEIGHT=WIDTH>
     struct Board {
-        // tile values, indexed as follows:
+        // tile values, indexed as follows (e.g. 24 puzzle):
         /* 0  1  2  3  4 
            5  6  7  8  9
            10 11 12 13 14

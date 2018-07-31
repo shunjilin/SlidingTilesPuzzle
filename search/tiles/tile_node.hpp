@@ -42,26 +42,6 @@ namespace Tiles {
                  unsigned char cost = 0) :
             board(std::move(board)), prev_move(prev_move), cost(cost) {}
 
-        // get cost of path to node
-        int getG() const {
-            return static_cast<int>(cost);
-        }
-
-        // get heuristic value of node
-        int getH() const {
-            return heuristic.getH(board);
-        }
-
-        // get g + h value
-        int getF() const {
-             return getG() + getH();
-        }
-
-        // check if node is goal node
-        bool isGoal() const {
-            return board == goal_board;
-        }
-
         bool operator==(TileNode<WIDTH, HEIGHT, Heuristic> const & rhs) const {
             return board == rhs.board;
         }
@@ -122,15 +102,39 @@ namespace Tiles {
         }
     };
 
+    template <int WIDTH, int HEIGHT, typename Heuristic>
+    Heuristic TileNode<WIDTH, HEIGHT, Heuristic>::heuristic = Heuristic();
+
+    template <int WIDTH, int HEIGHT, typename Heuristic>
+    Board<WIDTH, HEIGHT> TileNode<WIDTH, HEIGHT, Heuristic>::goal_board =
+        Tiles::getGoalBoard<WIDTH, HEIGHT>();
+
+    // free functions, loose coupling, take advantage of argument dependent lookup
+
+    // get cost of path to node
+    template <int WIDTH, int HEIGHT, typename Heuristic>
+    int getG(TileNode<WIDTH, HEIGHT, Heuristic> const & node) {
+        return static_cast<int>(node.cost);
+    }
+
+    // get heuristic value of node
+    template<int WIDTH, int HEIGHT, typename Heuristic>
+    int getH(TileNode<WIDTH, HEIGHT, Heuristic> const & node) {
+        return node.heuristic.getH(node.board);
+    }
+
+    // get g + h value
+    template<int WIDTH, int HEIGHT, typename Heuristic>
+    int getF(TileNode<WIDTH, HEIGHT, Heuristic> const & node) {
+        return getG(node) + getH(node);
+    }
+
+    // check if node is goal node
+    template<int WIDTH, int HEIGHT, typename Heuristic>
+    bool isGoal(TileNode<WIDTH, HEIGHT, Heuristic> const & node) {
+        return node.board == node.goal_board;
+    }
 }
-
-template <int WIDTH, int HEIGHT, typename Heuristic>
-Heuristic Tiles::TileNode<WIDTH, HEIGHT, Heuristic>::heuristic = Heuristic();
-
-template <int WIDTH, int HEIGHT, typename Heuristic>
-Tiles::Board<WIDTH, HEIGHT> Tiles::TileNode<WIDTH, HEIGHT, Heuristic>::goal_board =
-    Tiles::getGoalBoard<WIDTH, HEIGHT>();
-
 
 // overload default hash
 namespace std

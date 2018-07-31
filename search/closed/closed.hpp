@@ -24,7 +24,7 @@ template <typename Node>
 bool Closed<Node>::insert(Node node) {
     auto found = closed.find(node);
     if (found != closed.end()) {
-        if (node.getF() >= found->getF()) {
+        if (getF(node) >= getF(*found)) {
             return false;
         }
         closed.erase(found); // reopening

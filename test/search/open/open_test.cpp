@@ -9,24 +9,24 @@ struct DummyNode {
     DummyNode(int heuristic_value, int cost) :
         heuristic_value(heuristic_value),
         cost(cost) {}
-    
-    int getH() const {
-        return heuristic_value;
-    }
-
-    int getG() const {
-        return cost;
-    }
-
-    int getF() const {
-        return getG() + getH();
-    }
 
     bool operator==(DummyNode const & rhs) const {
         return heuristic_value == rhs.heuristic_value &&
             cost == rhs.cost;
     }
 };
+
+int getH(DummyNode const & node) {
+    return node.heuristic_value;
+}
+
+int getG(DummyNode const & node) {
+    return node.cost;
+}
+
+int getF(DummyNode const & node) {
+    return getG(node) + getH(node);
+}
 
 class OpenInitialize : public testing::Test {
 public:

@@ -54,11 +54,11 @@ TEST_F(FifteenPuzzleNode, InitializeTileNode) {
 }
 
 TEST_F(FifteenPuzzleNode, GetCost) {
-    ASSERT_EQ(node.getG(), 0);
+    ASSERT_EQ(getG(node), 0);
 }
 
 TEST_F(FifteenPuzzleNode, GetHeuristicValue) {
-    ASSERT_EQ(node.getH(), 0);
+    ASSERT_EQ(getG(node), 0);
 }
 
 TEST_F(FifteenPuzzleNode, GetChildNodes) {
@@ -87,7 +87,7 @@ TEST_F(FifteenPuzzleNode, GetChildNodes) {
 
 TEST_F(FifteenPuzzleNode, ChildNodesIncreaseCost) {
     auto child_nodes = node.getChildNodes();
-    ASSERT_EQ(child_nodes[DOWN]->getG(), node.getG() + 1);
+    ASSERT_EQ(getG(*child_nodes[DOWN]), getG(node) + 1);
 }
 
 TEST_F(FifteenPuzzleNode, CachePreviousMove) {
@@ -152,11 +152,11 @@ TEST_F(TwentyFourPuzzleNode, InitializeTileNode) {
 }
 
 TEST_F(TwentyFourPuzzleNode, GetCost) {
-    ASSERT_EQ(node.getG(), 0);
+    ASSERT_EQ(getG(node), 0);
 }
 
 TEST_F(TwentyFourPuzzleNode, GetHeuristicValue) {
-    ASSERT_EQ(node.getH(), 0);
+    ASSERT_EQ(getH(node), 0);
 }
 
 TEST_F(TwentyFourPuzzleNode, GetChildNodes) {
@@ -183,7 +183,7 @@ TEST_F(TwentyFourPuzzleNode, GetChildNodes) {
 
 TEST_F(TwentyFourPuzzleNode, ChildNodesIncreaseCost) {
     auto child_nodes = node.getChildNodes();
-    ASSERT_EQ(child_nodes[DOWN]->getG(), node.getG() + 1);
+    ASSERT_EQ(getG(*child_nodes[DOWN]), getG(node) + 1);
 }
 
 TEST_F(TwentyFourPuzzleNode, CachePreviousMove) {
