@@ -20,7 +20,7 @@ struct Closed {
     std::vector<Node> getPath(Node const &node) const;
 
     Closed() {
-        closed.reserve(512927357);
+        closed.reserve(86028121);//512927357);
     }
 };
 
@@ -43,7 +43,7 @@ std::vector<Node> Closed<Node>::getPath(Node const &node) const {
     auto found = closed.find(node);
     while (found != closed.end()) {
         path.push_back(*found);
-        auto parent = found->getParent();
+        auto parent = getParent(*found);
         if (!parent.has_value()) {
             break;
         }

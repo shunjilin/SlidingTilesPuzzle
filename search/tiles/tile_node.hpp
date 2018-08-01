@@ -2,137 +2,135 @@
 #define TILE_NODE_HPP
 
 #include <array>
+#include <limits>
+#include <algorithm>
 #include <optional>
 #include <numeric>
-#include <limits>
-#include "tiles.hpp"
+#include <ostream>
+#include <iomanip>
 
 namespace Tiles {
 
-    using uchar = unsigned char;
+    // board moves; blank moved in the specified direction
+    enum MOVE : char {
+        DOWN, LEFT, RIGHT, UP, N_MOVES, NONE // best ordering for 15 puzzle
+    };
 
-    // returns goal board, where value at each index = index
     template<int WIDTH, int HEIGHT>
-    Board<WIDTH, HEIGHT> getGoalBoard() {
-        std::array<char, WIDTH*HEIGHT> tiles;
-        for (int i = 0; i < WIDTH*HEIGHT; ++i) {
-            tiles[i] = i;
-        }
-        return Board<WIDTH, HEIGHT>(tiles);
-    }
-    
-    template <int WIDTH, int HEIGHT>
     struct TileNode {
-        
-        // goal board configuration
-        static Board<WIDTH, HEIGHT> goal_board;
 
-        Board<WIDTH, HEIGHT> board;
+        // goal board configuration
+        static std::array<char, WIDTH*HEIGHT> const goal_board;
+
+        // tile values, indexed in row-major order
+        // e.g. 24 puzzle:
+        /* 0  1  2  3  4 
+           5  6  7  8  9
+           10 11 12 13 14
+           15 16 17 18 19
+           20 21 22 23 24 */
+        std::array<char, WIDTH*HEIGHT> board;
+
+        // index of blank
+        unsigned char blank_idx = std::numeric_limits<char>::max();
 
         // caching to prevent regeneration of parent node
         MOVE prev_move = NONE;
-        
-        unsigned char cost = 0; // g-value
-         // cached h_val;
-        unsigned char h = std::numeric_limits<unsigned char>::max();
 
-        bool isHCached() const {
-            return h != std::numeric_limits<unsigned char>::max();
+        // cost and heuristic value of node
+        unsigned char g_val = 0;
+        unsigned char h_val = std::numeric_limits<unsigned char>::max();
+
+        // construct node from array of tiles
+        TileNode(std::array<char, WIDTH*HEIGHT> board) : board(std::move(board)) {
+            getBlankIdx();
         }
-        
-        // constructor
-        TileNode(Board<WIDTH, HEIGHT> board,
-		 MOVE prev_move = NONE,
-                 unsigned char cost = 0) :
-            board(std::move(board)), prev_move(prev_move), cost(cost) {}
 
         bool operator==(TileNode<WIDTH, HEIGHT> const & rhs) const {
             return board == rhs.board;
         }
 
-        // get nodes that can be generated from current node
-        std::array< std::optional< TileNode<WIDTH, HEIGHT> >, N_MOVES >
-        getChildNodes() const {
-            std::array<
-                std::optional< TileNode<WIDTH, HEIGHT> >, N_MOVES
-                > child_nodes;
-            if (prev_move != UP) {
-                auto child_board = board.moveBlank(DOWN);
-                if (child_board.has_value()) {
-                    child_nodes[DOWN] = {std::move(*child_board), DOWN,
-                                         static_cast<uchar>(cost + 1)};
-                }
+        // get index of current blank tile
+        char getBlankIdx() {
+            // not cached, do linear scan
+            if (blank_idx == std::numeric_limits<char>::max()) {
+                auto blank_iter = std::find(board.begin(), board.end(), 0);
+                blank_idx = std::distance(board.begin(), blank_iter);
             }
-
-            if (prev_move != RIGHT) {
-                auto child_board = board.moveBlank(LEFT);
-                if (child_board.has_value()) {
-                    child_nodes[LEFT] = {std::move(*child_board), LEFT,
-                                         static_cast<uchar>(cost + 1)};
-                }
-            }
-            if (prev_move != LEFT) {
-                auto child_board = board.moveBlank(RIGHT);
-                if (child_board.has_value()) {
-                    child_nodes[RIGHT] = {std::move(*child_board), RIGHT,
-                                          static_cast<uchar>(cost + 1)};
-                }
-            }
-
-            if (prev_move != DOWN) {
-                auto child_node = board.moveBlank(UP);
-                if (child_node.has_value()) {
-                    child_nodes[UP] = {std::move(*child_node),  UP,
-                                       static_cast<uchar>(cost + 1)};
-                }
-            }
-            return child_nodes;   
+            return blank_idx;
         }
 
-        // get parent node
-        std::optional<TileNode<WIDTH, HEIGHT> >
-        getParent() const {     
-            if (prev_move == UP) {
-                return TileNode<WIDTH, HEIGHT>{*board.moveBlank(DOWN), NONE};
+        // swap blank tile with new blank tile to get new tile node
+        TileNode<WIDTH, HEIGHT> swapBlank(char new_blank_idx) const {
+            auto new_node = *this; // copy
+            std::swap(new_node.board[blank_idx], new_node.board[new_blank_idx]);
+            new_node.blank_idx = new_blank_idx; // cache blank idx
+            return new_node;
+        }
+
+        // get new node from moving blank in direction move
+        // cache previous move and increments g_val
+        std::optional<TileNode<WIDTH, HEIGHT> > moveBlank(MOVE move) const {
+            std::optional<TileNode<WIDTH, HEIGHT> > new_node;
+            switch(move) {
+            case UP :
+                if (blank_idx >= WIDTH) {
+                    new_node = swapBlank(blank_idx - WIDTH);
+                }
+                break;
+            case DOWN:
+                if (blank_idx < (WIDTH * (HEIGHT - 1))) {
+                    new_node = swapBlank(blank_idx + WIDTH);
+                }
+                break;
+            case LEFT:
+                if ((blank_idx % WIDTH) != 0) {
+                    new_node = swapBlank(blank_idx - 1);
+                }
+                break;
+            case RIGHT:
+                if ((blank_idx % WIDTH) != (WIDTH - 1)) {
+                    new_node = swapBlank(blank_idx + 1);   
+                }
+                break;
+            default:
+                break;
             }
-            if (prev_move == DOWN) {
-                return TileNode<WIDTH, HEIGHT>{*board.moveBlank(UP), NONE};
+            if (new_node.has_value()) {
+                new_node->prev_move = move; // cache previous move
+                ++new_node->g_val; // increment g value
             }
-            if (prev_move == LEFT) {
-                return TileNode<WIDTH, HEIGHT>{*board.moveBlank(RIGHT), NONE};
-            }
-            if (prev_move == RIGHT) {
-                return TileNode<WIDTH, HEIGHT>{*board.moveBlank(LEFT), NONE};
-            }
-            return {};
+            return new_node;
         }
     };
 
-    template <int WIDTH, int HEIGHT>
-    Board<WIDTH, HEIGHT> TileNode<WIDTH, HEIGHT>::goal_board =
-        Tiles::getGoalBoard<WIDTH, HEIGHT>();
+    
+    // returns goal board, where value at each index = index
+    template<int WIDTH, int HEIGHT>
+    std::array<char, WIDTH*HEIGHT> getGoalBoard() {
+        std::array<char, WIDTH*HEIGHT> tiles;
+        std::iota(tiles.begin(), tiles.end(), 0);
+        return tiles;      
+    }
+
+    // static initialization of goal board
+    template<int WIDTH, int HEIGHT>
+    std::array<char, WIDTH*HEIGHT> const TileNode<WIDTH, HEIGHT>::goal_board =
+        getGoalBoard<WIDTH,HEIGHT>();
 
     // free functions, loose coupling, take advantage of argument dependent
     // lookup
-
-    // evalutate and cache h value
-    template <int WIDTH, int HEIGHT, typename Heuristic>
-    void evalH(TileNode<WIDTH, HEIGHT> & node, Heuristic const & heuristic) {
-        if (!node.isHCached()) {
-            node.h = heuristic.getH(node.board);
-        }
-    }
     
     // get cost of path to node
     template <int WIDTH, int HEIGHT>
     int getG(TileNode<WIDTH, HEIGHT> const & node) {
-        return static_cast<int>(node.cost);
+        return static_cast<int>(node.g_val);
     }
 
     // get heuristic value of node
     template<int WIDTH, int HEIGHT>
     int getH(TileNode<WIDTH, HEIGHT> const & node) {
-        return static_cast<int>(node.h);
+        return static_cast<int>(node.h_val);
     }
 
     // get g + h value
@@ -145,6 +143,60 @@ namespace Tiles {
     template<int WIDTH, int HEIGHT>
     bool isGoal(TileNode<WIDTH, HEIGHT> const & node) {
         return node.board == node.goal_board;
+    }
+
+    // get nodes that can be generated from current node
+    template<int WIDTH, int HEIGHT>
+    std::array< std::optional< TileNode<WIDTH, HEIGHT> >, N_MOVES >
+    getChildNodes(TileNode<WIDTH, HEIGHT> const & node) {
+        std::array<
+            std::optional< TileNode<WIDTH, HEIGHT> >, N_MOVES
+            > child_nodes;      
+        if (node.prev_move != UP) {
+            child_nodes[DOWN] = node.moveBlank(DOWN);
+        }
+        if (node.prev_move != RIGHT) {
+            child_nodes[LEFT] = node.moveBlank(LEFT);
+        }
+        if (node.prev_move != LEFT) {
+            child_nodes[RIGHT] = node.moveBlank(RIGHT);
+        }
+        if (node.prev_move != DOWN) {
+            child_nodes[UP] = node.moveBlank(UP);
+        }
+        return child_nodes;  
+    }
+    
+    template<int WIDTH, int HEIGHT>
+    std::optional<TileNode<WIDTH, HEIGHT> >
+    getParent(TileNode<WIDTH, HEIGHT> const & node) {     
+        if (node.prev_move == UP) {
+            return node.moveBlank(DOWN);
+        }
+        if (node.prev_move == DOWN) {
+            return node.moveBlank(UP);
+        }
+        if (node.prev_move == LEFT) {
+            return node.moveBlank(RIGHT);
+        }
+        if (node.prev_move == RIGHT) {
+            return node.moveBlank(LEFT);
+        }
+        return {};
+    }
+
+    // pretty print board
+    template<int WIDTH, int HEIGHT>
+    std::ostream& operator<< (std::ostream& os,
+                              TileNode<WIDTH, HEIGHT> const & node) {
+        for (int row = 0; row < HEIGHT; ++row) {
+            for (int col = 0; col < WIDTH; ++ col) {
+                os << std::setw(2) <<
+                    static_cast<int>(node.board[row * WIDTH + col]) << " ";
+            }
+            os << "\n";
+        }
+	return os;
     }
 }
 
@@ -159,7 +211,7 @@ namespace std
         {
             size_t result = 0;
             for (auto i = 0; i < WIDTH*HEIGHT; ++i) {
-                result = result * 31 + hash<int>()(node.board.tiles[i]);
+                result = result * 31 + hash<int>()(node.board[i]);
             }
             return result;
         }

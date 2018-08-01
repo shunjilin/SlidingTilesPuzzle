@@ -13,13 +13,6 @@ struct DummyNode {
         id(id),
         f_value(f_value) {}
 
-    std::optional<DummyNode> getParent() const {
-        if (parent_node) {
-            return *parent_node;
-        }
-        return {};
-    }
-
     bool operator==(DummyNode const & rhs) const {
         return id == rhs.id;
     }
@@ -27,6 +20,13 @@ struct DummyNode {
 
 int getF(DummyNode const & node) {
     return node.f_value;
+}
+
+std::optional<DummyNode> getParent(DummyNode const & node) {
+    if (node.parent_node) {
+        return *node.parent_node;
+    }
+    return {};
 }
 
 // overload default hash

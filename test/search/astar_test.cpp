@@ -17,10 +17,9 @@ using Heuristic = ManhattanDistanceHeuristic<WIDTH, HEIGHT>;
 
 class AStarInitialize: public testing::Test {
 public:
-    std::array<char, N_TILES> initial_tiles = std::array<char, N_TILES>
+    std::array<char, N_TILES> initial_board = std::array<char, N_TILES>
         ({{1, 2, 3, 4, 0, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
                     15, 16, 17, 18, 19, 20, 21, 22, 23, 24}});
-    Board<WIDTH, HEIGHT> initial_board = Board<WIDTH, HEIGHT>(initial_tiles);
     // initial board
     /* 1  2  3  4  0
        5  6  7  8  9
@@ -36,7 +35,7 @@ public:
        20 21 22 23 24 */
     Node initial_node =
         Node(initial_board);
-    Heuristic heuristic = Heuristic(initial_board);
+    Heuristic heuristic = Heuristic();
     
 };
 

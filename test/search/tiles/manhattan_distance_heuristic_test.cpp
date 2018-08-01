@@ -1,4 +1,3 @@
-#include "tiles.hpp"
 #include "manhattan_distance_heuristic.hpp"
 #include <gtest/gtest.h>
 
@@ -33,10 +32,9 @@ TEST(ManhattanDistance, correctManhattanDistance) {
 
 class BoardInitialize: public testing::Test {
 public:
-    std::array<char, N_TILES> initial_tiles = std::array<char, N_TILES>
+    std::array<char, N_TILES> initial_board = std::array<char, N_TILES>
         ({{1, 2, 5, 3, 4, 0, 6, 7, 8, 9, 10, 11}});
     
-    Board<WIDTH, HEIGHT> board = Board<WIDTH, HEIGHT>(initial_tiles);
     // initial board
     /* 1  2  5
        3  4  0
@@ -50,10 +48,12 @@ public:
        9  10 11 */
     ManhattanDistanceHeuristic<WIDTH, HEIGHT> heuristic =
         ManhattanDistanceHeuristic<WIDTH, HEIGHT>();
+    TileNode<WIDTH, HEIGHT> node = TileNode<WIDTH, HEIGHT>(initial_board);
 };
 
 TEST_F(BoardInitialize, correctManhattanHeuristic) {
-    ASSERT_EQ(heuristic.getH(board), 3);
+    evalH(node, heuristic);
+    ASSERT_EQ(getH(node), 3);
 }
 
 int main(int argc, char *argv[]) {

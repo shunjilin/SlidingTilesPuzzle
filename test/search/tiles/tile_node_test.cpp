@@ -1,5 +1,4 @@
 #include "tile_node.hpp"
-#include "tiles.hpp"
 #include <string>
 #include <sstream>
 #include <gmock/gmock.h>
@@ -15,10 +14,9 @@ public:
     static int const HEIGHT = 4;
     static int const N_TILES = WIDTH*HEIGHT;
     
-    std::array<char, N_TILES> initial_tiles = std::array<char, N_TILES>
+    std::array<char, N_TILES> initial_board = std::array<char, N_TILES>
         ({{1, 2, 3, 7, 4, 5, 6, 0, 8, 9, 10, 11, 12, 13, 14, 15}});
     
-    Board<WIDTH, HEIGHT> board = Board<WIDTH, HEIGHT>(initial_tiles);
     // initial board
     /* 1  2  3  7
        4  5  6  0
@@ -32,11 +30,11 @@ public:
        12 13 14 15 */
 
     TileNode<WIDTH, HEIGHT> node =
-        TileNode<WIDTH, HEIGHT>(board);
+        TileNode<WIDTH, HEIGHT>(initial_board);
 };
 
 TEST_F(FifteenPuzzleNode, InitializeTileNode) {
-    ASSERT_THAT(node.board.tiles,
+    ASSERT_THAT(node.board,
                 testing::ElementsAre(1, 2, 3, 7,
                                      4, 5, 6, 0,
                                      8, 9, 10, 11,
@@ -48,21 +46,21 @@ TEST_F(FifteenPuzzleNode, GetCost) {
 }
 
 TEST_F(FifteenPuzzleNode, GetChildNodes) {
-    auto child_nodes = node.getChildNodes();
+    auto child_nodes = getChildNodes(node);
 
-    EXPECT_THAT(child_nodes[UP]->board.tiles,
+    EXPECT_THAT(child_nodes[UP]->board,
                 testing::ElementsAre(1, 2, 3, 0,
                                      4, 5, 6, 7,
                                      8, 9, 10, 11,
                                      12, 13, 14, 15));
 
-    EXPECT_THAT(child_nodes[DOWN]->board.tiles,
+    EXPECT_THAT(child_nodes[DOWN]->board,
                 testing::ElementsAre(1, 2, 3, 7,
                                      4, 5, 6, 11,
                                      8, 9, 10, 0,
                                      12, 13, 14, 15));
 
-    EXPECT_THAT(child_nodes[LEFT]->board.tiles,
+    EXPECT_THAT(child_nodes[LEFT]->board,
                 testing::ElementsAre(1, 2, 3, 7,
                                      4, 5, 0, 6,
                                      8, 9, 10, 11,
@@ -72,25 +70,25 @@ TEST_F(FifteenPuzzleNode, GetChildNodes) {
 }
 
 TEST_F(FifteenPuzzleNode, ChildNodesIncreaseCost) {
-    auto child_nodes = node.getChildNodes();
+    auto child_nodes = getChildNodes(node);
     ASSERT_EQ(getG(*child_nodes[DOWN]), getG(node) + 1);
 }
 
 TEST_F(FifteenPuzzleNode, CachePreviousMove) {
-    auto child_nodes = node.getChildNodes();
+    auto child_nodes = getChildNodes(node);
 
     ASSERT_EQ(child_nodes[DOWN]->prev_move, DOWN);
 }
 
 TEST_F(FifteenPuzzleNode, DoNotRegenerateParentNode) {
-    auto child_nodes = node.getChildNodes();
-    auto grandchild_nodes = child_nodes[DOWN]->getChildNodes();
+    auto child_nodes = getChildNodes(node);
+    auto grandchild_nodes = getChildNodes(*child_nodes[DOWN]);
     ASSERT_FALSE(grandchild_nodes[UP].has_value());
 }
 
 TEST_F(FifteenPuzzleNode, GetParentNode) {
-    auto child_node = *node.getChildNodes()[DOWN];
-    ASSERT_EQ(*child_node.getParent(), node);
+    auto child_node = getChildNodes(node)[DOWN];
+    ASSERT_EQ(getParent(*child_node), node);
 }
 
 TEST_F(FifteenPuzzleNode, Node20Bytes) {
@@ -105,11 +103,10 @@ public:
     static int const HEIGHT = 5;
     static int const N_TILES = WIDTH*HEIGHT;
     
-    std::array<char, N_TILES> initial_tiles = std::array<char, N_TILES>
+    std::array<char, N_TILES> initial_board = std::array<char, N_TILES>
         ({{1, 2, 3, 4, 0, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
            15, 16, 17, 18, 19, 20, 21, 22, 23, 24}});
     
-    Board<WIDTH, HEIGHT> board = Board<WIDTH, HEIGHT>(initial_tiles);
     // initial board
     /* 1  2  3  4  0
        5  6  7  8  9
@@ -125,11 +122,11 @@ public:
        20 21 22 23 24 */
 
     TileNode<WIDTH, HEIGHT> node =
-        TileNode<WIDTH, HEIGHT>(board);
+        TileNode<WIDTH, HEIGHT>(initial_board);
 };
 
 TEST_F(TwentyFourPuzzleNode, InitializeTileNode) {
-    ASSERT_THAT(node.board.tiles,
+    ASSERT_THAT(node.board,
                 testing::ElementsAre(1, 2, 3, 4, 0,
                                      5, 6, 7, 8, 9,
                                      10, 11, 12, 13, 14,
@@ -142,18 +139,18 @@ TEST_F(TwentyFourPuzzleNode, GetCost) {
 }
 
 TEST_F(TwentyFourPuzzleNode, GetChildNodes) {
-    auto child_nodes = node.getChildNodes();
+    auto child_nodes = getChildNodes(node);
     
     EXPECT_FALSE(child_nodes[UP].has_value());
 
-    EXPECT_THAT(child_nodes[DOWN]->board.tiles,
+    EXPECT_THAT(child_nodes[DOWN]->board,
                 testing::ElementsAre(1, 2, 3, 4, 9,
                                      5, 6, 7, 8, 0,
                                      10, 11, 12, 13, 14,
                                      15, 16, 17, 18, 19,
                                      20, 21, 22, 23, 24));
 
-    EXPECT_THAT(child_nodes[LEFT]->board.tiles,
+    EXPECT_THAT(child_nodes[LEFT]->board,
                 testing::ElementsAre(1, 2, 3, 0, 4,
                                      5, 6, 7, 8, 9,
                                      10, 11, 12, 13, 14,
@@ -164,25 +161,24 @@ TEST_F(TwentyFourPuzzleNode, GetChildNodes) {
 }
 
 TEST_F(TwentyFourPuzzleNode, ChildNodesIncreaseCost) {
-    auto child_nodes = node.getChildNodes();
+    auto child_nodes = getChildNodes(node);
     ASSERT_EQ(getG(*child_nodes[DOWN]), getG(node) + 1);
 }
 
 TEST_F(TwentyFourPuzzleNode, CachePreviousMove) {
-    auto child_nodes = node.getChildNodes();
-
+    auto child_nodes = getChildNodes(node);
     ASSERT_EQ(child_nodes[DOWN]->prev_move, DOWN);
 }
 
 TEST_F(TwentyFourPuzzleNode, DoNotRegenerateParentNode) {
-    auto child_nodes = node.getChildNodes();
-    auto grandchild_nodes = child_nodes[DOWN]->getChildNodes();
+    auto child_nodes = getChildNodes(node);
+    auto grandchild_nodes = getChildNodes(*child_nodes[DOWN]);
     ASSERT_FALSE(grandchild_nodes[UP].has_value());
 }
 
 TEST_F(TwentyFourPuzzleNode, GetParentNode) {
-    auto child_node = *node.getChildNodes()[DOWN];
-    ASSERT_EQ(*child_node.getParent(), node);
+    auto child_node = getChildNodes(node)[DOWN];
+    ASSERT_EQ(getParent(*child_node), node);
 }
 
 TEST_F(TwentyFourPuzzleNode, Node29Bytes) {

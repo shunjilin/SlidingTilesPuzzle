@@ -1,9 +1,9 @@
 #ifndef MANHATTAN_DISTANCE_HEURISTIC_HPP
 #define MANHATTAN_DISTANCE_HEURISTIC_HPP
 
-#include "tiles.hpp"
 #include <cstdlib>
 #include <array>
+#include "tile_node.hpp"
 
 namespace Tiles {
     
@@ -24,38 +24,32 @@ namespace Tiles {
     }
 
     template<int WIDTH, int HEIGHT>
-    class ManhattanDistanceHeuristic {
-    private:
+    struct ManhattanDistanceHeuristic {
         // 2-D array for calculating each tile's manhattan distance
         std::array< std::array<int, WIDTH*HEIGHT>, WIDTH*HEIGHT> table;
-    public:
+        
         ManhattanDistanceHeuristic() {
             // initialize lookup table
-       
+            
             // value of 0 for blank tile
             table[0].fill(0);
-        
+            
             for (int tile = 1; tile < WIDTH*HEIGHT; ++tile) {
                 for (int idx = 0; idx < WIDTH*HEIGHT; ++idx) {
                     table[tile][idx] = manhattanDistance(tile, idx, WIDTH);
                 }
-            }  
-            
-        }
-        
-        // just for type deduction
-        ManhattanDistanceHeuristic(Board<WIDTH, HEIGHT> const & board) {
-            (void)(board);
-        }
-        
-        int getH(Board<WIDTH, HEIGHT> const & board) const {
-            int heuristic_value = 0;
-            for (int idx = 0; idx < WIDTH*HEIGHT; ++idx) {
-                heuristic_value += table[board.tiles[idx]][idx];
             }
-            return heuristic_value;     
         }
     };
+
+    template<int WIDTH, int HEIGHT, typename Heuristic>
+    void evalH(TileNode<WIDTH, HEIGHT> & node, Heuristic const & heuristic) {
+        int heuristic_value = 0;
+        for (int idx = 0; idx < WIDTH*HEIGHT; ++idx) {
+            heuristic_value += heuristic.table[node.board[idx]][idx];
+        }
+        node.h_val = heuristic_value;
+    }
 }
 
 #endif

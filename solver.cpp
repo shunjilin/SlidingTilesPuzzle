@@ -40,12 +40,11 @@ int main(int argc, char *argv[]) {
         initial_tiles[i] = std::stoi(tile_string);
     }
     
-    auto board = Tiles::Board<WIDTH, HEIGHT>(initial_tiles);
-    auto initial_node = Tiles::TileNode(board);
+    auto initial_node = Tiles::TileNode<WIDTH, HEIGHT>(initial_tiles);
     using Node = decltype(initial_node);
-    using Heuristic = decltype(Tiles::ManhattanDistanceHeuristic(board));
+    using Heuristic = decltype(Tiles::ManhattanDistanceHeuristic<WIDTH, HEIGHT>());
     auto astar = AStar<Node, Heuristic, ArrayOpen<Node>, Closed<Node> >();
-
+    
     auto timer = SteadyClockTimer();
     timer.start();
     auto path = astar.search(initial_node);
@@ -53,8 +52,8 @@ int main(int argc, char *argv[]) {
               << " ms to solve" << std::endl;
     std::cout << "Sequence:" << std::endl;
     std::cout << "n moves: " << path.size() - 1 << std::endl;
-    /*for (auto node : path) {
-        std::cout << node.board << std::endl;
-        }*/
+    for (auto node : path) {
+        std::cout << node << std::endl;
+    }
     
 }

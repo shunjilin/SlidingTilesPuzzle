@@ -27,7 +27,7 @@ struct AStar {
                 if (isGoal(node)) {
                     return closed.getPath(node);
                 }
-                auto child_nodes = node.getChildNodes();
+                auto child_nodes = getChildNodes(node);
                 for (auto child_node : child_nodes) {
                     if (child_node.has_value()) {
                         evalH(*child_node, heuristic);
