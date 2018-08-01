@@ -16,7 +16,8 @@ struct AStar {
         Open open;
         Closed closed;
         Heuristic const heuristic;
-        
+
+        evalH(initial_node, heuristic);
         open.push(std::move(initial_node));
 
         while (!open.empty()) {
