@@ -1,4 +1,5 @@
 #include "open.hpp"
+#include "array_open.hpp"
 #include "closed.hpp"
 #include "manhattan_distance_heuristic.hpp"
 #include "tile_node.hpp"
@@ -43,7 +44,7 @@ int main(int argc, char *argv[]) {
     auto initial_node = Tiles::TileNode(board);
     using Node = decltype(initial_node);
     using Heuristic = decltype(Tiles::ManhattanDistanceHeuristic(board));
-    auto astar = AStar<Node, Heuristic, Open<Node>, Closed<Node> >();
+    auto astar = AStar<Node, Heuristic, ArrayOpen<Node>, Closed<Node> >();
 
     auto timer = SteadyClockTimer();
     timer.start();
@@ -51,8 +52,9 @@ int main(int argc, char *argv[]) {
     std::cout << "Took " << timer.getElapsedTime<milliseconds>()
               << " ms to solve" << std::endl;
     std::cout << "Sequence:" << std::endl;
-    for (auto node : path) {
+    std::cout << "n moves: " << path.size() - 1 << std::endl;
+    /*for (auto node : path) {
         std::cout << node.board << std::endl;
-    }
+        }*/
     
 }

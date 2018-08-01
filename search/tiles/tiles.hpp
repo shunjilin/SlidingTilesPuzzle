@@ -14,7 +14,7 @@ namespace Tiles {
     
     // board moves; blank moved in the specified direction
     enum MOVE : char {
-        UP, DOWN, LEFT, RIGHT, N_MOVES, NONE
+        UP, RIGHT, LEFT, DOWN, N_MOVES, NONE // best ordering for 15 puzzle
     };
 
     // board of WIDTH * HEIGHT dimension

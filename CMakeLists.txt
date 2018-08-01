@@ -18,6 +18,7 @@ target_compile_features(Solver PUBLIC cxx_std_17)
 target_link_libraries(Solver
   PRIVATE cxxopts
   PRIVATE astar
+  PRIVATE array_open
   PRIVATE open
   PRIVATE closed
   PRIVATE manhattan_distance_heuristic
@@ -30,6 +31,10 @@ if (MSVC)
 else()
   target_compile_options(Solver PRIVATE -Wall -Wextra -Wpedantic)
 endif()
+
+set(CMAKE_BUILD_TYPE Release)
+#set(CMAKE_BUILD_TYPE DEBUG)
+
 
 ## run ctest on build : this does not work if executables have not been compiled
 # add_custom_command(TARGET 24Puzzle

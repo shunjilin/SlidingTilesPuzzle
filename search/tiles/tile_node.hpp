@@ -63,11 +63,11 @@ namespace Tiles {
                                        static_cast<uchar>(cost + 1)};
                 }
             }
-            if (prev_move != UP) {
-                auto child_board = board.moveBlank(DOWN);
+            if (prev_move != LEFT) {
+                auto child_board = board.moveBlank(RIGHT);
                 if (child_board.has_value()) {
-                    child_nodes[DOWN] = {std::move(*child_board), DOWN,
-                                         static_cast<uchar>(cost + 1)};
+                    child_nodes[RIGHT] = {std::move(*child_board), RIGHT,
+                                          static_cast<uchar>(cost + 1)};
                 }
             }
             if (prev_move != RIGHT) {
@@ -77,11 +77,11 @@ namespace Tiles {
                                          static_cast<uchar>(cost + 1)};
                 }
             }
-            if (prev_move != LEFT) {
-                auto child_board = board.moveBlank(RIGHT);
+            if (prev_move != UP) {
+                auto child_board = board.moveBlank(DOWN);
                 if (child_board.has_value()) {
-                    child_nodes[RIGHT] = {std::move(*child_board), RIGHT,
-                                          static_cast<uchar>(cost + 1)};
+                    child_nodes[DOWN] = {std::move(*child_board), DOWN,
+                                         static_cast<uchar>(cost + 1)};
                 }
             }
             return child_nodes;   
