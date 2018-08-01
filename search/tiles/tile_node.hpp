@@ -56,11 +56,19 @@ namespace Tiles {
             std::array<
                 std::optional< TileNode<WIDTH, HEIGHT> >, N_MOVES
                 > child_nodes;
-            if (prev_move != DOWN) {
-                auto child_node = board.moveBlank(UP);
-                if (child_node.has_value()) {
-                    child_nodes[UP] = {std::move(*child_node),  UP,
-                                       static_cast<uchar>(cost + 1)};
+            if (prev_move != UP) {
+                auto child_board = board.moveBlank(DOWN);
+                if (child_board.has_value()) {
+                    child_nodes[DOWN] = {std::move(*child_board), DOWN,
+                                         static_cast<uchar>(cost + 1)};
+                }
+            }
+
+            if (prev_move != RIGHT) {
+                auto child_board = board.moveBlank(LEFT);
+                if (child_board.has_value()) {
+                    child_nodes[LEFT] = {std::move(*child_board), LEFT,
+                                         static_cast<uchar>(cost + 1)};
                 }
             }
             if (prev_move != LEFT) {
@@ -70,18 +78,12 @@ namespace Tiles {
                                           static_cast<uchar>(cost + 1)};
                 }
             }
-            if (prev_move != RIGHT) {
-                auto child_board = board.moveBlank(LEFT);
-                if (child_board.has_value()) {
-                    child_nodes[LEFT] = {std::move(*child_board), LEFT,
-                                         static_cast<uchar>(cost + 1)};
-                }
-            }
-            if (prev_move != UP) {
-                auto child_board = board.moveBlank(DOWN);
-                if (child_board.has_value()) {
-                    child_nodes[DOWN] = {std::move(*child_board), DOWN,
-                                         static_cast<uchar>(cost + 1)};
+
+            if (prev_move != DOWN) {
+                auto child_node = board.moveBlank(UP);
+                if (child_node.has_value()) {
+                    child_nodes[UP] = {std::move(*child_node),  UP,
+                                       static_cast<uchar>(cost + 1)};
                 }
             }
             return child_nodes;   
