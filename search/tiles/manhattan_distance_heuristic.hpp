@@ -8,19 +8,18 @@
 namespace Tiles {
     
     // calculate row index from index in grid of given width
-    int getRowIdx(int index, int height) {
-	return index / height;
+    int getRowIdx(int index, int width) {
+	return index / width;
     }
 
-    // calculate row index from index in grid of given height
+    // calculate col index from index in grid of given width
     int getColIdx(int index, int width) {
 	return index % width;
     }
 
-    // calculate Manhattan distance between two indexes in a grid of dimensions
-    // width and height
-    int manhattanDistance(char index1, char index2, int width, int height) {
-	return abs(getRowIdx(index1, height) - getRowIdx(index2, height)) +
+    // calculate Manhattan distance between two indexes in a grid of given width
+    int manhattanDistance(char index1, char index2, int width) {
+	return abs(getRowIdx(index1, width) - getRowIdx(index2, width)) +
 	    abs(getColIdx(index1, width) - getColIdx(index2, width));
     }
 
@@ -38,7 +37,7 @@ namespace Tiles {
         
             for (int tile = 1; tile < WIDTH*HEIGHT; ++tile) {
                 for (int idx = 0; idx < WIDTH*HEIGHT; ++idx) {
-                    table[tile][idx] = manhattanDistance(tile, idx, WIDTH, HEIGHT);
+                    table[tile][idx] = manhattanDistance(tile, idx, WIDTH);
                 }
             }  
             
