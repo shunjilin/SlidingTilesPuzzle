@@ -7,15 +7,14 @@
 template <typename Node, typename Heuristic, typename Open, typename Closed>
 struct AStar {
 
+    Open open;
+    Closed closed;
+    Heuristic const heuristic;
+
     // perform astar search: lazy with reopenings
     // return path to solution
     std::vector<Node>
-    
     search(Node initial_node) {
-
-        Open open;
-        Closed closed;
-        Heuristic const heuristic;
 
         evalH(initial_node, heuristic);
         open.push(std::move(initial_node));

@@ -21,6 +21,7 @@ target_link_libraries(Solver
   PRIVATE array_open
   PRIVATE open
   PRIVATE closed
+  PRIVATE open_address_closed
   PRIVATE manhattan_distance_heuristic
   PRIVATE tile_node
   )

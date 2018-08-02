@@ -1,6 +1,7 @@
 #include "open.hpp"
 #include "array_open.hpp"
 #include "closed.hpp"
+#include "open_address_closed.hpp"
 #include "manhattan_distance_heuristic.hpp"
 #include "tile_node.hpp"
 #include "astar.hpp"
@@ -39,17 +40,21 @@ int main(int argc, char *argv[]) {
         iss >> tile_string;
         initial_tiles[i] = std::stoi(tile_string);
     }
+    auto timer = SteadyClockTimer();
+    timer.start();
     
     auto initial_node = Tiles::TileNode<WIDTH, HEIGHT>(initial_tiles);
     using Node = decltype(initial_node);
     using Heuristic = decltype(Tiles::ManhattanDistanceHeuristic<WIDTH, HEIGHT>());
-    auto astar = AStar<Node, Heuristic, ArrayOpen<Node>, Closed<Node> >();
+    auto astar = AStar<Node, Heuristic, ArrayOpen<Node>,
+                       OpenAddressClosed<Node, 205170943> > ();//86028121> >();
     
-    auto timer = SteadyClockTimer();
-    timer.start();
+
+    std::cout << "Initialization took " << timer.getElapsedTime<milliseconds>()
+              << " ms" << std::endl;
     auto path = astar.search(initial_node);
     std::cout << "Took " << timer.getElapsedTime<milliseconds>()
-              << " ms to solve" << std::endl;
+              << " ms to solve (including initialization)" << std::endl;
     std::cout << "Sequence:" << std::endl;
     std::cout << "n moves: " << path.size() - 1 << std::endl;
     for (auto node : path) {

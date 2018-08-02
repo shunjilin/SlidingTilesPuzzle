@@ -56,6 +56,15 @@ TEST_F(BoardInitialize, correctManhattanHeuristic) {
     ASSERT_EQ(getH(node), 3);
 }
 
+TEST_F(BoardInitialize, correctIncrementalManhattanHeuristic) {
+    evalH(node, heuristic);
+    auto child_node = node.moveBlank(DOWN);
+    auto child_node_copy = child_node;
+    evalH(*child_node, node, heuristic);
+    evalH(*child_node_copy, heuristic);
+    ASSERT_EQ(child_node->h_val, child_node_copy->h_val);
+}
+
 int main(int argc, char *argv[]) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

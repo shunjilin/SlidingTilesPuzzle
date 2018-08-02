@@ -36,16 +36,17 @@ public:
     Node initial_node =
         Node(initial_board);
     Heuristic heuristic = Heuristic();
-    
+
+    AStar<Node, Heuristic, Open<Node>, Closed<Node> > astar =
+        AStar<Node, Heuristic, Open<Node>, Closed<Node> >();
 };
 
 TEST_F(AStarInitialize, AStarReturnsCorrectPath) {
-    auto astar = AStar<Node, Heuristic, Open<Node>, Closed<Node> >();
     auto path = astar.search(initial_node);
     EXPECT_EQ(getG(*(path.end() - 1)), 4);
     EXPECT_EQ(getH(*(path.begin())), 4);
     EXPECT_EQ(getH(*(path.end() - 1)), 0);
-    ASSERT_EQ(astar.search(initial_node).size(), 5);
+    ASSERT_EQ(path.size(), 5);
 }
 
 int main(int argc, char *argv[]) {

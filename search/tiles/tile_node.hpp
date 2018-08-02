@@ -41,13 +41,11 @@ namespace Tiles {
         unsigned char g_val = 0;
         unsigned char h_val = std::numeric_limits<unsigned char>::max();
 
+        TileNode() = default; // sentinel value;
+
         // construct node from array of tiles
         TileNode(std::array<char, WIDTH*HEIGHT> board) : board(std::move(board)) {
             getBlankIdx();
-        }
-
-        bool operator==(TileNode<WIDTH, HEIGHT> const & rhs) const {
-            return board == rhs.board;
         }
 
         // get index of current blank tile
@@ -120,6 +118,18 @@ namespace Tiles {
 
     // free functions, loose coupling, take advantage of argument dependent
     // lookup
+
+    template<int WIDTH, int HEIGHT>
+    bool operator==(TileNode<WIDTH, HEIGHT> const & lhs,
+                    TileNode<WIDTH, HEIGHT> const & rhs) {
+        return lhs.board == rhs.board;
+    }
+
+    template<int WIDTH, int HEIGHT>
+    bool operator!=(TileNode<WIDTH, HEIGHT> const & lhs,
+                    TileNode<WIDTH, HEIGHT> const & rhs) {
+        return !(lhs == rhs);
+    }
     
     // get cost of path to node
     template <int WIDTH, int HEIGHT>

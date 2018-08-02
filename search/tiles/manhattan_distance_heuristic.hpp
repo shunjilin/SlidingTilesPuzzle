@@ -50,6 +50,15 @@ namespace Tiles {
         }
         node.h_val = heuristic_value;
     }
+
+    // incremental manhattan distance
+    template<int WIDTH, int HEIGHT, typename Heuristic>
+    void evalH(TileNode<WIDTH, HEIGHT> & node, TileNode<WIDTH, HEIGHT> & parent,
+               Heuristic const & heuristic) {
+        auto tile_moved = parent.board[node.blank_idx];
+        node.h_val = parent.h_val - heuristic.table[tile_moved][node.blank_idx]
+            + heuristic.table[tile_moved][parent.blank_idx];       
+    }
 }
 
 #endif

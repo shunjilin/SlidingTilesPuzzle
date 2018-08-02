@@ -18,10 +18,6 @@ struct Closed {
     bool insert(Node node);
 
     std::vector<Node> getPath(Node const &node) const;
-
-    Closed() {
-        closed.reserve(86028121);//512927357);
-    }
 };
 
 template <typename Node>
