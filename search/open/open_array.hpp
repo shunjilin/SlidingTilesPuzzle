@@ -1,12 +1,12 @@
-#ifndef ARRAY_OPEN
-#define ARRAY_OPEN
+#ifndef OPEN_ARRAY_HPP
+#define OPEN_ARRAY_HPP
 
 #include <array>
 
 // open list using array-based open list for 3 level tie-breaking
 
 template <typename Node>
-struct ArrayOpen {
+struct OpenArray {
 
     static int const MAX_MOVES = 255;
 

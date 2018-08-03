@@ -1,7 +1,5 @@
-#include "open.hpp"
-#include "array_open.hpp"
-#include "closed.hpp"
-#include "open_address_closed.hpp"
+#include "open_array.hpp"
+#include "closed_open_address.hpp"
 #include "manhattan_distance_heuristic.hpp"
 #include "tile_node.hpp"
 #include "astar.hpp"
@@ -42,12 +40,14 @@ int main(int argc, char *argv[]) {
     }
     auto timer = SteadyClockTimer();
     timer.start();
+
+    using Node = Tiles::TileNode<WIDTH, HEIGHT>;
+    auto initial_node = Node(initial_tiles);
+
+    using Heuristic = Tiles::ManhattanDistanceHeuristic<WIDTH, HEIGHT>;
     
-    auto initial_node = Tiles::TileNode<WIDTH, HEIGHT>(initial_tiles);
-    using Node = decltype(initial_node);
-    using Heuristic = decltype(Tiles::ManhattanDistanceHeuristic<WIDTH, HEIGHT>());
-    auto astar = AStar<Node, Heuristic, ArrayOpen<Node>,
-                       OpenAddressClosed<Node, 205170943> > ();//86028121> >();
+    auto astar = AStar<Node, Heuristic, OpenArray<Node>,
+                       ClosedOpenAddress<Node, 205170943> > ();//86028121> >();
     
 
     std::cout << "Initialization took " << timer.getElapsedTime<milliseconds>()
@@ -59,6 +59,5 @@ int main(int argc, char *argv[]) {
     std::cout << "n moves: " << path.size() - 1 << std::endl;
     for (auto node : path) {
         std::cout << node << std::endl;
-    }
-    
+    }    
 }

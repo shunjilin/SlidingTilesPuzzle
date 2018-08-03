@@ -18,8 +18,8 @@ target_compile_features(Solver PUBLIC cxx_std_17)
 target_link_libraries(Solver
   PRIVATE cxxopts
   PRIVATE astar
-  PRIVATE array_open
-  PRIVATE open_address_closed
+  PRIVATE open_array
+  PRIVATE closed_open_address
   PRIVATE manhattan_distance_heuristic
   PRIVATE tile_node
   )

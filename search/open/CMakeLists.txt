@@ -1,4 +1,4 @@
-# minimum open list
+# minimal open list
 add_library(open INTERFACE)
 
 target_include_directories(open
@@ -8,16 +8,13 @@ target_include_directories(open
 target_compile_features(open INTERFACE cxx_std_14)
 
 # array based open list
-add_library(array_open INTERFACE)
+add_library(open_array INTERFACE)
 
-target_include_directories(array_open
+target_include_directories(open_array
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
   )
 
-#target_compile_features(open INTERFACE cxx_std_14)
-
-
-# array based open list with pointers
+# array based open list using pointers
 add_library(open_array_ptr INTERFACE)
 
 target_include_directories(open_array_ptr

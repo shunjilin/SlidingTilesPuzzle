@@ -1,4 +1,4 @@
-#include "array_open.hpp"
+#include "open_array.hpp"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -31,13 +31,13 @@ int getF(DummyNode const & node) {
     return getG(node) + getH(node);
 }
 
-class ArrayOpenInitialize : public testing::Test {
+class OpenArrayInitialize : public testing::Test {
 public:
     DummyNode node1 = DummyNode{0, 0};
     DummyNode node2 = DummyNode{2, 1};
     DummyNode node3 = DummyNode{1, 2};
 
-    ArrayOpen<DummyNode> open;
+    OpenArray<DummyNode> open;
 
     virtual void SetUp() {
         open.push(node3);
@@ -46,13 +46,13 @@ public:
     }
 };
 
-TEST_F(ArrayOpenInitialize, PopLowestFValNode) {
+TEST_F(OpenArrayInitialize, PopLowestFValNode) {
     EXPECT_TRUE(open.pop() == DummyNode(0, 0));
     EXPECT_TRUE(open.pop() == DummyNode(1, 2));
     EXPECT_TRUE(open.pop() == DummyNode(2, 1));
 }
 
-TEST_F(ArrayOpenInitialize, EmptyOpenAfterPops) {
+TEST_F(OpenArrayInitialize, EmptyOpenAfterPops) {
     for (int i = 0; i < 3; ++i) {
         open.pop();
     }

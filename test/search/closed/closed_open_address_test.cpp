@@ -1,4 +1,4 @@
-#include "open_address_closed.hpp"
+#include "closed_open_address.hpp"
 #include <memory>
 #include <optional>
 #include <gmock/gmock.h>
@@ -53,7 +53,7 @@ public:
     DummyNode node0 = DummyNode{0, 3}; // f-value 3
     DummyNode node1 = DummyNode{1, 3}; // f-value 3
     DummyNode node2 = DummyNode{2, 3}; // f-value 3
-    OpenAddressClosed<DummyNode, 100> closed;
+    ClosedOpenAddress<DummyNode, 100> closed;
 
     virtual void SetUp() {
         closed.insert(node2);

@@ -1,5 +1,5 @@
-#ifndef OPEN_ADDRESS_CLOSED_HPP
-#define OPEN_ADDRESS_CLOSED_HPP
+#ifndef CLOSED_OPEN_ADDRESS_HPP
+#define CLOSED_OPEN_ADDRESS_HPP
 
 #include <array>
 #include <functional>
@@ -10,14 +10,14 @@
 // TODO: use bool or optional to indicate if entry is filled? Right now uses
 // default constructor as null entry;
 template <typename Node, size_t N_Entries>
-struct OpenAddressClosed {
+struct ClosedOpenAddress {
     static const Node NullEntry;
 
     static const std::hash<Node> hasher;
     
     std::vector<Node> closed;
 
-    OpenAddressClosed() : closed(N_Entries, Node()) {}
+    ClosedOpenAddress() : closed(N_Entries, Node()) {}
                                 
     // returns true if node needs to be expanded,
     // insert node if not already exist in closed, or if lower f-val than
@@ -30,14 +30,14 @@ struct OpenAddressClosed {
 };
 
 template<typename Node, size_t N_Entries>
-Node const OpenAddressClosed<Node, N_Entries>::NullEntry = Node();
+Node const ClosedOpenAddress<Node, N_Entries>::NullEntry = Node();
 
 template<typename Node, size_t N_Entries>
-const std::hash<Node> OpenAddressClosed<Node, N_Entries>::hasher = std::hash<Node>();
+const std::hash<Node> ClosedOpenAddress<Node, N_Entries>::hasher = std::hash<Node>();
 
 
 template <typename Node, size_t N_Entries>
-bool OpenAddressClosed<Node, N_Entries>::insert(Node node) {
+bool ClosedOpenAddress<Node, N_Entries>::insert(Node node) {
     auto idx = hasher(node) % N_Entries;
     while (true) {
         if (closed[idx] == node) { // found
@@ -59,7 +59,7 @@ bool OpenAddressClosed<Node, N_Entries>::insert(Node node) {
 
 template <typename Node, size_t N_Entries>
 std::vector<Node>
-OpenAddressClosed<Node, N_Entries>::getPath(Node const &node) const {
+ClosedOpenAddress<Node, N_Entries>::getPath(Node const &node) const {
     std::cout << "load factor of closed at end of search : " << (double)(size) / N_Entries << std::endl;
     std::vector<Node> path;
     std::optional<Node> to_find = node;
