@@ -4,16 +4,15 @@
 #include <memory>
 #include <vector>
 #include "MemoryPool.h"
-#include <iostream>
-#include <type_traits>
 
+// Astar which uses memory pool for allocation of nodes
 template <typename Node, typename Heuristic, typename Open, typename Closed>
 struct AStar {
 
     Open open;
     Closed closed;
     Heuristic const heuristic;
-    MemoryPool<Node> pool;
+    MemoryPool<Node> pool; // memory pool
 
     // perform astar search: lazy with reopenings
     // return path to solution
@@ -31,7 +30,7 @@ struct AStar {
             if (closed.insert(node_ptr)) { // need to expand
                 // check goal node
                 if (isGoal(*node_ptr)) {
-                    return closed.getPath(*node_ptr);
+                    return closed.getPath(node_ptr);
                 }
 
                 auto child_nodes = getChildNodes(*node_ptr);

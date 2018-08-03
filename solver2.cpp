@@ -40,13 +40,14 @@ int main(int argc, char *argv[]) {
     }
     auto timer = SteadyClockTimer();
     timer.start();
-    
-    auto initial_node = Tiles::TileNode<WIDTH, HEIGHT>(initial_tiles);
-    
-    using Node = decltype(initial_node);
-    using Heuristic = decltype(Tiles::ManhattanDistanceHeuristic<WIDTH, HEIGHT>());
-    auto astar = AStar<Node, Heuristic, ArrayOpen<Node>,
-                       OpenAddressClosed<Node, 512927357> > ();//205170943> > ();//86028121> >();
+
+    using Node = Tiles::TileNode<WIDTH, HEIGHT>;
+    auto initial_node = Node(initial_tiles);
+
+    using Heuristic = Tiles::ManhattanDistanceHeuristic<WIDTH, HEIGHT>;
+
+    auto astar = AStar<Node, Heuristic, OpenArrayPtr<Node>,
+                       ClosedOpenAddressPtr<Node, 512927357> > ();//205170943> > ();//86028121> >();
     
 
     std::cout << "Initialization took " << timer.getElapsedTime<milliseconds>()

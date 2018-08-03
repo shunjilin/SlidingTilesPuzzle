@@ -5,9 +5,9 @@
 #include <memory>
 
 // open list using array-based open list for 3 level tie-breaking
-
+// store pointers to reduce memory footprint / use in conjunction with memory pool
 template <typename Node>
-struct ArrayOpen {
+struct OpenArrayPtr {
 
     static int const MAX_MOVES = 255;
 

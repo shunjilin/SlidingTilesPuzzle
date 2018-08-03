@@ -1,4 +1,4 @@
-#include "open_array.hpp"
+#include "open_array_ptr.hpp"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -37,19 +37,19 @@ public:
     DummyNode node2 = DummyNode{2, 1};
     DummyNode node3 = DummyNode{1, 2};
 
-    OpenArray<DummyNode> open;
+    OpenArrayPtr<DummyNode> open;
 
     virtual void SetUp() {
-        open.push(node3);
-        open.push(node1);
-        open.push(node2);
+        open.push(&node3);
+        open.push(&node1);
+        open.push(&node2);
     }
 };
 
-TEST_F(OpenArrayInitialize, PopLowestFValHigestGValNode) {
-    EXPECT_TRUE(open.pop() == DummyNode(0, 0));
-    EXPECT_TRUE(open.pop() == DummyNode(1, 2));
-    EXPECT_TRUE(open.pop() == DummyNode(2, 1));
+TEST_F(OpenArrayInitialize, PopLowestFValHighestGValNode) {
+    EXPECT_TRUE(*open.pop() == DummyNode(0, 0));
+    EXPECT_TRUE(*open.pop() == DummyNode(1, 2));
+    EXPECT_TRUE(*open.pop() == DummyNode(2, 1));
 }
 
 TEST_F(OpenArrayInitialize, EmptyOpenAfterPops) {
