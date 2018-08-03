@@ -10,9 +10,4 @@ target_include_directories(astar
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
   )
 
-target_link_libraries(astar
-  INTERFACE open
-  INTERFACE closed
-  )
-
 target_compile_features(astar INTERFACE cxx_std_11)
