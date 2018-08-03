@@ -15,3 +15,11 @@ target_include_directories(array_open
   )
 
 #target_compile_features(open INTERFACE cxx_std_14)
+
+
+# array based open list with pointers
+add_library(open_array_ptr INTERFACE)
+
+target_include_directories(open_array_ptr
+  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+  )

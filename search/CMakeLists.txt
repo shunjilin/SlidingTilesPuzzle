@@ -11,3 +11,13 @@ target_include_directories(astar
   )
 
 target_compile_features(astar INTERFACE cxx_std_11)
+
+# astar (memory pool)
+
+add_library(astar_pool INTERFACE)
+
+target_include_directories(astar_pool
+  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+  )
+
+target_compile_features(astar_pool INTERFACE cxx_std_11)
