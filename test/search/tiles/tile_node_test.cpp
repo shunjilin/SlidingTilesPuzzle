@@ -14,7 +14,7 @@ public:
     static int const HEIGHT = 4;
     static int const N_TILES = WIDTH*HEIGHT;
     
-    std::array<char, N_TILES> initial_board = std::array<char, N_TILES>
+    std::array<uint8_t, N_TILES> initial_board = std::array<uint8_t, N_TILES>
         ({{1, 2, 3, 7, 4, 5, 6, 0, 8, 9, 10, 11, 12, 13, 14, 15}});
     
     // initial board
@@ -103,7 +103,7 @@ public:
     static int const HEIGHT = 5;
     static int const N_TILES = WIDTH*HEIGHT;
     
-    std::array<char, N_TILES> initial_board = std::array<char, N_TILES>
+    std::array<uint8_t, N_TILES> initial_board = std::array<uint8_t, N_TILES>
         ({{1, 2, 3, 4, 0, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
            15, 16, 17, 18, 19, 20, 21, 22, 23, 24}});
     

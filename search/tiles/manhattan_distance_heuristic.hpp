@@ -18,7 +18,7 @@ namespace Tiles {
     }
 
     // calculate Manhattan distance between two indexes in a grid of given width
-    int manhattanDistance(char index1, char index2, int width) {
+    int manhattanDistance(int index1, int index2, int width) {
 	return abs(getRowIdx(index1, width) - getRowIdx(index2, width)) +
 	    abs(getColIdx(index1, width) - getColIdx(index2, width));
     }

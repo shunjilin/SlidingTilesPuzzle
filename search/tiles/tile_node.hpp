@@ -8,11 +8,12 @@
 #include <numeric>
 #include <ostream>
 #include <iomanip>
+#include <cstdint>
 
 namespace Tiles {
 
     // board moves; blank moved in the specified direction
-    enum MOVE : char {
+    enum MOVE : uint8_t {
         DOWN, LEFT, RIGHT, UP, N_MOVES, NONE // best ordering for 15 puzzle
     };
 
@@ -20,7 +21,7 @@ namespace Tiles {
     struct TileNode {
 
         // goal board configuration
-        static std::array<char, WIDTH*HEIGHT> const goal_board;
+        static std::array<uint8_t, WIDTH*HEIGHT> const goal_board;
 
         // tile values, indexed in row-major order
         // e.g. 24 puzzle:
@@ -29,29 +30,29 @@ namespace Tiles {
            10 11 12 13 14
            15 16 17 18 19
            20 21 22 23 24 */
-        std::array<char, WIDTH*HEIGHT> board;
+        std::array<uint8_t, WIDTH*HEIGHT> board;
 
         // index of blank
-        unsigned char blank_idx = std::numeric_limits<char>::max();
+        uint8_t blank_idx = std::numeric_limits<uint8_t>::max();
 
         // caching to prevent regeneration of parent node
         MOVE prev_move = NONE;
 
         // cost and heuristic value of node
-        unsigned char g_val = 0;
-        unsigned char h_val = std::numeric_limits<unsigned char>::max();
+        uint8_t g_val = 0;
+        uint8_t h_val = std::numeric_limits<uint8_t>::max();
 
         TileNode() = default; // sentinel value;
 
         // construct node from array of tiles
-        TileNode(std::array<char, WIDTH*HEIGHT> board) : board(std::move(board)) {
+        TileNode(std::array<uint8_t, WIDTH*HEIGHT> board) : board(std::move(board)) {
             getBlankIdx();
         }
 
         // get index of current blank tile
-        char getBlankIdx() {
+        uint8_t getBlankIdx() {
             // not cached, do linear scan
-            if (blank_idx == std::numeric_limits<char>::max()) {
+            if (blank_idx == std::numeric_limits<uint8_t>::max()) {
                 auto blank_iter = std::find(board.begin(), board.end(), 0);
                 blank_idx = std::distance(board.begin(), blank_iter);
             }
@@ -59,7 +60,7 @@ namespace Tiles {
         }
 
         // swap blank tile with new blank tile to get new tile node
-        TileNode<WIDTH, HEIGHT> swapBlank(char new_blank_idx) const {
+        TileNode<WIDTH, HEIGHT> swapBlank(uint8_t new_blank_idx) const {
             auto new_node = *this; // copy
             std::swap(new_node.board[blank_idx], new_node.board[new_blank_idx]);
             new_node.blank_idx = new_blank_idx; // cache blank idx
@@ -105,15 +106,15 @@ namespace Tiles {
     
     // returns goal board, where value at each index = index
     template<int WIDTH, int HEIGHT>
-    std::array<char, WIDTH*HEIGHT> getGoalBoard() {
-        std::array<char, WIDTH*HEIGHT> tiles;
+    std::array<uint8_t, WIDTH*HEIGHT> getGoalBoard() {
+        std::array<uint8_t, WIDTH*HEIGHT> tiles;
         std::iota(tiles.begin(), tiles.end(), 0);
         return tiles;      
     }
 
     // static initialization of goal board
     template<int WIDTH, int HEIGHT>
-    std::array<char, WIDTH*HEIGHT> const TileNode<WIDTH, HEIGHT>::goal_board =
+    std::array<uint8_t, WIDTH*HEIGHT> const TileNode<WIDTH, HEIGHT>::goal_board =
         getGoalBoard<WIDTH,HEIGHT>();
 
     // free functions, loose coupling, take advantage of argument dependent

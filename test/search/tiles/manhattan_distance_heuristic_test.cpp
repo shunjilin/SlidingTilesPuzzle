@@ -32,7 +32,7 @@ TEST(ManhattanDistance, correctManhattanDistance) {
 
 class BoardInitialize: public testing::Test {
 public:
-    std::array<char, N_TILES> initial_board = std::array<char, N_TILES>
+    std::array<uint8_t, N_TILES> initial_board = std::array<uint8_t, N_TILES>
         ({{1, 2, 5, 3, 4, 0, 6, 7, 8, 9, 10, 11}});
     
     // initial board

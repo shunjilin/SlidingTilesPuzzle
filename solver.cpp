@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     auto initial_tiles_string = result["initial_state"].as<std::string>();
     std::istringstream iss(initial_tiles_string);
     
-    std::array<char, N_TILES> initial_tiles;
+    std::array<uint8_t, N_TILES> initial_tiles;
 
     // read tiles
     for (int i = 0; i < N_TILES; ++i) {
