@@ -5,9 +5,10 @@ project("Search")
 # ctest
 enable_testing()
 
+add_subdirectory(utils)
+add_subdirectory(dependencies)
 add_subdirectory(search)
 add_subdirectory(test)
-add_subdirectory(utils)
 
 # executables
 add_executable(Solver solver.cpp)
