@@ -28,11 +28,11 @@ TODO: source generation using CMake to configure domain, puzzle size, search alg
 
 To execute solvers, run:
 
-For Astar with 3-level tie-breaking: min f, max g, LIFO and lazy duplicate detection:
+For Astar with 3-level tie-breaking: min f, max g, LIFO; lazy duplicate detection and manhattan distance heuristic:
 ```
 ./Solver -i "[initial state configuration]"
 ```
-For optimized Astar (memory pool and open / closed list that hold pointers to the memory pool):
+For optimized Astar (memory pool and open / closed list that hold pointers to the memory pool) with incremental manhattan distance heuristics:
 ```
 ./Solver2 -i "[initial state configuration]"
 ```

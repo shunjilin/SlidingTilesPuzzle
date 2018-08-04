@@ -20,7 +20,6 @@ struct AStar {
     search(Node initial_node) {
         auto initial_node_ptr = pool.newElement(initial_node);
         
-        
         evalH(*initial_node_ptr, heuristic);
         open.push(initial_node_ptr);
 
@@ -33,17 +32,18 @@ struct AStar {
                     return closed.getPath(node_ptr);
                 }
 
-                auto child_nodes = getChildNodes(*node_ptr);
+                auto child_nodes = getChildNodes(*node_ptr); // generate nodes
                 for (auto child_node : child_nodes) {
+                    // push all valid child nodes into open
                     if (child_node.has_value()) {
                         auto child_node_ptr =
                             pool.newElement(child_node.value());
-                        evalH(*child_node_ptr, heuristic);
+                        evalH(*child_node_ptr, *node_ptr, heuristic);
                         open.push(child_node_ptr);
                     }
                 }
             } else {
-                pool.deleteElement(node_ptr); // already in closed
+                pool.deleteElement(node_ptr); // duplicate in closed, deallocate
             }
         }
         return std::vector<Node>(); // no path found

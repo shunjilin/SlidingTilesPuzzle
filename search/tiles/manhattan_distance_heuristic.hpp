@@ -52,6 +52,7 @@ namespace Tiles {
     }
 
     // incremental manhattan distance
+    // TODO: remove dependency on parent node
     template<int WIDTH, int HEIGHT, typename Heuristic>
     void evalH(TileNode<WIDTH, HEIGHT> & node, TileNode<WIDTH, HEIGHT> & parent,
                Heuristic const & heuristic) {
