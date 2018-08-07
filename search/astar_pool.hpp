@@ -22,7 +22,7 @@ struct AStarPool : public Search<Node> {
     std::vector<Node>
     search(Node initial_node) override final {
         auto initial_node_ptr = pool.newElement(initial_node);
-        
+
         evalH(*initial_node_ptr, heuristic);
         open.push(initial_node_ptr);
 
@@ -41,7 +41,7 @@ struct AStarPool : public Search<Node> {
                     if (child_node.has_value()) {
                         auto child_node_ptr =
                             pool.newElement(child_node.value());
-                        evalH(*child_node_ptr, *node_ptr, heuristic);
+                        evalH(*child_node_ptr, heuristic);
                         open.push(child_node_ptr);
                     }
                 }

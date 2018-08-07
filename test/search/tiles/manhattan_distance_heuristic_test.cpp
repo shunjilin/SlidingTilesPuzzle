@@ -52,16 +52,16 @@ public:
 };
 
 TEST_F(BoardInitialize, correctManhattanHeuristic) {
-    evalH(node, heuristic);
+    heuristic.evalH(node);
     ASSERT_EQ(getH(node), 3);
 }
 
-TEST_F(BoardInitialize, correctIncrementalManhattanHeuristic) {
+TEST_F(BoardInitialize, correctIncrementalManhattanHeuristic2) {
     evalH(node, heuristic);
     auto child_node = node.moveBlank(DOWN);
     auto child_node_copy = child_node;
-    evalH(*child_node, node, heuristic);
-    evalH(*child_node_copy, heuristic);
+    heuristic.evalH(*child_node_copy);
+    heuristic.evalHIncremental(*child_node);
     ASSERT_EQ(child_node->h_val, child_node_copy->h_val);
 }
 

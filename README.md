@@ -30,7 +30,7 @@ For Astar with 3-level tie-breaking: min f, max g, LIFO; lazy duplicate detectio
 ```
 ./Solver -s "astar" -i "[initial state configuration]"
 ```
-For optimized Astar (memory pool and open / closed list that hold pointers to the memory pool) with incremental manhattan distance heuristics:
+For optimized Astar (memory pool and open / closed list that hold pointers to the memory pool) with manhattan distance heuristics:
 ```
 ./Solver -s "astar_pool" -i "[initial state configuration]"
 ```

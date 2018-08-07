@@ -20,7 +20,7 @@ static void BM_ManhattanDistanceHeuristic(benchmark::State& state) {
         for (int i = 0, i_end = state.range(0); i < i_end; ++i) {
             auto next_node = node;
             std::shuffle(next_node.board.begin(), next_node.board.end(), g);
-            evalH(next_node, heuristic);
+            heuristic.evalH(next_node);
             node = next_node;
         }
     }
@@ -37,7 +37,7 @@ static void BM_IncrementalManhattanDistanceHeuristic(benchmark::State& state) {
         for (int i = 0, i_end = state.range(); i < i_end; ++i) {
             auto next_node = node;
             std::shuffle(next_node.board.begin(), next_node.board.end(), g);
-            evalH(next_node, node, heuristic);
+            heuristic.evalHIncremental(next_node);
             node = next_node;
             
         }

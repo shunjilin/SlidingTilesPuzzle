@@ -40,25 +40,45 @@ namespace Tiles {
                 }
             }
         }
+
+        void evalH(TileNode<WIDTH, HEIGHT> & node) const {
+            int heuristic_value = 0;
+            for (int idx = 0; idx < WIDTH*HEIGHT; ++idx) {
+                heuristic_value += table[node.board[idx]][idx];
+            }
+            node.h_val = heuristic_value;
+        }
+
+        void evalHIncremental(TileNode<WIDTH, HEIGHT> & node) const {
+            auto parent_blank_idx = getParentBlankIdx(node);
+            auto tile_moved = node.board[parent_blank_idx];
+            node.h_val += (table[tile_moved][parent_blank_idx] -
+                           table[tile_moved][node.blank_idx]);
+        }
     };
 
-    template<int WIDTH, int HEIGHT, typename Heuristic>
-    void evalH(TileNode<WIDTH, HEIGHT> & node, Heuristic const & heuristic) {
-        int heuristic_value = 0;
-        for (int idx = 0; idx < WIDTH*HEIGHT; ++idx) {
-            heuristic_value += heuristic.table[node.board[idx]][idx];
+    // helper function for incremental manhattan heuristic
+    template<int WIDTH, int HEIGHT>
+    uint8_t getParentBlankIdx(TileNode<WIDTH, HEIGHT> const & node) {
+        switch(node.prev_move) {
+        case UP:
+            return node.blank_idx + WIDTH;
+        case DOWN:
+            return node.blank_idx - WIDTH;
+        case LEFT:
+            return node.blank_idx + 1;
+        case RIGHT:
+            return node.blank_idx - 1;
+        default:
+            break;
         }
-        node.h_val = heuristic_value;
+        return node.blank_idx;
     }
 
-    // incremental manhattan distance
-    // TODO: remove dependency on parent node
+    // use non incremental heuristic as optimization seems to give minimal speedup
     template<int WIDTH, int HEIGHT, typename Heuristic>
-    void evalH(TileNode<WIDTH, HEIGHT> & node, TileNode<WIDTH, HEIGHT> & parent,
-               Heuristic const & heuristic) {
-        auto tile_moved = parent.board[node.blank_idx];
-        node.h_val = parent.h_val - heuristic.table[tile_moved][node.blank_idx]
-            + heuristic.table[tile_moved][parent.blank_idx];       
+    void evalH(TileNode<WIDTH, HEIGHT> & node, Heuristic const & heuristic) {
+        heuristic.evalH(node);
     }
 }
 
