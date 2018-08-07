@@ -9,10 +9,10 @@
 
 // open addressing to minimize memory allocations
 // store pointers to reduce memory footprint / use in conjunction with memory pool
-template <typename Node, size_t N_Entries>
+template <typename Node, typename HashFunction, size_t N_Entries>
 struct ClosedOpenAddressPtr {
 
-    static const std::hash<Node> hasher;
+    static const HashFunction hasher;
     
     std::vector<Node *> closed;
 
@@ -28,14 +28,15 @@ struct ClosedOpenAddressPtr {
     size_t size = 0;
 };
 
-template<typename Node, size_t N_Entries>
-const std::hash<Node> ClosedOpenAddressPtr<Node, N_Entries>::hasher = std::hash<Node>();
+template<typename Node, typename HashFunction, size_t N_Entries>
+const HashFunction
+ClosedOpenAddressPtr<Node, HashFunction, N_Entries>::hasher = HashFunction();
 
 // insert node pointer into closed list
 // return true if node needs to be expanded, false otherwise
 // handles reopenings : e.g. inconsistent heuristics
-template <typename Node, size_t N_Entries>
-bool ClosedOpenAddressPtr<Node, N_Entries>::insert(Node * node_ptr) {
+template <typename Node, typename HashFunction, size_t N_Entries>
+bool ClosedOpenAddressPtr<Node, HashFunction, N_Entries>::insert(Node * node_ptr) {
     auto idx = hasher(*node_ptr) % N_Entries;
     while (true) {
         if (closed[idx] != nullptr && *closed[idx] == *node_ptr) { // found
@@ -57,9 +58,9 @@ bool ClosedOpenAddressPtr<Node, N_Entries>::insert(Node * node_ptr) {
 
 // given node pointer, trace parent nodes in closed list to return a solution
 // path of nodes
-template <typename Node, size_t N_Entries>
+template <typename Node, typename HashFunction, size_t N_Entries>
 std::vector<Node>
-ClosedOpenAddressPtr<Node, N_Entries>::getPath(Node const * node) const {
+ClosedOpenAddressPtr<Node, HashFunction, N_Entries>::getPath(Node const * node) const {
     std::vector<Node> path;
     std::optional<Node> to_find = *node;
     auto idx = hasher(*to_find) % N_Entries;
@@ -80,9 +81,9 @@ ClosedOpenAddressPtr<Node, N_Entries>::getPath(Node const * node) const {
     return path;
 }
 
-template <typename Node, size_t N_Entries>
-std::ostream &operator<<(std::ostream& os,
-                         ClosedOpenAddressPtr<Node, N_Entries> const & closed) {
+template <typename Node, typename HashFunction, size_t N_Entries>
+std::ostream &operator<<
+(std::ostream& os, ClosedOpenAddressPtr<Node, HashFunction, N_Entries> const & closed) {
     os <<  "closed list load factor: "
        << (double)(closed.size) / N_Entries << "\n";
     return os;

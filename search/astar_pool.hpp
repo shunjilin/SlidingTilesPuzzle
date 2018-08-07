@@ -9,11 +9,12 @@
 #include "closed_open_address_ptr.hpp"
 
 // Astar which uses memory pool for allocation of nodes
-template <typename Node, typename Heuristic, size_t ClosedEntries = 512927357>
+template <typename Node, typename Heuristic,
+          typename HashFunction, size_t ClosedEntries = 512927357>
 struct AStarPool : public Search<Node> {
 
     OpenArrayPtr<Node> open;
-    ClosedOpenAddressPtr<Node, ClosedEntries> closed;
+    ClosedOpenAddressPtr<Node, HashFunction, ClosedEntries> closed;
     Heuristic  heuristic;
     MemoryPool<Node> pool; // memory pool
 

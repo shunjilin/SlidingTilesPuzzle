@@ -53,7 +53,7 @@ public:
     DummyNode node0 = DummyNode{0, 3}; // f-value 3
     DummyNode node1 = DummyNode{1, 3}; // f-value 3
     DummyNode node2 = DummyNode{2, 3}; // f-value 3
-    ClosedOpenAddressPtr<DummyNode, 100> closed;
+    ClosedOpenAddressPtr<DummyNode, std::hash<DummyNode>, 100> closed;
 
     virtual void SetUp() {
         closed.insert(&node2);

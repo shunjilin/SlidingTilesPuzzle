@@ -9,11 +9,11 @@
 // open addressing to minimize memory allocations
 // TODO: use bool or optional to indicate if entry is filled? Right now uses
 // default constructor as null entry;
-template <typename Node, size_t N_Entries>
+template <typename Node, typename HashFunction, size_t N_Entries>
 struct ClosedOpenAddress {
     static const Node NullEntry;
 
-    static const std::hash<Node> hasher;
+    static const HashFunction hasher;
     
     std::vector<Node> closed;
 
@@ -29,15 +29,15 @@ struct ClosedOpenAddress {
     size_t size = 0;
 };
 
-template<typename Node, size_t N_Entries>
-Node const ClosedOpenAddress<Node, N_Entries>::NullEntry = Node();
+template<typename Node, typename HashFunction, size_t N_Entries>
+Node const ClosedOpenAddress<Node, HashFunction, N_Entries>::NullEntry = Node();
 
-template<typename Node, size_t N_Entries>
-const std::hash<Node> ClosedOpenAddress<Node, N_Entries>::hasher = std::hash<Node>();
+template<typename Node, typename HashFunction, size_t N_Entries>
+const HashFunction ClosedOpenAddress<Node, HashFunction, N_Entries>::hasher = HashFunction();
 
 
-template <typename Node, size_t N_Entries>
-bool ClosedOpenAddress<Node, N_Entries>::insert(Node node) {
+template <typename Node, typename HashFunction, size_t N_Entries>
+bool ClosedOpenAddress<Node, HashFunction, N_Entries>::insert(Node node) {
     auto idx = hasher(node) % N_Entries;
     while (true) {
         if (closed[idx] == node) { // found
@@ -57,9 +57,9 @@ bool ClosedOpenAddress<Node, N_Entries>::insert(Node node) {
     }
 }
 
-template <typename Node, size_t N_Entries>
+template <typename Node, typename HashFunction, size_t N_Entries>
 std::vector<Node>
-ClosedOpenAddress<Node, N_Entries>::getPath(Node const &node) const {
+ClosedOpenAddress<Node, HashFunction, N_Entries>::getPath(Node const &node) const {
     std::vector<Node> path;
     std::optional<Node> to_find = node;
     auto idx = hasher(*to_find) % N_Entries;
@@ -80,9 +80,9 @@ ClosedOpenAddress<Node, N_Entries>::getPath(Node const &node) const {
     return path;
 }
 
-template <typename Node, size_t N_Entries>
+template <typename Node, typename HashFunction, size_t N_Entries>
 std::ostream &operator<<(std::ostream& os,
-                         ClosedOpenAddress<Node, N_Entries> const & closed) {
+                         ClosedOpenAddress<Node, HashFunction, N_Entries> const & closed) {
     os <<  "closed list load factor: "
        << (double)(closed.size) / N_Entries << std::endl;
     return os;

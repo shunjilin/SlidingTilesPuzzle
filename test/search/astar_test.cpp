@@ -1,6 +1,7 @@
 #include "manhattan_distance_heuristic.hpp"
 #include "tile_node.hpp"
 #include "astar.hpp"
+#include "tabulation.hpp"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -35,8 +36,8 @@ public:
         Node(initial_board);
     Heuristic heuristic = Heuristic();
 
-    AStar<Node, Heuristic, 100> astar =
-        AStar<Node, Heuristic, 100>();
+    AStar<Node, Heuristic, std::hash<Node>, 100> astar =
+        AStar<Node, Heuristic, std::hash<Node>, 100>();
 };
 
 TEST_F(AStarInitialize, AStarReturnsCorrectPath) {

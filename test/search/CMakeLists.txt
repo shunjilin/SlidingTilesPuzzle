@@ -9,6 +9,7 @@ target_link_libraries(astar_test
   PRIVATE tile_node
   PRIVATE astar
   PRIVATE manhattan_distance_heuristic
+  PRIVATE tabulation
   PRIVATE gtest
   PRIVATE gmock
   )
@@ -16,7 +17,7 @@ target_link_libraries(astar_test
 add_test(astar_test astar_test)
 
 # astar_pool test
-add_executable(astar_pool_test astar_test.cpp)
+add_executable(astar_pool_test astar_pool_test.cpp)
 
 target_link_libraries(astar_pool_test
   PRIVATE tile_node

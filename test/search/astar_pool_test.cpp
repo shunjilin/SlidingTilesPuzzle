@@ -35,8 +35,8 @@ public:
         Node(initial_board);
     Heuristic heuristic = Heuristic();
 
-    AStarPool<Node, Heuristic, 100> astar =
-        AStarPool<Node, Heuristic, 100>();
+    AStarPool<Node, Heuristic, std::hash<Node>, 100> astar =
+        AStarPool<Node, Heuristic, std::hash<Node>, 100>();
 };
 
 TEST_F(AStarInitialize, AStarReturnsCorrectPath) {

@@ -22,6 +22,7 @@ target_link_libraries(Solver
   PRIVATE astar
   PRIVATE astar_pool
   PRIVATE manhattan_distance_heuristic
+  PRIVATE tabulation
   PRIVATE tile_node
   )
 

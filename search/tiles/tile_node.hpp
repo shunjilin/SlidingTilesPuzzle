@@ -101,6 +101,16 @@ namespace Tiles {
             }
             return new_node;
         }
+
+        // simple iterator
+        typedef typename std::array<uint8_t, WIDTH*HEIGHT>::const_iterator iterator;
+
+        iterator begin() const {
+            return board.begin();
+        }
+        iterator end() const {
+            return board.end();
+        }
     };
 
     
@@ -217,6 +227,7 @@ namespace std
     template<int WIDTH, int HEIGHT>
     struct hash<Tiles::TileNode<WIDTH, HEIGHT> >
     {
+        
         size_t
         operator() (const Tiles::TileNode<WIDTH, HEIGHT>& node) const
         {

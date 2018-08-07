@@ -3,6 +3,7 @@
 #include "search.hpp"
 #include "astar.hpp"
 #include "astar_pool.hpp"
+#include "tabulation.hpp"
 #include "cxxopts.hpp"
 #include "steady_clock_timer.hpp"
 #include <array>
@@ -19,6 +20,7 @@ int const N_TILES = WIDTH*HEIGHT;
 
 using Node = TileNode<WIDTH, HEIGHT>;
 using Heuristic = ManhattanDistanceHeuristic<WIDTH, HEIGHT>;
+using HashFunction = TabulationHash<Node, WIDTH*HEIGHT>;
 
 int main(int argc, char *argv[]) {
 
@@ -58,9 +60,9 @@ int main(int argc, char *argv[]) {
     std::unique_ptr<Search<Node> > search_algo;
 
     if (search_string == "astar") {
-        search_algo = std::make_unique<AStar<Node, Heuristic> >();
+        search_algo = std::make_unique<AStar<Node, Heuristic, HashFunction> >();
     } else if (search_string == "astar_pool") {
-        search_algo = std::make_unique<AStarPool<Node, Heuristic> >();
+        search_algo = std::make_unique<AStarPool<Node, Heuristic, HashFunction> >();
     } else {
         std::cout << "invalid algorithm option" << "\n";
         throw;
