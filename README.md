@@ -24,17 +24,15 @@ Default puzzle is the 15 puzzle.
 
 Puzzle dimensions can be configured in ./solver.cpp (astar) or ./solver2.cpp (optimized astar)
 
-TODO: source generation using CMake to configure domain, puzzle size, search algorithm etc. 
-
 To execute solvers, run:
 
 For Astar with 3-level tie-breaking: min f, max g, LIFO; lazy duplicate detection and manhattan distance heuristic:
 ```
-./Solver -i "[initial state configuration]"
+./Solver -s "astar" -i "[initial state configuration]"
 ```
 For optimized Astar (memory pool and open / closed list that hold pointers to the memory pool) with incremental manhattan distance heuristics:
 ```
-./Solver2 -i "[initial state configuration]"
+./Solver -s "astar_pool" -i "[initial state configuration]"
 ```
 
 where [initial state configuration] is a space separated list of tile numbers, 0-15, with 0 representing the blank tile.
