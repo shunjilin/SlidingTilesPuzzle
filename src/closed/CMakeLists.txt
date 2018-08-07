@@ -1,5 +1,3 @@
-add_subdirectory(hash)
-
 add_library(closed INTERFACE)
 
 # simple closed list

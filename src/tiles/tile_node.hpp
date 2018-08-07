@@ -103,12 +103,12 @@ namespace Tiles {
         }
 
         // simple iterator
-        typedef typename std::array<uint8_t, WIDTH*HEIGHT>::const_iterator iterator;
+        using const_iterator = typename std::array<uint8_t, WIDTH*HEIGHT>::const_iterator;
 
-        iterator begin() const {
+        const_iterator begin() const {
             return board.begin();
         }
-        iterator end() const {
+        const_iterator end() const {
             return board.end();
         }
     };

@@ -1,7 +1,9 @@
 # Sliding Tiles Puzzle Solver : Search Algorithms
 
 ## Cloning the repository
+```
 git clone https://github.com/shunjilin/SlidingTilesPuzzle --recurse-modules
+```
 
 ## Usage
 In root folder, make directory ./build
@@ -20,17 +22,19 @@ To run all tests:
 ctest --verbose
 ```
 
-Default puzzle is the 15 puzzle.
+Default puzzle: 15 puzzle
+Default heuristic: manhattan distance heuristic
+Default hash function: simple tabulation (zobrist) hashing
 
-Puzzle dimensions can be configured in ./solver.cpp (astar) or ./solver2.cpp (optimized astar)
+The above parameters can be configured in ./solver.cpp
 
-To execute solvers, run:
+To run solvers:
 
-For Astar with 3-level tie-breaking: min f, max g, LIFO; lazy duplicate detection and manhattan distance heuristic:
+For AStar with 3-level tie-breaking: min f, max g, LIFO and lazy duplicate detection:
 ```
 ./Solver -s "astar" -i "[initial state configuration]"
 ```
-For optimized Astar (memory pool and open / closed list that hold pointers to the memory pool) with manhattan distance heuristics:
+For optimized AStar (memory pool and open / closed list that hold pointers to the memory pool):
 ```
 ./Solver -s "astar_pool" -i "[initial state configuration]"
 ```

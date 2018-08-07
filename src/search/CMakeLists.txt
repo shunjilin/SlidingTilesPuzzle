@@ -1,6 +1,3 @@
-add_subdirectory(tiles)
-add_subdirectory(open)
-add_subdirectory(closed)
 add_subdirectory(memory_pool)
 
 # search interface
