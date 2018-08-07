@@ -1,7 +1,7 @@
 # Sliding Tiles Puzzle Solver : Search Algorithms
 
-## Goal
-Efficient and modular search algorithms for domains (e.g. sliding tiles puzzle).
+## Cloning the repository
+git clone https://github.com/shunjilin/SlidingTilesPuzzle --recurse-modules
 
 ## Usage
 In root folder, make directory ./build
