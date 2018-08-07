@@ -16,39 +16,20 @@ add_executable(Solver solver.cpp)
 
 target_compile_features(Solver PUBLIC cxx_std_17)
 
-# TODO: make factory library to handle search configuration
 target_link_libraries(Solver
   PRIVATE cxxopts
+  PRIVATE search
   PRIVATE astar
-  PRIVATE open_array
-  PRIVATE closed_open_address
-  PRIVATE manhattan_distance_heuristic
-  PRIVATE tile_node
-  )
-
-# Memory Pool solver
-add_executable(Solver2 solver2.cpp)
-
-target_compile_features(Solver2 PUBLIC cxx_std_17)
-
-# TODO: make factory library to handle search configuration
-target_link_libraries(Solver2
-  PRIVATE cxxopts
   PRIVATE astar_pool
-  PRIVATE open_array_ptr
-  PRIVATE closed_open_address_ptr
   PRIVATE manhattan_distance_heuristic
   PRIVATE tile_node
   )
-
 
 # warning flags
 if (MSVC)
   target_compile_options(Solver PRIVATE /W4)
-  target_compile_options(Solver2 PRIVATE /W4)
 else()
   target_compile_options(Solver PRIVATE -Wall -Wextra -Wpedantic)
-  target_compile_options(Solver2 PRIVATE -Wall -Wextra -Wpedantic)
 endif()
 
 set(CMAKE_BUILD_TYPE Release)

@@ -3,18 +3,21 @@
 
 #include <memory>
 #include <vector>
+#include "search.hpp"
+#include "open_array.hpp"
+#include "closed_open_address.hpp"
 
-template <typename Node, typename Heuristic, typename Open, typename Closed>
-struct AStar {
+template <typename Node, typename Heuristic, size_t ClosedEntries = 512927357 >
+struct AStar : public Search<Node> {
 
-    Open open;
-    Closed closed;
-    Heuristic const heuristic;
+    Heuristic heuristic;
+    OpenArray<Node> open;
+    ClosedOpenAddress<Node, ClosedEntries> closed;
 
     // perform astar search: lazy with reopenings
     // return path to solution
     std::vector<Node>
-    search(Node initial_node) {
+    search(Node initial_node) override final {
 
         evalH(initial_node, heuristic);
         open.push(std::move(initial_node));

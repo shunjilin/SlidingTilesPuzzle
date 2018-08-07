@@ -1,23 +1,26 @@
-#ifndef ASTAR_HPP
-#define ASTAR_HPP
+#ifndef ASTAR_POOL_HPP
+#define ASTAR_POOL_HPP
 
 #include <memory>
 #include <vector>
 #include "MemoryPool.h"
+#include "search.hpp"
+#include "open_array_ptr.hpp"
+#include "closed_open_address_ptr.hpp"
 
 // Astar which uses memory pool for allocation of nodes
-template <typename Node, typename Heuristic, typename Open, typename Closed>
-struct AStar {
+template <typename Node, typename Heuristic, size_t ClosedEntries = 512927357>
+struct AStarPool : public Search<Node> {
 
-    Open open;
-    Closed closed;
-    Heuristic const heuristic;
+    OpenArrayPtr<Node> open;
+    ClosedOpenAddressPtr<Node, ClosedEntries> closed;
+    Heuristic  heuristic;
     MemoryPool<Node> pool; // memory pool
 
     // perform astar search: lazy with reopenings
     // return path to solution
     std::vector<Node>
-    search(Node initial_node) {
+    search(Node initial_node) override final {
         auto initial_node_ptr = pool.newElement(initial_node);
         
         evalH(*initial_node_ptr, heuristic);
