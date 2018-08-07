@@ -69,14 +69,15 @@ int main(int argc, char *argv[]) {
     using Node = Tiles::TileNode<WIDTH, HEIGHT>;
     auto initial_node = Node(initial_tiles);
     
-    std::cout << "Initialization took " << timer.getElapsedTime<milliseconds>()
-              << " ms\n";
+    std::cout <<  timer.getElapsedTime<milliseconds>()
+              << " ms to initialize\n";
     auto path = search_algo->search(initial_node);
     
-    std::cout << "Took " << timer.getElapsedTime<milliseconds>()
+    std::cout << timer.getElapsedTime<milliseconds>()
               << " ms to solve (including initialization)\n";
-    std::cout << "Sequence:" << std::endl;
+    std::cout << *search_algo << "\n";
     std::cout << "n moves: " << path.size() - 1 << "\n";
+    std::cout << "sequence:\n";
     for (auto node : path) {
         std::cout << node << std::endl;
     }    

@@ -60,7 +60,6 @@ bool ClosedOpenAddressPtr<Node, N_Entries>::insert(Node * node_ptr) {
 template <typename Node, size_t N_Entries>
 std::vector<Node>
 ClosedOpenAddressPtr<Node, N_Entries>::getPath(Node const * node) const {
-    std::cout << "load factor of closed at end of search : " << (double)(size) / N_Entries << std::endl;
     std::vector<Node> path;
     std::optional<Node> to_find = *node;
     auto idx = hasher(*to_find) % N_Entries;
@@ -79,6 +78,14 @@ ClosedOpenAddressPtr<Node, N_Entries>::getPath(Node const * node) const {
     }
     std::reverse(path.begin(), path.end());
     return path;
+}
+
+template <typename Node, size_t N_Entries>
+std::ostream &operator<<(std::ostream& os,
+                         ClosedOpenAddressPtr<Node, N_Entries> const & closed) {
+    os <<  "closed list load factor: "
+       << (double)(closed.size) / N_Entries << "\n";
+    return os;
 }
 
 #endif

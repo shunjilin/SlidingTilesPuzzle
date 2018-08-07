@@ -24,6 +24,7 @@ struct AStarPool : public Search<Node> {
         auto initial_node_ptr = pool.newElement(initial_node);
 
         evalH(*initial_node_ptr, heuristic);
+        ++Search<Node>::generated;
         open.push(initial_node_ptr);
 
         while (!open.empty()) {
@@ -34,11 +35,12 @@ struct AStarPool : public Search<Node> {
                 if (isGoal(*node_ptr)) {
                     return closed.getPath(node_ptr);
                 }
-
-                auto child_nodes = getChildNodes(*node_ptr); // generate nodes
+                auto child_nodes = getChildNodes(*node_ptr);
+                ++Search<Node>::expanded;
                 for (auto child_node : child_nodes) {
                     // push all valid child nodes into open
                     if (child_node.has_value()) {
+                        ++Search<Node>::generated;
                         auto child_node_ptr =
                             pool.newElement(child_node.value());
                         evalH(*child_node_ptr, heuristic);
@@ -50,6 +52,11 @@ struct AStarPool : public Search<Node> {
             }
         }
         return std::vector<Node>(); // no path found
+    }
+
+    std::ostream& print(std::ostream& os) const override final {
+        os << closed;
+        return os;
     }
 };
 

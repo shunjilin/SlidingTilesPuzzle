@@ -20,6 +20,7 @@ struct AStar : public Search<Node> {
     search(Node initial_node) override final {
 
         evalH(initial_node, heuristic);
+        ++Search<Node>::generated;
         open.push(std::move(initial_node));
 
         while (!open.empty()) {
@@ -30,8 +31,10 @@ struct AStar : public Search<Node> {
                     return closed.getPath(node);
                 }
                 auto child_nodes = getChildNodes(node);
+                ++Search<Node>::expanded;
                 for (auto child_node : child_nodes) {
                     if (child_node.has_value()) {
+                        ++Search<Node>::generated;
                         evalH(*child_node, heuristic);
                         open.push(std::move(*child_node));
                     }
@@ -39,6 +42,11 @@ struct AStar : public Search<Node> {
             }
         }
         return std::vector<Node>(); // no path found
+    }
+
+    std::ostream&  print(std::ostream& os) const override final {
+        os << closed;
+        return os;
     }
 };
 
