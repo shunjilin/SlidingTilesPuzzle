@@ -2,7 +2,7 @@
 
 ## Cloning the repository
 ```
-git clone https://github.com/shunjilin/SlidingTilesPuzzle --recurse-modules
+git clone https://github.com/shunjilin/SlidingTilesPuzzle --recurse-submodules
 ```
 
 ## Usage
