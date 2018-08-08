@@ -2,6 +2,7 @@
 #define SEARCH_HPP
 
 #include <ostream>
+#include <vector>
 
 // interface for search algorithms
 template<typename Node>

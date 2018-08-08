@@ -24,7 +24,6 @@ ctest --verbose
 
 Default puzzle: 15 puzzle
 Default heuristic: manhattan distance heuristic
-Default hash function: simple tabulation (zobrist) hashing
 
 The above parameters can be configured in ./solver.cpp
 
@@ -32,11 +31,11 @@ To run solvers:
 
 For AStar with 3-level tie-breaking: min f, max g, LIFO and lazy duplicate detection:
 ```
-./Solver -s "astar" -i "[initial state configuration]"
+./src/Solver -s "astar" -i "[initial state configuration]"
 ```
 For optimized AStar (memory pool and open / closed list that hold pointers to the memory pool):
 ```
-./Solver -s "astar_pool" -i "[initial state configuration]"
+./src/Solver -s "astar_pool" -i "[initial state configuration]"
 ```
 
 where [initial state configuration] is a space separated list of tile numbers, 0-15, with 0 representing the blank tile.

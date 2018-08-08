@@ -2,6 +2,7 @@
 #define OPEN_ARRAY_HPP
 
 #include <array>
+#include <vector>
 
 // open list using array-based open list for 3 level tie-breaking
 
