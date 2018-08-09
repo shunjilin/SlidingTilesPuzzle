@@ -233,7 +233,7 @@ namespace std
         {
             size_t result = 0;
             for (auto i = 0; i < WIDTH*HEIGHT; ++i) {
-                result = result * 31 + hash<int>()(node.board[i]);
+                result = result * 31 + hash<char>()(node.board[i]);
             }
             return result;
         }

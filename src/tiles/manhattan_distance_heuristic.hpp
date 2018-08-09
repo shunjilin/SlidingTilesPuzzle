@@ -8,17 +8,17 @@
 namespace Tiles {
     
     // calculate row index from index in grid of given width
-    int getRowIdx(int index, int width) {
+    uint8_t getRowIdx(int index, int width) {
 	return index / width;
     }
 
     // calculate col index from index in grid of given width
-    int getColIdx(int index, int width) {
+    uint8_t getColIdx(int index, int width) {
 	return index % width;
     }
 
     // calculate Manhattan distance between two indexes in a grid of given width
-    int manhattanDistance(int index1, int index2, int width) {
+    uint8_t manhattanDistance(int index1, int index2, int width) {
 	return abs(getRowIdx(index1, width) - getRowIdx(index2, width)) +
 	    abs(getColIdx(index1, width) - getColIdx(index2, width));
     }
@@ -26,7 +26,7 @@ namespace Tiles {
     template<int WIDTH, int HEIGHT>
     struct ManhattanDistanceHeuristic {
         // 2-D array for calculating each tile's manhattan distance
-        std::array< std::array<int, WIDTH*HEIGHT>, WIDTH*HEIGHT> table;
+        std::array< std::array<uint8_t, WIDTH*HEIGHT>, WIDTH*HEIGHT> table;
         
         ManhattanDistanceHeuristic() {
             // initialize lookup table

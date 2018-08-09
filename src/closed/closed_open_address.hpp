@@ -38,7 +38,7 @@ const HashFunction ClosedOpenAddress<Node, HashFunction, N_Entries>::hasher = Ha
 
 template <typename Node, typename HashFunction, size_t N_Entries>
 bool ClosedOpenAddress<Node, HashFunction, N_Entries>::insert(Node node) {
-    auto idx = hasher(node) % N_Entries;
+    size_t idx = hasher(node) % N_Entries;
     while (true) {
         if (closed[idx] == NullEntry) { // not found
             closed[idx] = node; // insert
@@ -62,7 +62,7 @@ std::vector<Node>
 ClosedOpenAddress<Node, HashFunction, N_Entries>::getPath(Node const &node) const {
     std::vector<Node> path;
     std::optional<Node> to_find = node;
-    auto idx = hasher(*to_find) % N_Entries;
+    size_t idx = hasher(*to_find) % N_Entries;
 
     while (to_find.has_value()) {
         if (closed[idx] == to_find) { // found
