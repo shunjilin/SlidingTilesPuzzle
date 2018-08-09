@@ -40,19 +40,19 @@ template <typename Node, typename HashFunction, size_t N_Entries>
 bool ClosedOpenAddress<Node, HashFunction, N_Entries>::insert(Node node) {
     auto idx = hasher(node) % N_Entries;
     while (true) {
-        if (closed[idx] == node) { // found
+        if (closed[idx] == NullEntry) { // not found
+            closed[idx] = node; // insert
+            ++size;
+            return true;
+        } else if (closed[idx] == node) { // found
             if (getF(node) < getF(closed[idx])) { // reopening
                 closed[idx] = node;
                 return true;
             }
             return false;
-        } else if (closed[idx] != NullEntry) { // collision
+        } else { // collision
             ++idx;
             if (idx == N_Entries) idx = 0; //wrap around
-        } else {
-            closed[idx] = node; // insert
-            ++size;
-            return true;
         }
     }
 }
