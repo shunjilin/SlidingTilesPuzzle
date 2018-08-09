@@ -65,10 +65,10 @@ ClosedOpenAddress<Node, HashFunction, N_Entries>::getPath(Node const &node) cons
     size_t idx = hasher(*to_find) % N_Entries;
 
     while (to_find.has_value()) {
-        if (closed[idx] == to_find) { // found
+        if (closed[idx] == *to_find) { // found
             path.push_back(closed[idx]);
             to_find = getParent(closed[idx]);
-            idx = hasher(*to_find) % N_Entries;
+            if (to_find.has_value()) idx = hasher(*to_find) % N_Entries;
         } else {
             ++idx;
             if (idx == N_Entries) idx = 0; // wrap around

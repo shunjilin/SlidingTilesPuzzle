@@ -39,19 +39,19 @@ template <typename Node, typename HashFunction, size_t N_Entries>
 bool ClosedOpenAddressPtr<Node, HashFunction, N_Entries>::insert(Node * node_ptr) {
     auto idx = hasher(*node_ptr) % N_Entries;
     while (true) {
-        if (closed[idx] != nullptr && *closed[idx] == *node_ptr) { // found
+        if (closed[idx] == nullptr) { // not found
+            closed[idx] = node_ptr; // insert
+            ++size;
+            return true;
+        } else if (*closed[idx] == *node_ptr) { // found
             if (getF(*node_ptr) < getF(*closed[idx])) { // reopening
                 closed[idx] = node_ptr;
                 return true;
             }
             return false;
-        } else if (closed[idx] != nullptr) { // collision
+        } else { // collision
             ++idx;
             if (idx == N_Entries) idx = 0; //wrap around
-        } else {
-            closed[idx] = node_ptr; // insert
-            ++size;
-            return true;
         }
     }
 }
@@ -69,7 +69,7 @@ ClosedOpenAddressPtr<Node, HashFunction, N_Entries>::getPath(Node const * node) 
         if (*closed[idx] == to_find) { // found
             path.push_back(*closed[idx]);
             to_find = getParent(*closed[idx]);
-            idx = hasher(*to_find) % N_Entries;
+            if (to_find.has_value()) idx = hasher(*to_find) % N_Entries;
         } else {
             ++idx;
             if (idx == N_Entries) idx = 0; // wrap around
