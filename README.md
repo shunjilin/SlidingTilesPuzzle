@@ -10,7 +10,7 @@ In root folder, make directory ./build
 
 In ./build, run:
 ```
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 ```
 followed by:
 ```
@@ -24,6 +24,7 @@ ctest --verbose
 
 Default puzzle: 15 puzzle
 Default heuristic: manhattan distance heuristic
+Default hash function: simple tabulation hash (zobrist)
 
 The above parameters can be configured in ./solver.cpp
 

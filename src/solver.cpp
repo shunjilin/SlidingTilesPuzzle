@@ -20,7 +20,8 @@ int const N_TILES = WIDTH*HEIGHT;
 
 using Node = TileNode<WIDTH, HEIGHT>;
 using Heuristic = ManhattanDistanceHeuristic<WIDTH, HEIGHT>;
-using HashFunction = std::hash<Node>;
+using HashFunction = TabulationHash<Node, WIDTH*HEIGHT>;
+//using HashFunction = std::hash<Node>;
 
 int main(int argc, char *argv[]) {
 
