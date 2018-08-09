@@ -139,7 +139,7 @@ namespace Tiles {
     template<int WIDTH, int HEIGHT>
     bool operator!=(TileNode<WIDTH, HEIGHT> const & lhs,
                     TileNode<WIDTH, HEIGHT> const & rhs) {
-        return !(lhs == rhs);
+        return lhs != rhs;
     }
     
     // get cost of path to node
