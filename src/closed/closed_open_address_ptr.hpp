@@ -69,14 +69,14 @@ ClosedOpenAddressPtr<Node, HashFunction, N_Entries>::getPath(Node const * node) 
         if (*closed[idx] == to_find) { // found
             path.push_back(*closed[idx]);
             to_find = getParent(*closed[idx]);
-            if (to_find.has_value()) idx = hasher(*to_find) % N_Entries;
+            if (to_find.has_value()) idx = hasher(to_find.value()) % N_Entries;
         } else {
             ++idx;
             if (idx == N_Entries) idx = 0; // wrap around
             if (closed[idx] == nullptr) throw;
-            to_find = *closed[idx];
         }
     }
+    
     std::reverse(path.begin(), path.end());
     return path;
 }

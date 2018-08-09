@@ -65,17 +65,17 @@ ClosedOpenAddress<Node, HashFunction, N_Entries>::getPath(Node const &node) cons
     size_t idx = hasher(*to_find) % N_Entries;
 
     while (to_find.has_value()) {
-        if (closed[idx] == *to_find) { // found
+        if (closed[idx] == to_find.value()) { // found
             path.push_back(closed[idx]);
             to_find = getParent(closed[idx]);
-            if (to_find.has_value()) idx = hasher(*to_find) % N_Entries;
+            if (to_find.has_value()) idx = hasher(to_find.value()) % N_Entries;
         } else {
             ++idx;
             if (idx == N_Entries) idx = 0; // wrap around
             if (closed[idx] == NullEntry) throw;
-            to_find = closed[idx];
         }
     }
+    
     std::reverse(path.begin(), path.end());
     return path;
 }

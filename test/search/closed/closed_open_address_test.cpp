@@ -43,7 +43,7 @@ namespace std
         size_t
         operator()(const DummyNode& node) const
         {
-            return hash<int>()(node.id);
+            return 0; // force collision
         }
     };
 }
@@ -61,6 +61,11 @@ public:
         closed.insert(node1);
     }
 };
+
+
+TEST_F(ClosedInitialize, correctSizeOnInserts) {
+    ASSERT_EQ(closed.size, 3);
+}
 
 TEST_F(ClosedInitialize, insertUniqueNode) {
     auto node = DummyNode{3, 3};
