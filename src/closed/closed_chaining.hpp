@@ -5,6 +5,7 @@
 #include <optional>
 #include <vector>
 #include <forward_list>
+#include <algorithm>
 #include <ostream>
 
 // chaining

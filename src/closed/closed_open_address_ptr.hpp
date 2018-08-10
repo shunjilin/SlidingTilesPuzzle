@@ -5,6 +5,7 @@
 #include <optional>
 #include <memory>
 #include <ostream>
+#include <algorithm>
 
 // open addressing to minimize memory allocations
 // store pointers to reduce memory footprint / use in conjunction with memory pool

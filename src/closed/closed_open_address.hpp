@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <optional>
+#include <algorithm>
 #include <ostream>
 
 // open addressing to minimize memory allocations
