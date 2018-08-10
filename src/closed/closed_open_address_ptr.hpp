@@ -13,18 +13,19 @@ template <typename Node, typename HashFunction, size_t N_Entries>
 struct ClosedOpenAddressPtr {
 
     static const HashFunction hasher;
-    
+
     std::vector<Node *> closed;
 
     ClosedOpenAddressPtr() : closed(N_Entries, nullptr) {}
-                                
+
     // returns true if node needs to be expanded,
     // insert node if not already exist in closed, or if lower f-val than
     // existing closed node
     bool insert(Node * node_ptr);
 
+    // reconstruct path by retracing parent pointers
     std::vector<Node> getPath(Node const * node) const;
-    
+
     size_t size = 0;
 };
 
@@ -60,9 +61,9 @@ bool ClosedOpenAddressPtr<Node, HashFunction, N_Entries>::insert(Node * node_ptr
 // path of nodes
 template <typename Node, typename HashFunction, size_t N_Entries>
 std::vector<Node>
-ClosedOpenAddressPtr<Node, HashFunction, N_Entries>::getPath(Node const * node) const {
+ClosedOpenAddressPtr<Node, HashFunction, N_Entries>::getPath(Node const * node_ptr) const {
     std::vector<Node> path;
-    std::optional<Node> to_find = *node;
+    std::optional<Node> to_find = *node_ptr;
     auto idx = hasher(*to_find) % N_Entries;
 
     while (to_find.has_value()) {
@@ -76,7 +77,7 @@ ClosedOpenAddressPtr<Node, HashFunction, N_Entries>::getPath(Node const * node) 
             if (closed[idx] == nullptr) throw;
         }
     }
-    
+
     std::reverse(path.begin(), path.end());
     return path;
 }

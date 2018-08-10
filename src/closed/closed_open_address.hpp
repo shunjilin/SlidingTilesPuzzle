@@ -14,18 +14,19 @@ struct ClosedOpenAddress {
     static const Node NullEntry;
 
     static const HashFunction hasher;
-    
+
     std::vector<Node> closed;
 
     ClosedOpenAddress() : closed(N_Entries, Node()) {}
-                                
+
     // returns true if node needs to be expanded,
     // insert node if not already exist in closed, or if lower f-val than
     // existing closed node
     bool insert(Node node);
 
+    // reconstruct path by retracing parent pointers
     std::vector<Node> getPath(Node const & node) const;
-    
+
     size_t size = 0;
 };
 
@@ -40,7 +41,7 @@ template <typename Node, typename HashFunction, size_t N_Entries>
 bool ClosedOpenAddress<Node, HashFunction, N_Entries>::insert(Node node) {
     size_t idx = hasher(node) % N_Entries;
     while (true) {
-        if (closed[idx] == NullEntry) { // not found
+        if (closed[idx] == NullEntry) { // empty slot
             closed[idx] = node; // insert
             ++size;
             return true;
@@ -75,7 +76,7 @@ ClosedOpenAddress<Node, HashFunction, N_Entries>::getPath(Node const &node) cons
             if (closed[idx] == NullEntry) throw;
         }
     }
-    
+
     std::reverse(path.begin(), path.end());
     return path;
 }
