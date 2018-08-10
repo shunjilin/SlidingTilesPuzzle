@@ -1,11 +1,10 @@
 #ifndef CLOSED_OPEN_ADDRESS_PTR_HPP
 #define CLOSED_OPEN_ADDRESS_PTR_HPP
 
-#include <array>
-#include <functional>
+#include <vector>
 #include <optional>
-#include <iostream>
 #include <memory>
+#include <ostream>
 
 // open addressing to minimize memory allocations
 // store pointers to reduce memory footprint / use in conjunction with memory pool

@@ -18,3 +18,10 @@ add_library(closed_open_address_ptr INTERFACE)
 target_include_directories(closed_open_address_ptr
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
     )
+
+# closed list using chaining
+add_library(closed_chaining INTERFACE)
+
+target_include_directories(closed_chaining
+  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+  )

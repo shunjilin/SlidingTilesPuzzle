@@ -3,6 +3,7 @@
 #include "search.hpp"
 #include "astar.hpp"
 #include "astar_pool.hpp"
+#include "closed_chaining.hpp"
 #include "tabulation.hpp"
 #include "cxxopts.hpp"
 #include "steady_clock_timer.hpp"
@@ -63,7 +64,11 @@ int main(int argc, char *argv[]) {
     if (search_string == "astar") {
         search_algo = std::make_unique<AStar<Node, Heuristic, HashFunction> >();
     } else if (search_string == "astar_pool") {
-        search_algo = std::make_unique<AStarPool<Node, Heuristic, HashFunction> >();
+        search_algo = std::make_unique<AStarPool<Node, Heuristic, HashFunction> >();   
+    } else if (search_string == "astar_chaining") {
+        search_algo =
+            std::make_unique<AStar<Node, Heuristic, HashFunction, 512927357,
+                                   ClosedChaining<Node, HashFunction, 512927357> > >();
     } else {
         std::cout << "invalid algorithm option" << "\n";
         throw;

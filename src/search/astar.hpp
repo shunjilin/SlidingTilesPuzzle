@@ -8,13 +8,14 @@
 #include "closed_open_address.hpp"
 #include "tabulation.hpp"
 
-template <typename Node, typename Heuristic,
-          typename HashFunction, size_t ClosedEntries = 512927357 >
+template <typename Node, typename Heuristic, typename HashFunction,
+          size_t ClosedEntries = 512927357,
+          typename Closed = ClosedOpenAddress<Node, HashFunction, ClosedEntries> >
 struct AStar : public Search<Node> {
 
     Heuristic heuristic;
     OpenArray<Node> open;
-    ClosedOpenAddress<Node, HashFunction, ClosedEntries> closed;
+    Closed closed;
 
     // perform astar search: lazy with reopenings
     // return path to solution

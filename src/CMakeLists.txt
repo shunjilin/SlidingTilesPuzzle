@@ -18,6 +18,7 @@ target_link_libraries(Solver
   PRIVATE manhattan_distance_heuristic
   PRIVATE tabulation
   PRIVATE tile_node
+  PRIVATE closed_chaining
   )
 
 # warning flags

@@ -1,10 +1,9 @@
 #ifndef CLOSED_OPEN_ADDRESS_HPP
 #define CLOSED_OPEN_ADDRESS_HPP
 
-#include <array>
-#include <functional>
+#include <vector>
 #include <optional>
-#include <iostream>
+#include <ostream>
 
 // open addressing to minimize memory allocations
 // TODO: use bool or optional to indicate if entry is filled? Right now uses
@@ -22,7 +21,7 @@ struct ClosedOpenAddress {
     // returns true if node needs to be expanded,
     // insert node if not already exist in closed, or if lower f-val than
     // existing closed node
-    bool insert(Node node);
+    bool insert(Node const & node);
 
     // reconstruct path by retracing parent pointers
     std::vector<Node> getPath(Node const & node) const;
@@ -38,7 +37,7 @@ const HashFunction ClosedOpenAddress<Node, HashFunction, N_Entries>::hasher = Ha
 
 
 template <typename Node, typename HashFunction, size_t N_Entries>
-bool ClosedOpenAddress<Node, HashFunction, N_Entries>::insert(Node node) {
+bool ClosedOpenAddress<Node, HashFunction, N_Entries>::insert(Node const & node) {
     size_t idx = hasher(node) % N_Entries;
     while (true) {
         if (closed[idx] == NullEntry) { // empty slot
