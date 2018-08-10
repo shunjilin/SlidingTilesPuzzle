@@ -59,7 +59,10 @@ struct OpenArray {
 
     // pop node
     Node pop() {
-        if (queue[min_f][max_g].empty()) updateFG(); // guard in case
+        if (queue[min_f][max_g].empty()) {
+            std::vector<Node>().swap(queue[min_f][max_g]); // deallocate
+            updateFG(); // guard in case
+        }
         auto node = queue[min_f][max_g].back();
         queue[min_f][max_g].pop_back();
         return node;
