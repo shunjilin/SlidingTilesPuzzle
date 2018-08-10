@@ -30,5 +30,4 @@ for filename in os.listdir(FIFTEEN_PUZZLE_FOLDER):
     output_filename = os.path.join(FIFTEEN_PUZZLE_RESULTS_FOLDER, filename)
     output_file = open(output_filename, "w")
     subprocess.call(["../build/src/Solver", "-s", "astar",
-                     "-i", initial_state, " >> ", output_filename],
-                    stdout=output_file)
+                     "-i", initial_state], stdout=output_file)
