@@ -8,7 +8,8 @@ template <typename Node>
 struct Open {
 
     struct Compare {
-        int operator()(Node const & lhs, Node const & rhs) const {          
+        int operator()(Node const & lhs, Node const & rhs) const
+            noexcept(noexcept(getF(lhs))) {          
             return getF(lhs) > getF(rhs);
         }  
     } compare;

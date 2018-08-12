@@ -8,17 +8,17 @@
 namespace Tiles {
     
     // calculate row index from index in grid of given width
-    uint8_t getRowIdx(int index, int width) {
+    uint8_t getRowIdx(int index, int width) noexcept(noexcept(width != 0)) {
 	return index / width;
     }
 
     // calculate col index from index in grid of given width
-    uint8_t getColIdx(int index, int width) {
+    uint8_t getColIdx(int index, int width) noexcept {
 	return index % width;
     }
 
     // calculate Manhattan distance between two indexes in a grid of given width
-    uint8_t manhattanDistance(int index1, int index2, int width) {
+    uint8_t manhattanDistance(int index1, int index2, int width) noexcept {
 	return abs(getRowIdx(index1, width) - getRowIdx(index2, width)) +
 	    abs(getColIdx(index1, width) - getColIdx(index2, width));
     }
@@ -28,7 +28,7 @@ namespace Tiles {
         // 2-D array for calculating each tile's manhattan distance
         std::array< std::array<uint8_t, WIDTH*HEIGHT>, WIDTH*HEIGHT> table;
         
-        ManhattanDistanceHeuristic() {
+        ManhattanDistanceHeuristic() noexcept {
             // initialize lookup table
             
             // value of 0 for blank tile
@@ -41,7 +41,7 @@ namespace Tiles {
             }
         }
 
-        void evalH(TileNode<WIDTH, HEIGHT> & node) const {
+        void evalH(TileNode<WIDTH, HEIGHT> & node) const noexcept {
             int heuristic_value = 0;
             for (int idx = 0; idx < WIDTH*HEIGHT; ++idx) {
                 heuristic_value += table[node.board[idx]][idx];
@@ -49,7 +49,7 @@ namespace Tiles {
             node.h_val = heuristic_value;
         }
 
-        void evalHIncremental(TileNode<WIDTH, HEIGHT> & node) const {
+        void evalHIncremental(TileNode<WIDTH, HEIGHT> & node) const noexcept {
             auto parent_blank_idx = getParentBlankIdx(node);
             auto tile_moved = node.board[parent_blank_idx];
             node.h_val += (table[tile_moved][parent_blank_idx] -
@@ -59,7 +59,7 @@ namespace Tiles {
 
     // helper function for incremental manhattan heuristic
     template<int WIDTH, int HEIGHT>
-    uint8_t getParentBlankIdx(TileNode<WIDTH, HEIGHT> const & node) {
+    uint8_t getParentBlankIdx(TileNode<WIDTH, HEIGHT> const & node) noexcept {
         switch(node.prev_move) {
         case UP:
             return node.blank_idx + WIDTH;
@@ -77,7 +77,7 @@ namespace Tiles {
 
     // use non incremental heuristic as optimization seems to give minimal speedup
     template<int WIDTH, int HEIGHT, typename Heuristic>
-    void evalH(TileNode<WIDTH, HEIGHT> & node, Heuristic const & heuristic) {
+    void evalH(TileNode<WIDTH, HEIGHT> & node, Heuristic const & heuristic) noexcept {
         heuristic.evalH(node);
     }
 }

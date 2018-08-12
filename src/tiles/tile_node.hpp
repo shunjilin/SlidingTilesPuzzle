@@ -45,12 +45,19 @@ namespace Tiles {
         TileNode() = default; // sentinel value;
 
         // construct node from array of tiles
-        TileNode(std::array<uint8_t, WIDTH*HEIGHT> board) : board(std::move(board)) {
+        TileNode(std::array<uint8_t, WIDTH*HEIGHT> board) :
+            board(std::move(board)) {
+            // check if valid input : TODO: check parity
+            for (char i = 0; i < WIDTH*HEIGHT; ++i) {
+                if (std::find(board.begin(), board.end(), i) == board.end()) {
+                    throw std::invalid_argument("initial tiles incorrect");
+                }
+            }
             getBlankIdx();
         }
 
         // get index of current blank tile
-        uint8_t getBlankIdx() {
+        uint8_t getBlankIdx() noexcept {
             // not cached, do linear scan
             if (blank_idx == std::numeric_limits<uint8_t>::max()) {
                 auto blank_iter = std::find(board.begin(), board.end(), 0);
@@ -60,7 +67,7 @@ namespace Tiles {
         }
 
         // swap blank tile with new blank tile to get new tile node
-        TileNode<WIDTH, HEIGHT> swapBlank(uint8_t new_blank_idx) const {
+        TileNode<WIDTH, HEIGHT> swapBlank(uint8_t new_blank_idx) const noexcept {
             auto new_node = *this; // copy
             std::swap(new_node.board[blank_idx], new_node.board[new_blank_idx]);
             new_node.blank_idx = new_blank_idx; // cache blank idx
@@ -69,7 +76,7 @@ namespace Tiles {
 
         // get new node from moving blank in direction move
         // cache previous move and increments g_val
-        std::optional<TileNode<WIDTH, HEIGHT> > moveBlank(MOVE move) const {
+        std::optional<TileNode<WIDTH, HEIGHT> > moveBlank(MOVE move) const noexcept {
             std::optional<TileNode<WIDTH, HEIGHT> > new_node;
             switch(move) {
             case UP :
@@ -105,10 +112,10 @@ namespace Tiles {
         // simple iterator
         using const_iterator = typename std::array<uint8_t, WIDTH*HEIGHT>::const_iterator;
 
-        const_iterator begin() const {
+        const_iterator begin() const noexcept {
             return board.begin();
         }
-        const_iterator end() const {
+        const_iterator end() const noexcept {
             return board.end();
         }
     };
@@ -116,7 +123,7 @@ namespace Tiles {
     
     // returns goal board, where value at each index = index
     template<int WIDTH, int HEIGHT>
-    std::array<uint8_t, WIDTH*HEIGHT> getGoalBoard() {
+    std::array<uint8_t, WIDTH*HEIGHT> getGoalBoard() noexcept {
         std::array<uint8_t, WIDTH*HEIGHT> tiles;
         std::iota(tiles.begin(), tiles.end(), 0);
         return tiles;      
@@ -132,44 +139,38 @@ namespace Tiles {
 
     template<int WIDTH, int HEIGHT>
     bool operator==(TileNode<WIDTH, HEIGHT> const & lhs,
-                    TileNode<WIDTH, HEIGHT> const & rhs) {
+                    TileNode<WIDTH, HEIGHT> const & rhs) noexcept {
         return lhs.board == rhs.board;
-    }
-
-    template<int WIDTH, int HEIGHT>
-    bool operator!=(TileNode<WIDTH, HEIGHT> const & lhs,
-                    TileNode<WIDTH, HEIGHT> const & rhs) {
-        return lhs != rhs;
     }
     
     // get cost of path to node
     template <int WIDTH, int HEIGHT>
-    int getG(TileNode<WIDTH, HEIGHT> const & node) {
+    int getG(TileNode<WIDTH, HEIGHT> const & node) noexcept {
         return static_cast<int>(node.g_val);
     }
 
     // get heuristic value of node
     template<int WIDTH, int HEIGHT>
-    int getH(TileNode<WIDTH, HEIGHT> const & node) {
+    int getH(TileNode<WIDTH, HEIGHT> const & node) noexcept {
         return static_cast<int>(node.h_val);
     }
 
     // get g + h value
     template<int WIDTH, int HEIGHT>
-    int getF(TileNode<WIDTH, HEIGHT> const & node) {
+    int getF(TileNode<WIDTH, HEIGHT> const & node) noexcept {
         return getG(node) + getH(node);
     }
 
     // check if node is goal node
     template<int WIDTH, int HEIGHT>
-    bool isGoal(TileNode<WIDTH, HEIGHT> const & node) {
+    bool isGoal(TileNode<WIDTH, HEIGHT> const & node) noexcept {
         return node.board == node.goal_board;
     }
 
     // get nodes that can be generated from current node
     template<int WIDTH, int HEIGHT>
     std::array< std::optional< TileNode<WIDTH, HEIGHT> >, N_MOVES >
-    getChildNodes(TileNode<WIDTH, HEIGHT> const & node) {
+    getChildNodes(TileNode<WIDTH, HEIGHT> const & node) noexcept {
         std::array<
             std::optional< TileNode<WIDTH, HEIGHT> >, N_MOVES
             > child_nodes;      
@@ -190,7 +191,7 @@ namespace Tiles {
     
     template<int WIDTH, int HEIGHT>
     std::optional<TileNode<WIDTH, HEIGHT> >
-    getParent(TileNode<WIDTH, HEIGHT> const & node) {     
+    getParent(TileNode<WIDTH, HEIGHT> const & node) noexcept {     
         if (node.prev_move == UP) {
             return node.moveBlank(DOWN);
         }
@@ -229,7 +230,7 @@ namespace std
     {
         
         size_t
-        operator() (const Tiles::TileNode<WIDTH, HEIGHT>& node) const
+        operator() (const Tiles::TileNode<WIDTH, HEIGHT>& node) const noexcept
         {
             size_t result = 0;
             for (auto i = 0; i < WIDTH*HEIGHT; ++i) {

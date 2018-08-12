@@ -11,7 +11,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include <variant>
+#include <stdexcept>
 
 using namespace Tiles;
 
@@ -33,9 +33,9 @@ int main(int argc, char *argv[]) {
         ("d,domain", "domain",
          cxxopts::value<std::string>()->default_value("tiles"))
         ("i,initial_state", "initial state configuration",
-         cxxopts::value<std::string>())
+         cxxopts::value<std::string>()->default_value("wrong")) // prevent segfault
         ("s,search_algorithm", "search algorithm",
-         cxxopts::value<std::string>());
+         cxxopts::value<std::string>()->default_value("astar"));
     
     // parse command line
     auto result = options.parse(argc, argv);
@@ -44,49 +44,69 @@ int main(int argc, char *argv[]) {
     timer.start();
 
     // initial state
-    auto initial_tiles_string = result["initial_state"].as<std::string>();
-    std::istringstream iss(initial_tiles_string);
-    
     std::array<uint8_t, N_TILES> initial_tiles;
 
-    // read tiles
-    for (int i = 0; i < N_TILES; ++i) {
-        std::string tile_string;
-        iss >> tile_string;
-        initial_tiles[i] = std::stoi(tile_string);
+    auto initial_tiles_string = result["initial_state"].as<std::string>();
+    std::istringstream iss(initial_tiles_string);
+
+    try {
+        // read tiles
+        // for generic node perhaps modify constructor to take in string
+        for (int i = 0; i < N_TILES; ++i) {
+            std::string tile_string;
+            iss >> tile_string;
+            initial_tiles[i] = std::stoi(tile_string);
+        }
+
+        // initial state
+        using Node = Tiles::TileNode<WIDTH, HEIGHT>;
+        auto initial_node = Node(initial_tiles);
+
+        // search algorithm
+        auto search_string = result["search_algorithm"].as<std::string>();
+        std::unique_ptr<Search<Node> > search_algo;
+        
+        if (search_string == "astar") {
+            search_algo = std::make_unique<AStar<Node, Heuristic, HashFunction> >();
+        } else if (search_string == "astar_pool") {
+            search_algo = std::make_unique<AStarPool<Node, Heuristic, HashFunction> >();   
+        } else if (search_string == "astar_chaining") {
+            search_algo =
+                std::make_unique<AStar<Node, Heuristic, HashFunction, 512927357,
+                                       ClosedChaining<Node, HashFunction, 512927357> > >();
+        } else {
+            std::cerr << "Invalid search algorithm option: "
+                      << "\"" << search_string << "\n";
+            return EXIT_FAILURE;
+        }
+
+        std::cout <<  timer.getElapsedTime<milliseconds>()
+                  << " ms to initialize\n";
+
+        auto path = search_algo->search(initial_node);
+
+        std::cout << timer.getElapsedTime<milliseconds>()
+                  << " ms to solve (including initialization)\n"
+                  << *search_algo << "\n"
+                  << "n moves: " << path.size() - 1 << "\n"
+                  << "sequence:\n";
+        for (auto node : path) {
+            std::cout << node << "\n";
+        }
     }
-
-    // search algorithm
-    auto search_string = result["search_algorithm"].as<std::string>();
-
-    std::unique_ptr<Search<Node> > search_algo;
-
-    if (search_string == "astar") {
-        search_algo = std::make_unique<AStar<Node, Heuristic, HashFunction> >();
-    } else if (search_string == "astar_pool") {
-        search_algo = std::make_unique<AStarPool<Node, Heuristic, HashFunction> >();   
-    } else if (search_string == "astar_chaining") {
-        search_algo =
-            std::make_unique<AStar<Node, Heuristic, HashFunction, 512927357,
-                                   ClosedChaining<Node, HashFunction, 512927357> > >();
-    } else {
-        std::cout << "invalid algorithm option" << "\n";
-        throw;
+    // handle errors
+    catch (const std::invalid_argument& ia) {
+        std::cerr << "Invalid argument for initial state: "
+                  << ia.what() << " : "
+                  <<  "\"" << initial_tiles_string << "\"\n";
+        return EXIT_FAILURE;      
     }
-
-    using Node = Tiles::TileNode<WIDTH, HEIGHT>;
-    auto initial_node = Node(initial_tiles);
-    
-    std::cout <<  timer.getElapsedTime<milliseconds>()
-              << " ms to initialize\n";
-    auto path = search_algo->search(initial_node);
-    
-    std::cout << timer.getElapsedTime<milliseconds>()
-              << " ms to solve (including initialization)\n";
-    std::cout << *search_algo << "\n";
-    std::cout << "n moves: " << path.size() - 1 << "\n";
-    std::cout << "sequence:\n";
-    for (auto node : path) {
-        std::cout << node << std::endl;
-    }    
+    catch (const std::bad_alloc& ba) {
+        std::cerr << "Memory allocation failed : " << ba.what() << "\n";     
+    }
+    catch (const std::exception &e) {
+        std::cerr << "Search failed: " << e.what() << "\n";
+        return EXIT_FAILURE;
+    }
+    return EXIT_SUCCESS;
 }
