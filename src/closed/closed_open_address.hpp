@@ -6,9 +6,9 @@
 #include <algorithm>
 #include <ostream>
 
-// open addressing to minimize memory allocations
-// TODO: use bool or optional to indicate if entry is filled? Right now uses
-// default constructor as null entry;
+/* Closed list using open addressing hash table with linear probing
+ */
+
 template <typename Node, typename HashFunction, size_t N_Entries>
 struct ClosedOpenAddress {
     static const Node NullEntry;
@@ -21,13 +21,14 @@ struct ClosedOpenAddress {
 
     // returns true if node needs to be expanded,
     // insert node if not already exist in closed, or if lower f-val than
-    // existing closed node
+    // existing closed node (reopening)
     bool insert(Node const & node);
 
-    // reconstruct path by retracing parent pointers
+    // given node, return path in closed list by tracing parent nodes
+    // assumes node is in the closed list; otherwise returns empty path
     std::vector<Node> getPath(Node const & node) const;
 
-    size_t size = 0;
+    size_t size = 0; // number of nodes in closed list
 };
 
 template<typename Node, typename HashFunction, size_t N_Entries>
@@ -85,7 +86,7 @@ template <typename Node, typename HashFunction, size_t N_Entries>
 std::ostream &operator<<(std::ostream& os,
                          ClosedOpenAddress<Node, HashFunction, N_Entries> const & closed) {
     os <<  "closed list load factor: "
-       << (double)(closed.size) / N_Entries << std::endl;
+       << (double)(closed.size) / N_Entries << "\n";
     return os;
 }
 

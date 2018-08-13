@@ -4,9 +4,11 @@
 #include <unordered_set>
 #include <vector>
 #include <algorithm>
+#include <ostream>
 
-// closed list
-// requires node to have default hasher for equality comparison
+/* Minimal Closed List Implementation
+ * Requires node to have default hasher for equality comparison.
+ */
 template <typename Node>
 struct Closed {
 
@@ -17,6 +19,8 @@ struct Closed {
     // existing closed node
     bool insert(Node node);
 
+    // given node, return path in closed list by tracing parent nodes
+    // assumes node is in the closed list; otherwise returns empty path
     std::vector<Node> getPath(Node const &node) const;
 };
 
@@ -47,6 +51,13 @@ std::vector<Node> Closed<Node>::getPath(Node const &node) const {
     }
     std::reverse(path.begin(), path.end());
     return path;
+}
+
+template <typename Node>
+std::ostream &operator<<(std::ostream& os, Closed<Node> const & closed) {
+    os <<  "closed list load factor: "
+       << closed.closed.load_factor() << "\n";
+    return os;
 }
 
 #endif

@@ -7,8 +7,11 @@
 #include <ostream>
 #include <algorithm>
 
-// open addressing to minimize memory allocations
-// store pointers to reduce memory footprint / use in conjunction with memory pool
+/* Closed list using open addressing hash table with linear probing
+ * stores pointers instead of nodes, requires clients to allocate memory,
+ * e.g. using a memory pool
+ */
+
 template <typename Node, typename HashFunction, size_t N_Entries>
 struct ClosedOpenAddressPtr {
 
@@ -20,22 +23,20 @@ struct ClosedOpenAddressPtr {
 
     // returns true if node needs to be expanded,
     // insert node if not already exist in closed, or if lower f-val than
-    // existing closed node
+    // existing closed node (reopening)
     bool insert(Node * node_ptr);
 
-    // reconstruct path by retracing parent pointers
+    // given node, return path in closed list by tracing parent nodes
+    // assumes node is in the closed list; otherwise returns empty path
     std::vector<Node> getPath(Node const * node) const;
 
-    size_t size = 0;
+    size_t size = 0; // number of nodes in closed list
 };
 
 template<typename Node, typename HashFunction, size_t N_Entries>
 const HashFunction
 ClosedOpenAddressPtr<Node, HashFunction, N_Entries>::hasher = HashFunction();
 
-// insert node pointer into closed list
-// return true if node needs to be expanded, false otherwise
-// handles reopenings : e.g. inconsistent heuristics
 template <typename Node, typename HashFunction, size_t N_Entries>
 bool ClosedOpenAddressPtr<Node, HashFunction, N_Entries>::insert(Node * node_ptr) {
     auto idx = hasher(*node_ptr) % N_Entries;
@@ -57,8 +58,6 @@ bool ClosedOpenAddressPtr<Node, HashFunction, N_Entries>::insert(Node * node_ptr
     }
 }
 
-// given node pointer, trace parent nodes in closed list to return a solution
-// path of nodes
 template <typename Node, typename HashFunction, size_t N_Entries>
 std::vector<Node>
 ClosedOpenAddressPtr<Node, HashFunction, N_Entries>::getPath(Node const * node_ptr) const {
