@@ -23,7 +23,9 @@ ctest --verbose
 ```
 
 Default puzzle: 15 puzzle
+
 Default heuristic: manhattan distance heuristic
+
 Default hash function: simple tabulation hash (zobrist)
 
 The above parameters can be configured in ./solver.cpp
@@ -40,6 +42,8 @@ For optimized AStar (memory pool and open / closed list that hold pointers to th
 ```
 
 where [initial state configuration] is a space separated list of tile numbers, 0-15, with 0 representing the blank tile.
+
+Note: if bad_alloc is thrown, this may mean that not enough memory is available to initialize the closed list. Change the value ClosedEntries in astar.hpp / astar_pool.hpp to configuret the size of the closed list.
 
 The goal board tiles correspond to the indexes in row-major order, where 0 is the blank tile.
 E.g. for the 15 puzzle:
