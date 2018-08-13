@@ -4,12 +4,13 @@
 #include <array>
 #include <vector>
 
-// open list using array-based open list for 3 level tie-breaking
+/* Array-based Open list that allows 3 level tie-breaking [min f, max g, LIFO]
+ */
 
 template <typename Node>
 struct OpenArray {
 
-    static int const MAX_MOVES = 255;
+    static int const MAX_MOVES = 255; // max f and g values
 
     int min_f = MAX_MOVES;
     int max_g = MAX_MOVES;
@@ -17,7 +18,7 @@ struct OpenArray {
     // index by f_value, then g_value
     std::array< std::array< std::vector<Node>, MAX_MOVES>, MAX_MOVES> queue;
 
-    // update min_f to be minimum f value, update g as well
+    // updates min_f to be minimum f value, updates g as well (see updateG())
     void updateFG() noexcept {
         while (min_f < MAX_MOVES) {
             updateG();
@@ -29,7 +30,7 @@ struct OpenArray {
         }
     }
 
-    // update max_g to be maximum g value in current min_f layer
+    // updates max_g to be maximum g value in current min_f layer
     void updateG() noexcept {
         if (max_g == MAX_MOVES) --max_g; // avoid out of bounds
         while (queue[min_f][max_g].empty()) {
@@ -41,7 +42,7 @@ struct OpenArray {
         }
     }
 
-    // push node into queue
+    // inserts node into open list
     void push(Node node) {
         auto f = getF(node);
         auto g = getG(node);
@@ -57,7 +58,7 @@ struct OpenArray {
         queue[f][g].emplace_back(node);
     }
 
-    // pop node
+    // pops and returns node from open list
     Node pop() {
         if (queue[min_f][max_g].empty()) {
             std::vector<Node>().swap(queue[min_f][max_g]); // deallocate
@@ -68,7 +69,7 @@ struct OpenArray {
         return node;
     }
 
-    // check if queue is empty, also updates f and g
+    // returns true if queue is empty, also updates f and g
     bool empty() noexcept {
         updateFG();
         if (min_f == MAX_MOVES) return true;

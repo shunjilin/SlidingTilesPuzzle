@@ -2,14 +2,18 @@
 #define OPEN_ARRAY_PTR_HPP
 
 #include <array>
+#include <vector>
 #include <memory>
 
-// open list using array-based open list for 3 level tie-breaking
-// store pointers to reduce memory footprint / use in conjunction with memory pool
+/* Array-based Open list that allows 3 level tie-breaking [min f, max g, LIFO]
+ * Store pointers instead of nodes; memory allocation is handled by client,
+ * e.g. using a memory pool
+ */
+
 template <typename Node>
 struct OpenArrayPtr {
 
-    static int const MAX_MOVES = 255;
+    static int const MAX_MOVES = 255; // max f and g values
 
     int min_f = MAX_MOVES;
     int max_g = MAX_MOVES;
@@ -17,7 +21,7 @@ struct OpenArrayPtr {
     // index by f_value, then g_value
     std::array< std::array< std::vector<Node *>, MAX_MOVES>, MAX_MOVES> queue;
 
-    // update min_f to be minimum f value, update g as well
+    // updates min_f to be minimum f value, updates g as well (see updateG())
     void updateFG() noexcept {
         while (min_f < MAX_MOVES) {
             updateG();
@@ -29,7 +33,7 @@ struct OpenArrayPtr {
         }
     }
 
-    // update max_g to be maximum g value in current min_f layer
+    // updates max_g to be maximum g value in current min_f layer
     void updateG() noexcept {
         if (max_g == MAX_MOVES) --max_g; // avoid out of bounds
         while (queue[min_f][max_g].empty()) {
@@ -41,7 +45,7 @@ struct OpenArrayPtr {
         }
     }
 
-    // push node into queue
+    // inserts node into open list
     void push(Node * node_ptr) {
         auto f = getF(*node_ptr);
         auto g = getG(*node_ptr);
@@ -57,7 +61,7 @@ struct OpenArrayPtr {
         queue[f][g].emplace_back(std::move(node_ptr));
     }
 
-    // pop node
+    // pops and returns node from open list
     Node * pop() {
         if (queue[min_f][max_g].empty()) updateFG(); // guard in case
         auto node_ptr = queue[min_f][max_g].back();
@@ -65,7 +69,7 @@ struct OpenArrayPtr {
         return node_ptr;
     }
 
-    // check if queue is empty, also updates f and g
+    // returns true if queue is empty, also updates f and g
     bool empty() noexcept {
         updateFG();
         if (min_f == MAX_MOVES) return true;
