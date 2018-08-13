@@ -5,8 +5,8 @@
 #include <vector>
 #include "search.hpp"
 #include "open_array.hpp"
-#include "closed_open_address.hpp"
 #include "tabulation.hpp"
+
 
 template <typename Node, typename Heuristic,
           typename HashFunction, size_t ClosedEntries = 512927357 >

@@ -4,7 +4,7 @@
 #include <ostream>
 #include <vector>
 
-// interface for search algorithms
+// interface for search algorithms, tracks node generation and expansion counts
 template<typename Node>
 struct Search {
     size_t expanded = 0;

@@ -8,7 +8,16 @@
 #include "open_array_ptr.hpp"
 #include "closed_open_address_ptr.hpp"
 
-// Astar which uses memory pool for allocation of nodes
+/* A* Search, using lazy duplicate detection (duplicate detection is only done
+ * when nodes are popped from the open list.
+ * 
+ * In addition, a memory pool is used for node allocation. This allows for a
+ * more compact closed list (holds pointers instead of nodes), but incurs an
+ * additional pointer for each node in the open and closed list.
+ *
+ * Requires versions of the open and closed list that stores pointers instead of
+ * nodes.
+ */
 template <typename Node, typename Heuristic,
           typename HashFunction, size_t ClosedEntries = 512927357>
 struct AStarPool : public Search<Node> {
@@ -18,8 +27,7 @@ struct AStarPool : public Search<Node> {
     Heuristic  heuristic;
     MemoryPool<Node> pool; // memory pool
 
-    // perform astar search: lazy with reopenings
-    // return path to solution
+    // perform A* search and returns solution path
     std::vector<Node>
     search(Node initial_node) override final {
         auto initial_node_ptr = pool.newElement(initial_node);
