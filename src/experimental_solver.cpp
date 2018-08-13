@@ -2,7 +2,7 @@
 #include "manhattan_distance_heuristic.hpp"
 #include "search.hpp"
 #include "astar.hpp"
-#include "astar_pool.hpp"
+#include "closed_chaining.hpp"
 #include "tabulation.hpp"
 #include "cxxopts.hpp"
 #include "steady_clock_timer.hpp"
@@ -32,9 +32,9 @@ int main(int argc, char *argv[]) {
         ("d,domain", "domain",
          cxxopts::value<std::string>()->default_value("tiles"))
         ("i,initial_state", "initial state configuration",
-         cxxopts::value<std::string>()->default_value("null")) // prevent segfault
+         cxxopts::value<std::string>()->default_value("wrong")) // prevent segfault
         ("s,search_algorithm", "search algorithm",
-         cxxopts::value<std::string>()->default_value("astar"));
+         cxxopts::value<std::string>()->default_value("astar_chaining"));
     
     // parse command line
     auto result = options.parse(argc, argv);
@@ -65,10 +65,10 @@ int main(int argc, char *argv[]) {
         auto search_string = result["search_algorithm"].as<std::string>();
         std::unique_ptr<Search<Node> > search_algo;
         
-        if (search_string == "astar") {
-            search_algo = std::make_unique<AStar<Node, Heuristic, HashFunction> >();
-        } else if (search_string == "astar_pool") {
-            search_algo = std::make_unique<AStarPool<Node, Heuristic, HashFunction> >();
+        if (search_string == "astar_chaining") {
+            search_algo =
+                std::make_unique<AStar<Node, Heuristic, HashFunction, 512927357,
+                                       ClosedChaining<Node, HashFunction, 512927357> > >();
         } else {
             std::cerr << "Invalid search algorithm option: "
                       << "\"" << search_string << "\n";
