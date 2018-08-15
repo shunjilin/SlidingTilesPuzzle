@@ -58,7 +58,6 @@ int main(int argc, char *argv[]) {
         }
 
         // initial state
-        using Node = Tiles::TileNode<WIDTH, HEIGHT>;
         auto initial_node = Node(initial_tiles);
 
         // search algorithm
