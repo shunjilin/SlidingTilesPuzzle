@@ -81,22 +81,22 @@ namespace Tiles {
             switch(move) {
             case UP :
                 if (blank_idx >= WIDTH) {
-                    new_node = swapBlank(blank_idx - WIDTH);
+                    new_node.emplace(swapBlank(blank_idx - WIDTH));
                 }
                 break;
             case DOWN:
                 if (blank_idx < (WIDTH * (HEIGHT - 1))) {
-                    new_node = swapBlank(blank_idx + WIDTH);
+                    new_node.emplace(swapBlank(blank_idx + WIDTH));
                 }
                 break;
             case LEFT:
                 if ((blank_idx % WIDTH) != 0) {
-                    new_node = swapBlank(blank_idx - 1);
+                    new_node.emplace(swapBlank(blank_idx - 1));
                 }
                 break;
             case RIGHT:
                 if ((blank_idx % WIDTH) != (WIDTH - 1)) {
-                    new_node = swapBlank(blank_idx + 1);   
+                    new_node.emplace(swapBlank(blank_idx + 1));   
                 }
                 break;
             default:
