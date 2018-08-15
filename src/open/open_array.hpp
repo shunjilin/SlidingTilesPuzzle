@@ -55,7 +55,7 @@ struct OpenArray {
         else if (f == min_f && g > max_g) {
             max_g = g;
         }
-        queue[f][g].emplace_back(node);
+        queue[f][g].emplace_back(std::move(node));
     }
 
     // pops and returns node from open list
