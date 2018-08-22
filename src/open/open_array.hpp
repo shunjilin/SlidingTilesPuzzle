@@ -34,6 +34,8 @@ struct OpenArray {
     void updateG() noexcept {
         if (max_g == MAX_MOVES) --max_g; // avoid out of bounds
         while (queue[min_f][max_g].empty()) {
+            // the following line is for when memory is a scarce resource
+            //std::vector<Node>().swap(queue[min_f][max_g]); // deallocate
             if (max_g == 0) { // entire f layer is empty
                 max_g = MAX_MOVES; // reset
                 return;
@@ -60,10 +62,7 @@ struct OpenArray {
 
     // pops and returns node from open list
     Node pop() {
-        if (queue[min_f][max_g].empty()) {
-            std::vector<Node>().swap(queue[min_f][max_g]); // deallocate
-            updateFG(); // guard in case
-        }
+        updateFG();
         auto node = queue[min_f][max_g].back();
         queue[min_f][max_g].pop_back();
         return node;
