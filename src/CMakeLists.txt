@@ -30,6 +30,7 @@ target_link_libraries(ExperimentalSolver
   PRIVATE tabulation
   PRIVATE tile_node
   PRIVATE closed_chaining
+  PRIVATE double_closed
   )
 
 # warning flags

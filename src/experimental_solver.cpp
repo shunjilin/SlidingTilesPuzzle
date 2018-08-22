@@ -12,6 +12,8 @@
 #include <sstream>
 #include <stdexcept>
 
+#include "double_closed.hpp"
+
 using namespace Tiles;
 
 int const WIDTH = 4;
@@ -68,9 +70,27 @@ int main(int argc, char *argv[]) {
             search_algo =
                 std::make_unique<AStar<Node, Heuristic, HashFunction, 512927357,
                                        ClosedChaining<Node, HashFunction, 512927357> > >();
+            
+        } else if (search_string == "astar_chaining2") {
+            search_algo =
+                std::make_unique<AStar<Node, Heuristic, HashFunction, 51292735,
+                                       ClosedChaining<Node, HashFunction, 51292735> > >();
+        } else if (search_string == "astar_chaining3") {
+            search_algo =
+                std::make_unique<AStar<Node, Heuristic, HashFunction, 5129273,
+                                       ClosedChaining<Node, HashFunction, 5129273> > >();
+        } else if (search_string == "astar_chaining4") {
+            search_algo =
+                std::make_unique<AStar<Node, Heuristic, HashFunction, 512927,
+                                       ClosedChaining<Node, HashFunction, 512927> > >();
+        } else if (search_string == "astar_chaining2_double") {
+            search_algo =
+                std::make_unique<DoubleClosed<Node, Heuristic, HashFunction, 51292735,
+                                       ClosedChaining<Node, HashFunction, 51292735> > >();
+                
         } else {
             std::cerr << "Invalid search algorithm option: "
-                      << "\"" << search_string << "\n";
+                      << "\"" << search_string << "\"\n";
             return EXIT_FAILURE;
         }
 

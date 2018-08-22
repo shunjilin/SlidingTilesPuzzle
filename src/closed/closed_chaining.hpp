@@ -32,6 +32,8 @@ struct ClosedChaining {
 
     size_t size = 0;
 
+    size_t probe_count = 0; // number of probes to the hash table
+
 };
 
 template<typename Node, typename HashFunction, size_t N_Entries>
@@ -43,17 +45,20 @@ bool ClosedChaining<Node, HashFunction, N_Entries>::insert(Node const & node) {
     size_t idx = hasher(node) % N_Entries;
 
     auto & bucket = closed[idx];
-
-    auto it = std::find(bucket.begin(), bucket.end(), node);
-
-    if (it != bucket.end()) { // found
-        if (getF(node) < getF(*it)) { // reopening
-            *it = node;
-            return true;
+    
+    ++probe_count;
+    
+    for (auto it = bucket.begin(); it != bucket.end(); ++it) {
+        if (*it == node) { // found
+            if (getF(node) < getF(*it)) { // reopening
+                *it = node;
+                return true;
+            }
+            return false;
         }
-        return false;     
+        ++probe_count;
     }
-
+    
     // not found
     bucket.push_front(node); // insert at front of linked list
     ++size;
@@ -87,7 +92,8 @@ template <typename Node, typename HashFunction, size_t N_Entries>
 std::ostream &operator<<(std::ostream& os,
                          ClosedChaining<Node, HashFunction, N_Entries> const & closed) {
     os <<  "closed list load factor: "
-       << (double)(closed.size) / N_Entries << "\n";
+       << (double)(closed.size) / N_Entries << "\n"
+       << "closed list probes: " << closed.probe_count << "\n";
     return os;
 }
 

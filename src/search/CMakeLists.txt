@@ -38,3 +38,19 @@ target_link_libraries(astar_pool
   )
 
 target_compile_features(astar_pool INTERFACE cxx_std_11)
+
+# double closed
+
+add_library(double_closed INTERFACE)
+
+target_include_directories(double_closed
+  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+  )
+
+target_link_libraries(double_closed
+  INTERFACE MemoryPool
+  INTERFACE open_array_ptr
+  INTERFACE closed_open_address_ptr
+  )
+
+target_compile_features(double_closed INTERFACE cxx_std_11)

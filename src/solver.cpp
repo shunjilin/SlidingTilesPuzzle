@@ -70,7 +70,7 @@ int main(int argc, char *argv[]) {
             search_algo = std::make_unique<AStarPool<Node, Heuristic, HashFunction> >();
         } else {
             std::cerr << "Invalid search algorithm option: "
-                      << "\"" << search_string << "\n";
+                      << "\"" << search_string << "\"\n";
             return EXIT_FAILURE;
         }
 
