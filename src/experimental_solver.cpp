@@ -1,6 +1,7 @@
 #include "tile_node.hpp"
 #include "manhattan_distance_heuristic.hpp"
 #include "search.hpp"
+#include "concurrent_search.hpp"
 #include "astar.hpp"
 #include "closed_chaining.hpp"
 #include "tabulation.hpp"
@@ -13,6 +14,7 @@
 #include <stdexcept>
 
 #include "double_closed.hpp"
+#include "astar_multicore.hpp"
 
 using namespace Tiles;
 
@@ -65,6 +67,7 @@ int main(int argc, char *argv[]) {
         // search algorithm
         auto search_string = result["search_algorithm"].as<std::string>();
         std::unique_ptr<Search<Node> > search_algo;
+        std::unique_ptr<ConcurrentSearch<Node> > concurrent_search_algo;
         
         if (search_string == "astar_chaining") {
             search_algo =
@@ -86,8 +89,10 @@ int main(int argc, char *argv[]) {
         } else if (search_string == "astar_chaining2_double") {
             search_algo =
                 std::make_unique<DoubleClosed<Node, Heuristic, HashFunction, 51292735,
-                                       ClosedChaining<Node, HashFunction, 51292735> > >();
-                
+                                              ClosedChaining<Node, HashFunction, 51292735> > >();
+        } else if (search_string == "concurrent_astar") {
+            concurrent_search_algo =
+                std::make_unique<AStarMulticore<Node, Heuristic, HashFunction, 512927357> >();
         } else {
             std::cerr << "Invalid search algorithm option: "
                       << "\"" << search_string << "\"\n";
@@ -97,13 +102,24 @@ int main(int argc, char *argv[]) {
         std::cout <<  timer.getElapsedTime<milliseconds>()
                   << " ms to initialize\n";
 
-        auto path = search_algo->search(initial_node);
+        auto path = std::vector<Node>();
+        if (search_algo) {
+            path = search_algo->search(initial_node);
+            std::cout << timer.getElapsedTime<milliseconds>()
+                      << " ms to solve (including initialization)\n"
+                      << *search_algo << "\n"
+                      << "n moves: " << path.size() - 1 << "\n"
+                      << "sequence:\n";
+        } else if (concurrent_search_algo) {
+            path = concurrent_search_algo->search(initial_node);
+            
+            std::cout << timer.getElapsedTime<milliseconds>()
+                      << " ms to solve (including initialization)\n"
+                      << *concurrent_search_algo << "\n"
+                      << "n moves: " << path.size() - 1 << "\n"
+                      << "sequence:\n";
+        }
 
-        std::cout << timer.getElapsedTime<milliseconds>()
-                  << " ms to solve (including initialization)\n"
-                  << *search_algo << "\n"
-                  << "n moves: " << path.size() - 1 << "\n"
-                  << "sequence:\n";
         for (auto node : path) {
             std::cout << node << "\n";
         }

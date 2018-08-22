@@ -20,3 +20,10 @@ add_library(open_array_ptr INTERFACE)
 target_include_directories(open_array_ptr
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
   )
+
+# array based open list with lock, thread safe
+add_library(concurrent_open_array INTERFACE)
+
+target_include_directories(concurrent_open_array
+  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+  )

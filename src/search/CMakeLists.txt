@@ -8,6 +8,14 @@ target_include_directories(search
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
   )
 
+# concurrent search interface
+
+add_library(concurrent_search INTERFACE)
+
+target_include_directories(concurrent_search
+  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+  )
+
 # astar
 
 add_library(astar INTERFACE)
@@ -48,9 +56,25 @@ target_include_directories(double_closed
   )
 
 target_link_libraries(double_closed
-  INTERFACE MemoryPool
-  INTERFACE open_array_ptr
-  INTERFACE closed_open_address_ptr
+  INTERFACE open_array
+  INTERFACE closed_open_address
   )
 
 target_compile_features(double_closed INTERFACE cxx_std_11)
+
+# astar multicore
+
+add_library(astar_multicore INTERFACE)
+
+target_include_directories(astar_multicore
+  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+  )
+
+target_link_libraries(astar_multicore
+  INTERFACE concurrent_search
+  INTERFACE concurrent_open_array
+  INTERFACE concurrent_closed_chaining
+  INTERFACE pthread
+  )
+
+target_compile_features(astar_multicore INTERFACE cxx_std_11)

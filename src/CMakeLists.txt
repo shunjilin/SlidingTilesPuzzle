@@ -25,12 +25,14 @@ target_link_libraries(Solver
 target_link_libraries(ExperimentalSolver
   PRIVATE cxxopts
   PRIVATE search
+  PRIVATE concurrent_search
   PRIVATE astar
   PRIVATE manhattan_distance_heuristic
   PRIVATE tabulation
   PRIVATE tile_node
   PRIVATE closed_chaining
   PRIVATE double_closed
+  PRIVATE astar_multicore
   )
 
 # warning flags
