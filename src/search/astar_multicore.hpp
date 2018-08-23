@@ -76,8 +76,7 @@ struct AStarMulticore : public ConcurrentSearch<Node> {
                         node_found = true;
                         std::lock_guard<std::mutex> lock(mtx);
                         if (getF(*node) < goal_f) goal_f = getF(*node);
-                        ++goal_counter;
-                        return; // work is done
+                        continue;
                     }
                     auto child_nodes = getChildNodes(*node);
                     ++ConcurrentSearch<Node>::expanded;
