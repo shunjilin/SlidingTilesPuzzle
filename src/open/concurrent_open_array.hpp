@@ -4,103 +4,86 @@
 #include <array>
 #include <vector>
 #include <mutex>
-#include <tuple>
-#include <shared_mutex>
-
-
-/* simple spin lock */
-class spinlock_mutex_ {
-    std::atomic_flag flag;
-public:
-    spinlock_mutex_(): flag(ATOMIC_FLAG_INIT) {}
-    void lock() {
-        while (flag.test_and_set(std::memory_order_acquire));
-    }
-    void unlock() {
-        flag.clear(std::memory_order_release);
-    }
-};
-
 
 template <typename Node, int N_THREADS>
 struct ConcurrentOpenArray {
     
     static int const MAX_MOVES = 255; // max f and g values
-    
+
+    // bucket indexed by g value
     struct GBucket {
-        //std::mutex mtx;
         std::vector<Node> nodes;
     };
 
+    // bucket indexed by f value
     struct FBucket {
-        //std::mutex mtx;
-        std::array< GBucket, MAX_MOVES> g_queue;
         int max_g = -1;
+        std::array< GBucket, MAX_MOVES> g_buckets;
     };
 
+    // bucket indexed by thead id
     struct ThreadBucket {
         std::mutex mtx;
-        std::array< FBucket, MAX_MOVES> f_queue;
+        size_t size = 0; // number of entries
         int min_f = MAX_MOVES;
+        std::array< FBucket, MAX_MOVES> f_buckets;
     };
 
+    // priority queue, indexed by thread id, f, then g
     std::array<ThreadBucket, N_THREADS> queue;
 
     // inserts node into open list
     void push(Node node, int thread_id) {
-        
-        //std::cout << "push " << thread_id << std::endl;
         auto f = getF(node);
         auto g = getG(node);
+        
         auto & thread_bucket = queue[thread_id];
-        auto & f_bucket = thread_bucket.f_queue[f];
-        auto & g_bucket = f_bucket.g_queue[g];
+        auto & f_bucket = thread_bucket.f_buckets[f];
+        auto & g_bucket = f_bucket.g_buckets[g];
 
+        // lock thread bucket
         std::lock_guard<std::mutex> lock(thread_bucket.mtx);
 
-        if (f <= thread_bucket.min_f) { // might contend with pop
-            //std::lock_guard<std::mutex> lock(thread_bucket.mtx);
-            if (f <= thread_bucket.min_f) {
-                thread_bucket.min_f = f;
-                if (g > f_bucket.max_g) f_bucket.max_g = g;
-                g_bucket.nodes.emplace_back(std::move(node));
-                return;
-            }
-        }
-        if (g > f_bucket.max_g) {
-            //std::lock_guard<std::mutex> lock(f_bucket.mtx);
-            if (g > f_bucket.max_g) {
-                f_bucket.max_g = g;
-                g_bucket.nodes.emplace_back(std::move(node));
-                return;
-            }
-        }
-        //std::lock_guard<std::mutex> lock(g_bucket.mtx);
-        g_bucket.nodes.emplace_back(std::move(node));        
+        // update min f, max g if necessary
+        if (f < thread_bucket.min_f) thread_bucket.min_f = f;        
+        if (g > f_bucket.max_g) f_bucket.max_g = g;
+        
+        g_bucket.nodes.emplace_back(std::move(node));
+        ++thread_bucket.size;
     }
 
     // pops and returns node from open list
     std::optional<Node> pop(int thread_id) {
-        //std::cout << "pop " << thread_id << std::endl;
         auto & thread_bucket = queue[thread_id];
+        
         std::unique_lock<std::mutex> lock(thread_bucket.mtx);
+        
+        if (thread_bucket.size == 0) return {}; // empty thread bucket
+        
+        // update min f and max g if necessary
         while (thread_bucket.min_f < MAX_MOVES) {
-            auto & f_bucket = thread_bucket.f_queue[thread_bucket.min_f];
+            auto & f_bucket = thread_bucket.f_buckets[thread_bucket.min_f];
             while (f_bucket.max_g >= 0 &&
-                   f_bucket.g_queue[f_bucket.max_g].nodes.empty()) {
+                   f_bucket.g_buckets[f_bucket.max_g].nodes.empty()) {
                 --f_bucket.max_g;
             }
-            if (f_bucket.max_g >= 0) break;
-            ++thread_bucket.min_f;
-        } 
-        if (thread_bucket.min_f == MAX_MOVES) return {};
+            if (f_bucket.max_g >= 0) break; // found non empty g bucket
+            ++thread_bucket.min_f; // continue searching for valid bucket
+        }
         
-        auto & f_bucket = thread_bucket.f_queue[thread_bucket.min_f];
-        auto & g_bucket = f_bucket.g_queue[f_bucket.max_g];
+        auto & f_bucket = thread_bucket.f_buckets[thread_bucket.min_f];
+        auto & g_bucket = f_bucket.g_buckets[f_bucket.max_g];
         auto node = g_bucket.nodes.back();
         g_bucket.nodes.pop_back();
+        --thread_bucket.size;
         lock.unlock();
         return node;
+    }
+
+    int get_min_f(int thread_id) {
+        auto & thread_bucket = queue[thread_id];
+        std::lock_guard<std::mutex> lock(thread_bucket.mtx);
+        return thread_bucket.min_f;
     }
 };
 

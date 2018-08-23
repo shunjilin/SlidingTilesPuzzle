@@ -21,7 +21,7 @@ namespace Tiles {
     struct TileNode {
 
         // goal board configuration
-        static std::array<uint8_t, WIDTH*HEIGHT> const goal_board;
+        static TileNode<WIDTH, HEIGHT> const goal_node;
 
         // tile values, indexed in row-major order
         // e.g. 24 puzzle:
@@ -129,10 +129,10 @@ namespace Tiles {
         return tiles;      
     }
 
-    // static initialization of goal board
+    // static initialization of goal node
     template<int WIDTH, int HEIGHT>
-    std::array<uint8_t, WIDTH*HEIGHT> const TileNode<WIDTH, HEIGHT>::goal_board =
-        getGoalBoard<WIDTH,HEIGHT>();
+    TileNode<WIDTH, HEIGHT> const TileNode<WIDTH, HEIGHT>::goal_node =
+        TileNode<WIDTH, HEIGHT>(getGoalBoard<WIDTH,HEIGHT>());
 
     // free functions, loose coupling, take advantage of argument dependent
     // lookup
@@ -164,7 +164,7 @@ namespace Tiles {
     // check if node is goal node
     template<int WIDTH, int HEIGHT>
     bool isGoal(TileNode<WIDTH, HEIGHT> const & node) noexcept {
-        return node.board == node.goal_board;
+        return node == node.goal_node;
     }
 
     // get nodes that can be generated from current node

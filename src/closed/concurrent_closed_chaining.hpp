@@ -67,27 +67,24 @@ bool ConcurrentClosedChaining<Node, HashFunction, N_Entries>::insert(Node const 
 
     auto & bucket = closed[idx];
 
-
-    
-    //++probe_count;
-    
+    ++probe_count;
+    bucket.mtx.lock();
     for (auto it = bucket.forward_list.begin(); it != bucket.forward_list.end(); ++it) {
         if (*it == node) { // found
             if (getF(node) < getF(*it)) { // reopening
                 *it = node;
-                //bucket.mtx.unlock();
+                bucket.mtx.unlock();
                 return true;
             }
-            //bucket.mtx.unlock();
+            bucket.mtx.unlock();
             return false;
         }
-        //++probe_count;
+        ++probe_count;
     }
     
     // not found
-    bucket.mtx.lock();
     bucket.forward_list.push_front(node); // insert at front of linked list
-    //++size;
+    ++size;
     bucket.mtx.unlock();
     return true;
 }
