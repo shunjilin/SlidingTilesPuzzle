@@ -15,6 +15,7 @@
 
 #include "double_closed.hpp"
 #include "astar_multicore.hpp"
+#include "astar_multicore_fine.hpp"
 
 using namespace Tiles;
 
@@ -93,6 +94,9 @@ int main(int argc, char *argv[]) {
         } else if (search_string == "concurrent_astar") {
             concurrent_search_algo =
                 std::make_unique<AStarMulticore<Node, Heuristic, HashFunction, 512927357> >();
+        } else if (search_string == "concurrent_astar_fine") {
+            concurrent_search_algo =
+                std::make_unique<AStarMulticoreFine<Node, Heuristic, HashFunction, 512927357> >();
         } else {
             std::cerr << "Invalid search algorithm option: "
                       << "\"" << search_string << "\"\n";

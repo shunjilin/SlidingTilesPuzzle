@@ -33,6 +33,7 @@ target_link_libraries(ExperimentalSolver
   PRIVATE closed_chaining
   PRIVATE double_closed
   PRIVATE astar_multicore
+  PRIVATE astar_multicore_fine
   )
 
 # warning flags

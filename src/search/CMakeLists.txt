@@ -78,3 +78,22 @@ target_link_libraries(astar_multicore
   )
 
 target_compile_features(astar_multicore INTERFACE cxx_std_11)
+
+
+
+# astar multicore fine
+
+add_library(astar_multicore_fine INTERFACE)
+
+target_include_directories(astar_multicore_fine
+  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+  )
+
+target_link_libraries(astar_multicore_fine
+  INTERFACE concurrent_search
+  INTERFACE concurrent_open_array_fine
+  INTERFACE concurrent_closed_chaining
+  INTERFACE pthread
+  )
+
+target_compile_features(astar_multicore_fine INTERFACE cxx_std_11)

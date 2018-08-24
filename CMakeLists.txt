@@ -5,7 +5,6 @@ project("Search")
 # ctest
 enable_testing()
 
-
 add_subdirectory(dependencies)
 add_subdirectory(src)
 add_subdirectory(test)

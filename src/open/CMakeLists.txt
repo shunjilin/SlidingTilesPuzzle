@@ -27,3 +27,10 @@ add_library(concurrent_open_array INTERFACE)
 target_include_directories(concurrent_open_array
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
   )
+
+# array based open list with lock, thread safe, finer grained lock implementation
+add_library(concurrent_open_array_fine INTERFACE)
+
+target_include_directories(concurrent_open_array_fine
+  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+  )

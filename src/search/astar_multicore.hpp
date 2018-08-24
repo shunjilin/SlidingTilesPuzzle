@@ -55,17 +55,8 @@ struct AStarMulticore : public ConcurrentSearch<Node> {
         
         while (true) {
             // synchronize return of all threads, if at least one solution found
-            if (node_found == true){
-                ++goal_counter;
-                while (true) {
-                    // possibility of finding goal with lower f
-                    if (open.get_min_f(thread_id) < goal_f) {
-                        --goal_counter;
-                        break;
-                    }
-                    // all threads have reached synchronization point
-                    if (goal_counter == N_THREADS) return;
-                }
+            if (node_found == true) {
+                if (open.get_min_f(thread_id) <= goal_f) return;
             }
             
             auto node = open.pop(thread_id);
@@ -76,7 +67,7 @@ struct AStarMulticore : public ConcurrentSearch<Node> {
                         node_found = true;
                         std::lock_guard<std::mutex> lock(mtx);
                         if (getF(*node) < goal_f) goal_f = getF(*node);
-                        continue;
+                        return;
                     }
                     auto child_nodes = getChildNodes(*node);
                     ++ConcurrentSearch<Node>::expanded;
