@@ -5,7 +5,7 @@
 #include <vector>
 #include "search.hpp"
 #include "open_array.hpp"
-#include "closed_open_address.hpp"
+#include "closed_chaining.hpp"
 #include "tabulation.hpp"
 
 /* Generic A* Search, using lazy duplicate detection (duplicate detection is
@@ -14,11 +14,12 @@
 
 template <typename Node, typename Heuristic, typename HashFunction,
           size_t ClosedEntries = 512927357,
-          typename Closed = ClosedOpenAddress<Node, HashFunction, ClosedEntries> >
+          typename Closed = ClosedChaining<Node, HashFunction, ClosedEntries>,
+          typename Open = OpenArray<Node> >
 struct AStar : public Search<Node> {
 
     Heuristic heuristic;
-    OpenArray<Node> open;
+    Open  open;
     Closed closed;
 
     // perform A* search and returns solution path

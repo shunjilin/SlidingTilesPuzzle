@@ -19,11 +19,13 @@
  * nodes.
  */
 template <typename Node, typename Heuristic,
-          typename HashFunction, size_t ClosedEntries = 512927357>
+          typename HashFunction, size_t ClosedEntries = 512927357,
+          typename Closed = ClosedOpenAddressPtr<Node, HashFunction, ClosedEntries>,
+          typename Open = OpenArrayPtr<Node> >
 struct AStarPool : public Search<Node> {
 
-    OpenArrayPtr<Node> open;
-    ClosedOpenAddressPtr<Node, HashFunction, ClosedEntries> closed;
+    Open open;
+    Closed closed;
     Heuristic  heuristic;
     MemoryPool<Node> pool; // memory pool
 

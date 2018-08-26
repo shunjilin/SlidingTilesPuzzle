@@ -31,9 +31,7 @@ target_link_libraries(ExperimentalSolver
   PRIVATE tabulation
   PRIVATE tile_node
   PRIVATE closed_chaining
-  PRIVATE double_closed
   PRIVATE astar_multicore
-  PRIVATE astar_multicore_fine
   )
 
 # warning flags

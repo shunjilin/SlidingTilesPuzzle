@@ -26,7 +26,7 @@ target_include_directories(astar
 
 target_link_libraries(astar
   INTERFACE open_array
-  INTERFACE closed_open_address
+  INTERFACE closed_chaining
   )
 
 target_compile_features(astar INTERFACE cxx_std_11)
@@ -47,21 +47,6 @@ target_link_libraries(astar_pool
 
 target_compile_features(astar_pool INTERFACE cxx_std_11)
 
-# double closed
-
-add_library(double_closed INTERFACE)
-
-target_include_directories(double_closed
-  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
-  )
-
-target_link_libraries(double_closed
-  INTERFACE open_array
-  INTERFACE closed_open_address
-  )
-
-target_compile_features(double_closed INTERFACE cxx_std_11)
-
 # astar multicore
 
 add_library(astar_multicore INTERFACE)
@@ -79,21 +64,20 @@ target_link_libraries(astar_multicore
 
 target_compile_features(astar_multicore INTERFACE cxx_std_11)
 
+# astar multicore pool
 
+add_library(astar_multicore_pool INTERFACE)
 
-# astar multicore fine
-
-add_library(astar_multicore_fine INTERFACE)
-
-target_include_directories(astar_multicore_fine
+target_include_directories(astar_multicore_pool
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
   )
 
-target_link_libraries(astar_multicore_fine
+target_link_libraries(astar_multicore_pool
   INTERFACE concurrent_search
-  INTERFACE concurrent_open_array_fine
-  INTERFACE concurrent_closed_chaining
+  INTERFACE MemoryPool
+  INTERFACE open_array_ptr
+  INTERFACE closed_open_address_ptr
   INTERFACE pthread
   )
 
-target_compile_features(astar_multicore_fine INTERFACE cxx_std_11)
+target_compile_features(astar_multicore_pool INTERFACE cxx_std_11)

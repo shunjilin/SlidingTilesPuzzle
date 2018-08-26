@@ -13,9 +13,7 @@
 #include <sstream>
 #include <stdexcept>
 
-#include "double_closed.hpp"
 #include "astar_multicore.hpp"
-#include "astar_multicore_fine.hpp"
 
 using namespace Tiles;
 
@@ -72,31 +70,10 @@ int main(int argc, char *argv[]) {
         
         if (search_string == "astar_chaining") {
             search_algo =
-                std::make_unique<AStar<Node, Heuristic, HashFunction, 512927357,
-                                       ClosedChaining<Node, HashFunction, 512927357> > >();
-            
-        } else if (search_string == "astar_chaining2") {
-            search_algo =
-                std::make_unique<AStar<Node, Heuristic, HashFunction, 51292735,
-                                       ClosedChaining<Node, HashFunction, 51292735> > >();
-        } else if (search_string == "astar_chaining3") {
-            search_algo =
-                std::make_unique<AStar<Node, Heuristic, HashFunction, 5129273,
-                                       ClosedChaining<Node, HashFunction, 5129273> > >();
-        } else if (search_string == "astar_chaining4") {
-            search_algo =
-                std::make_unique<AStar<Node, Heuristic, HashFunction, 512927,
-                                       ClosedChaining<Node, HashFunction, 512927> > >();
-        } else if (search_string == "astar_chaining2_double") {
-            search_algo =
-                std::make_unique<DoubleClosed<Node, Heuristic, HashFunction, 51292735,
-                                              ClosedChaining<Node, HashFunction, 51292735> > >();
+                std::make_unique<AStar<Node, Heuristic, HashFunction > >();
         } else if (search_string == "concurrent_astar") {
             concurrent_search_algo =
                 std::make_unique<AStarMulticore<Node, Heuristic, HashFunction, 512927357> >();
-        } else if (search_string == "concurrent_astar_fine") {
-            concurrent_search_algo =
-                std::make_unique<AStarMulticoreFine<Node, Heuristic, HashFunction, 512927357> >();
         } else {
             std::cerr << "Invalid search algorithm option: "
                       << "\"" << search_string << "\"\n";
