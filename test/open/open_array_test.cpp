@@ -1,6 +1,7 @@
 #include "open_array.hpp"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <optional>
 
 struct DummyNode {
     int heuristic_value = 0;
@@ -37,7 +38,7 @@ public:
     DummyNode node2 = DummyNode{2, 1};
     DummyNode node3 = DummyNode{1, 2};
 
-    OpenArray<DummyNode> open;
+    OpenArray<DummyNode, 100> open;
 
     virtual void SetUp() {
         open.push(node3);
@@ -47,9 +48,9 @@ public:
 };
 
 TEST_F(OpenArrayInitialize, PopLowestFValHigestGValNode) {
-    EXPECT_TRUE(open.pop() == DummyNode(0, 0));
-    EXPECT_TRUE(open.pop() == DummyNode(1, 2));
-    EXPECT_TRUE(open.pop() == DummyNode(2, 1));
+    EXPECT_TRUE(*open.pop() == DummyNode(0, 0));
+    EXPECT_TRUE(*open.pop() == DummyNode(1, 2));
+    EXPECT_TRUE(*open.pop() == DummyNode(2, 1));
 }
 
 TEST_F(OpenArrayInitialize, EmptyOpenAfterPops) {

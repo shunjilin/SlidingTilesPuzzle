@@ -2,7 +2,8 @@
 #include "manhattan_distance_heuristic.hpp"
 #include "search.hpp"
 #include "astar.hpp"
-#include "astar_pool.hpp"
+#include "open_array.hpp"
+#include "closed_open_address_pool.hpp"
 #include "tabulation.hpp"
 #include "cxxopts.hpp"
 #include "steady_clock_timer.hpp"
@@ -21,7 +22,13 @@ int const N_TILES = WIDTH*HEIGHT;
 using Node = TileNode<WIDTH, HEIGHT>;
 using Heuristic = ManhattanDistanceHeuristic<WIDTH, HEIGHT>;
 using HashFunction = TabulationHash<Node, WIDTH*HEIGHT>;
-//using HashFunction = std::hash<Node>;
+size_t const ClosedEntries = 512927357;
+int const MaxMoves = 100;
+
+using DefaultAStar = AStar<Node, Heuristic, HashFunction>;
+using AStarPool = AStar<Node, Heuristic, HashFunction,
+                        ClosedOpenAddressPool<Node, HashFunction, ClosedEntries>,
+                        OpenArray<Node, MaxMoves> >;
 
 int main(int argc, char *argv[]) {
 
@@ -65,9 +72,9 @@ int main(int argc, char *argv[]) {
         std::unique_ptr<Search<Node> > search_algo;
         
         if (search_string == "astar") {
-            search_algo = std::make_unique<AStar<Node, Heuristic, HashFunction> >();
+            search_algo = std::make_unique<DefaultAStar>();
         } else if (search_string == "astar_pool") {
-            search_algo = std::make_unique<AStarPool<Node, Heuristic, HashFunction> >();
+            search_algo = std::make_unique<AStarPool>();
         } else {
             std::cerr << "Invalid search algorithm option: "
                       << "\"" << search_string << "\"\n";

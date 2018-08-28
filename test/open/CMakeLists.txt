@@ -7,7 +7,7 @@ target_link_libraries(open_test
   PRIVATE gmock
   )
 
-target_compile_features(open_test PUBLIC cxx_std_11)
+target_compile_features(open_test PRIVATE cxx_std_17)
 
 add_test(open_test open_test)
 
@@ -20,7 +20,7 @@ target_link_libraries(open_array_test
   PRIVATE gmock
   )
 
-target_compile_features(open_array_test PUBLIC cxx_std_11)
+target_compile_features(open_array_test PRIVATE cxx_std_17)
 
 add_test(open_array_test open_array_test)
 
@@ -33,4 +33,4 @@ target_link_libraries(open_array_ptr_test
   PRIVATE gmock
   )
 
-target_compile_features(open_array_ptr_test PUBLIC cxx_std_11)
+target_compile_features(open_array_ptr_test PRIVATE cxx_std_17)

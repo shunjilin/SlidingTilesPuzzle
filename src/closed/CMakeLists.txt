@@ -32,3 +32,25 @@ add_library(concurrent_closed_chaining INTERFACE)
 target_include_directories(concurrent_closed_chaining
   INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
   )
+
+
+# closed list using open addressing and holding pointers, allocation with memory pool
+find_package(Boost)
+add_library(closed_open_address_pool INTERFACE)
+
+target_include_directories(closed_open_address_pool
+  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+  INTERFACE ${Boost_INCLUDE_DIRS}
+    )
+
+
+# concurrent closed list using open addressing and holding pointers, allocation with memory pool
+add_library(concurrent_closed_open_address_pool INTERFACE)
+
+target_include_directories(concurrent_closed_open_address_pool
+  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+  )
+
+target_link_libraries(concurrent_closed_open_address_pool
+  INTERFACE spinlock
+  )

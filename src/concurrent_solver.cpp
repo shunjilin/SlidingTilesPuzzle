@@ -1,9 +1,7 @@
 #include "tile_node.hpp"
 #include "manhattan_distance_heuristic.hpp"
-#include "search.hpp"
 #include "concurrent_search.hpp"
-#include "astar.hpp"
-#include "closed_chaining.hpp"
+#include "concurrent_astar.hpp"
 #include "tabulation.hpp"
 #include "cxxopts.hpp"
 #include "steady_clock_timer.hpp"
@@ -12,8 +10,6 @@
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
-
-#include "astar_multicore.hpp"
 
 using namespace Tiles;
 
@@ -28,8 +24,8 @@ using HashFunction = TabulationHash<Node, WIDTH*HEIGHT>;
 
 int main(int argc, char *argv[]) {
 
-    cxxopts::Options options("Sliding Tiles Puzzle Search",
-                             "Search algorithms for solving the sliding tiles puzzle.");
+    cxxopts::Options options("15 Puzzle Solver",
+                             "Concurrent search algorithms for solving the sliding tiles puzzle.");
     // command line options
     options.add_options()
         ("d,domain", "domain",
@@ -37,7 +33,7 @@ int main(int argc, char *argv[]) {
         ("i,initial_state", "initial state configuration",
          cxxopts::value<std::string>()->default_value("wrong")) // prevent segfault
         ("s,search_algorithm", "search algorithm",
-         cxxopts::value<std::string>()->default_value("astar_chaining"));
+         cxxopts::value<std::string>()->default_value("concurrent_astar"));
     
     // parse command line
     auto result = options.parse(argc, argv);
@@ -65,15 +61,11 @@ int main(int argc, char *argv[]) {
 
         // search algorithm
         auto search_string = result["search_algorithm"].as<std::string>();
-        std::unique_ptr<Search<Node> > search_algo;
         std::unique_ptr<ConcurrentSearch<Node> > concurrent_search_algo;
         
-        if (search_string == "astar_chaining") {
-            search_algo =
-                std::make_unique<AStar<Node, Heuristic, HashFunction > >();
-        } else if (search_string == "concurrent_astar") {
+        if (search_string == "concurrent_astar") {
             concurrent_search_algo =
-                std::make_unique<AStarMulticore<Node, Heuristic, HashFunction, 512927357> >();
+                std::make_unique<ConcurrentAStar<Node, Heuristic, HashFunction, 512927357> >();
         } else {
             std::cerr << "Invalid search algorithm option: "
                       << "\"" << search_string << "\"\n";
@@ -83,23 +75,13 @@ int main(int argc, char *argv[]) {
         std::cout <<  timer.getElapsedTime<milliseconds>()
                   << " ms to initialize\n";
 
-        auto path = std::vector<Node>();
-        if (search_algo) {
-            path = search_algo->search(initial_node);
-            std::cout << timer.getElapsedTime<milliseconds>()
-                      << " ms to solve (including initialization)\n"
-                      << *search_algo << "\n"
-                      << "n moves: " << path.size() - 1 << "\n"
-                      << "sequence:\n";
-        } else if (concurrent_search_algo) {
-            path = concurrent_search_algo->search(initial_node);
+        auto path = concurrent_search_algo->search(initial_node);
             
-            std::cout << timer.getElapsedTime<milliseconds>()
-                      << " ms to solve (including initialization)\n"
-                      << *concurrent_search_algo << "\n"
-                      << "n moves: " << path.size() - 1 << "\n"
-                      << "sequence:\n";
-        }
+        std::cout << timer.getElapsedTime<milliseconds>()
+                  << " ms to solve (including initialization)\n"
+                  << *concurrent_search_algo << "\n"
+                  << "n moves: " << path.size() - 1 << "\n"
+                  << "sequence:\n";
 
         for (auto node : path) {
             std::cout << node << "\n";

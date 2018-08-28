@@ -1,6 +1,8 @@
 #include "manhattan_distance_heuristic.hpp"
 #include "tile_node.hpp"
 #include "astar.hpp"
+#include "open_array.hpp"
+#include "closed_chaining.hpp"
 #include "tabulation.hpp"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -36,8 +38,12 @@ public:
         Node(initial_board);
     Heuristic heuristic = Heuristic();
 
-    AStar<Node, Heuristic, std::hash<Node>, 100> astar =
-        AStar<Node, Heuristic, std::hash<Node>, 100>();
+    AStar<Node, Heuristic, std::hash<Node>,
+          ClosedChaining<Node, std::hash<Node>, 100>,
+          OpenArray<Node, 100> > astar =
+          AStar<Node, Heuristic, std::hash<Node>,
+                ClosedChaining<Node, std::hash<Node>, 100>,
+                               OpenArray<Node, 100> >();
 };
 
 TEST_F(AStarInitialize, AStarReturnsCorrectPath) {

@@ -1,9 +1,14 @@
 # Sliding Tiles Puzzle Solver : Search Algorithms
 
+15 puzzle solver
+
 ## Cloning the repository
 ```
 git clone https://github.com/shunjilin/SlidingTilesPuzzle --recurse-submodules
 ```
+
+## Dependencies
+Boost
 
 ## Usage
 In root folder, make directory ./build
@@ -32,13 +37,17 @@ The above parameters can be configured in ./solver.cpp
 
 To run solvers:
 
-For AStar with 3-level tie-breaking: min f, max g, LIFO and lazy duplicate detection:
+A Star Search:
 ```
 ./src/Solver -s "astar" -i "[initial state configuration]"
 ```
-For optimized AStar (memory pool and open / closed list that hold pointers to the memory pool):
+A Star Search with memory pool
 ```
 ./src/Solver -s "astar_pool" -i "[initial state configuration]"
+```
+Concurrent A Star Search (default 6 threads):
+```
+./src/ConcurrentSolver -s "concurrent_astar" -i "[initial state configuration]"
 ```
 
 where [initial state configuration] is a space separated list of tile numbers, 0-15, with 0 representing the blank tile.
@@ -62,4 +71,3 @@ and represented as "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15"
 
 ## Reference
 * [Implementing Fast Heuristic Search Code](https://www.aaai.org/ocs/index.php/SOCS/SOCS12/paper/view/5404/5173) by Ethan Andrew Burns, Matthew Hatem, Michael J. Leighton, Wheeler Ruml
-* [Memory pool implementation](https://github.com/cacay/MemoryPool) by Cosku Acay

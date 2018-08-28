@@ -11,11 +11,9 @@
 /* Generic A* Search, using lazy duplicate detection (duplicate detection is
  * only done when nodes are popped from the open list.
 */
-
 template <typename Node, typename Heuristic, typename HashFunction,
-          size_t ClosedEntries = 512927357,
-          typename Closed = ClosedChaining<Node, HashFunction, ClosedEntries>,
-          typename Open = OpenArray<Node> >
+          typename Closed = ClosedChaining<Node, HashFunction, 512927357>,
+          typename Open = OpenArray<Node, 100> >
 struct AStar : public Search<Node> {
 
     Heuristic heuristic;
@@ -30,14 +28,16 @@ struct AStar : public Search<Node> {
         ++Search<Node>::generated;
         open.push(std::move(initial_node));
 
-        while (!open.empty()) {
+        //while (!open.empty()) {
+        while (true) {
             auto node = open.pop();
-            if (closed.insert(node)) {
+            if (!node.has_value()) break;
+            if (closed.insert(*node)) {
                 // check goal node
-                if (isGoal(node)) {
-                    return closed.getPath(node);
+                if (isGoal(*node)) {
+                    return closed.getPath(*node);
                 }
-                auto child_nodes = getChildNodes(node);
+                auto child_nodes = getChildNodes(*node);
                 ++Search<Node>::expanded;
                 for (auto child_node : child_nodes) {
                     if (child_node.has_value()) {
@@ -47,7 +47,7 @@ struct AStar : public Search<Node> {
                     }
                 }
             }
-        }
+         }
         return std::vector<Node>(); // no path found
     }
 
