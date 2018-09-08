@@ -18,6 +18,7 @@ if (Boost_FOUND)
     PRIVATE cxxopts
     PRIVATE search
     PRIVATE astar
+    PRIVATE idastar
     PRIVATE open_array
     PRIVATE closed_open_address_pool
     PRIVATE manhattan_distance_heuristic

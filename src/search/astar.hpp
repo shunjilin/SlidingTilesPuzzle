@@ -28,7 +28,6 @@ struct AStar : public Search<Node> {
         ++Search<Node>::generated;
         open.push(std::move(initial_node));
 
-        //while (!open.empty()) {
         while (true) {
             auto node = open.pop();
             if (!node.has_value()) break;

@@ -45,6 +45,10 @@ A Star Search with memory pool
 ```
 ./src/Solver -s "astar_pool" -i "[initial state configuration]"
 ```
+Iterative Deepening A Star Search
+```
+./src/Solver -s "idastar" -i "[initial state configuration]"
+```
 Concurrent A Star Search (default 6 threads):
 ```
 ./src/ConcurrentSolver -s "concurrent_astar" -i "[initial state configuration]"

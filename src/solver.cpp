@@ -2,6 +2,7 @@
 #include "manhattan_distance_heuristic.hpp"
 #include "search.hpp"
 #include "astar.hpp"
+#include "idastar.hpp"
 #include "open_array.hpp"
 #include "closed_open_address_pool.hpp"
 #include "tabulation.hpp"
@@ -75,6 +76,8 @@ int main(int argc, char *argv[]) {
             search_algo = std::make_unique<DefaultAStar>();
         } else if (search_string == "astar_pool") {
             search_algo = std::make_unique<AStarPool>();
+        } else if (search_string == "idastar") {
+            search_algo = std::make_unique<IDAStar<Node, Heuristic>>();
         } else {
             std::cerr << "Invalid search algorithm option: "
                       << "\"" << search_string << "\"\n";

@@ -1,9 +1,6 @@
 #include "manhattan_distance_heuristic.hpp"
 #include "tile_node.hpp"
-#include "astar.hpp"
-#include "open_array.hpp"
-#include "closed_chaining.hpp"
-#include "tabulation.hpp"
+#include "idastar.hpp"
 #include <array>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -17,7 +14,7 @@ int const N_TILES = WIDTH*HEIGHT;
 using Node = TileNode<WIDTH, HEIGHT>;
 using Heuristic = ManhattanDistanceHeuristic<WIDTH, HEIGHT>;
 
-class AStarInitialize: public testing::Test {
+class IDAStarInitialize: public testing::Test {
 public:
     std::array<uint8_t, N_TILES> initial_board = std::array<uint8_t, N_TILES>
         ({{1, 2, 3, 4, 0, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
@@ -37,18 +34,15 @@ public:
        20 21 22 23 24 */
     Node initial_node =
         Node(initial_board);
+    
     Heuristic heuristic = Heuristic();
 
-    AStar<Node, Heuristic, std::hash<Node>,
-          ClosedChaining<Node, std::hash<Node>, 100>,
-          OpenArray<Node, 100> > astar =
-          AStar<Node, Heuristic, std::hash<Node>,
-                ClosedChaining<Node, std::hash<Node>, 100>,
-                               OpenArray<Node, 100> >();
+    IDAStar<Node, Heuristic> idastar =
+        IDAStar<Node, Heuristic>();
 };
 
-TEST_F(AStarInitialize, AStarReturnsCorrectPath) {
-    auto path = astar.search(initial_node);
+TEST_F(IDAStarInitialize, IDAStarReturnsCorrectPath) {
+    auto path = idastar.search(initial_node);
     EXPECT_EQ(getG(*(path.end() - 1)), 4);
     EXPECT_EQ(getH(*(path.begin())), 4);
     EXPECT_EQ(getH(*(path.end() - 1)), 0);

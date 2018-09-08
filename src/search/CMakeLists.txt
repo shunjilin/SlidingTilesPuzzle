@@ -23,11 +23,26 @@ target_include_directories(astar
   )
 
 target_link_libraries(astar
+  INTERFACE search
   INTERFACE open_array
   INTERFACE closed_chaining
   )
 
-target_compile_features(astar INTERFACE cxx_std_11)
+target_compile_features(astar INTERFACE cxx_std_17)
+
+# idastar
+
+add_library(idastar INTERFACE)
+
+target_include_directories(idastar
+  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+  )
+
+target_link_libraries(idastar
+  INTERFACE search
+  )
+
+target_compile_features(idastar INTERFACE cxx_std_17)
 
 # concurrent astar
 find_package(Boost)
@@ -40,9 +55,10 @@ target_include_directories(concurrent_astar
   )
 
 target_link_libraries(concurrent_astar
+  INTERFACE concurrent_search
   INTERFACE concurrent_open_array
   INTERFACE concurrent_closed_open_address_pool
   INTERFACE pthread
   )
 
-target_compile_features(concurrent_astar INTERFACE cxx_std_11)
+target_compile_features(concurrent_astar INTERFACE cxx_std_17)

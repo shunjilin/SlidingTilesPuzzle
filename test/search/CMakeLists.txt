@@ -13,3 +13,16 @@ target_link_libraries(astar_test
   )
 
 add_test(astar_test astar_test)
+
+# idastar test
+add_executable(idastar_test idastar_test.cpp)
+
+target_link_libraries(idastar_test
+  PRIVATE tile_node
+  PRIVATE idastar
+  PRIVATE manhattan_distance_heuristic
+  PRIVATE gtest
+  PRIVATE gmock
+  )
+
+add_test(idastar_test idastar_test)
