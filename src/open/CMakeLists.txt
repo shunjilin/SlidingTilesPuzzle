@@ -15,13 +15,6 @@ target_include_directories(open_array
   )
 target_compile_features(open_array INTERFACE cxx_std_17)
 
-# array based open list using pointers
-add_library(open_array_ptr INTERFACE)
-
-target_include_directories(open_array_ptr
-  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
-  )
-
 # array based open list with lock, thread safe
 add_library(concurrent_open_array INTERFACE)
 

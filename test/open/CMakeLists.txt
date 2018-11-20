@@ -23,14 +23,3 @@ target_link_libraries(open_array_test
 target_compile_features(open_array_test PRIVATE cxx_std_17)
 
 add_test(open_array_test open_array_test)
-
-# array with pointers open test
-add_executable(open_array_ptr_test open_array_test.cpp)
-
-target_link_libraries(open_array_ptr_test
-  PRIVATE open_array_ptr
-  PRIVATE gtest
-  PRIVATE gmock
-  )
-
-target_compile_features(open_array_ptr_test PRIVATE cxx_std_17)
