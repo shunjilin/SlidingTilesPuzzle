@@ -46,19 +46,24 @@ target_compile_features(idastar INTERFACE cxx_std_17)
 
 # concurrent astar
 find_package(Boost)
+if (Boost_FOUND)
 
-add_library(concurrent_astar INTERFACE)
+  add_library(concurrent_astar INTERFACE)
 
-target_include_directories(concurrent_astar
-  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
-  INTERFACE ${Boost_INCLUDE_DIRS}
-  )
+  target_include_directories(concurrent_astar
+    INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+    INTERFACE ${Boost_INCLUDE_DIRS}
+    )
 
-target_link_libraries(concurrent_astar
-  INTERFACE concurrent_search
-  INTERFACE concurrent_open_array
-  INTERFACE concurrent_closed_open_address_pool
-  INTERFACE pthread
-  )
+  target_link_libraries(concurrent_astar
+    INTERFACE concurrent_search
+    INTERFACE concurrent_open_array
+    INTERFACE concurrent_closed_open_address_pool
+    INTERFACE pthread
+    INTERFACE boost_system
+    )
 
-target_compile_features(concurrent_astar INTERFACE cxx_std_17)
+  target_compile_features(concurrent_astar INTERFACE cxx_std_17)
+else()
+  message(WARNING "Requires Boost")
+endif()

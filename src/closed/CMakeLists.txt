@@ -28,13 +28,18 @@ target_include_directories(concurrent_closed_chaining
 
 
 # closed list using open addressing and holding pointers, allocation with memory pool
-find_package(Boost)
-add_library(closed_open_address_pool INTERFACE)
+find_package(Boost REQUIRED COMPONENTS system)
+if (Boost_FOUND)
+  add_library(closed_open_address_pool INTERFACE)
 
-target_include_directories(closed_open_address_pool
-  INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
-  INTERFACE ${Boost_INCLUDE_DIRS}
+  target_include_directories(closed_open_address_pool
+    INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
+    INTERFACE ${Boost_INCLUDE_DIRS}
+    INTERFACE boost_system
     )
+else()
+    message(WARNING "Requires Boost")
+endif()
 
 
 # concurrent closed list using open addressing and holding pointers, allocation with memory pool
