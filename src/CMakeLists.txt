@@ -37,10 +37,5 @@ target_link_libraries(ConcurrentSolver
   )
 
 # warning flags
-if (MSVC)
-  target_compile_options(Solver PRIVATE /W4)
-  target_compile_options(ConcurrentSolver PRIVATE /W4)
-else()
-  target_compile_options(Solver PRIVATE -Wall -Wextra -Wpedantic)
-  target_compile_options(ConcurrentSolver PRIVATE -Wall -Wextra -Wpedantic)
-endif()
+target_compile_options(Solver PRIVATE -Wall -Wextra -Wpedantic)
+target_compile_options(ConcurrentSolver PRIVATE -Wall -Wextra -Wpedantic)
