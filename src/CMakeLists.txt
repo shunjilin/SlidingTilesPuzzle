@@ -23,7 +23,6 @@ target_link_libraries(Solver
   PRIVATE manhattan_distance_heuristic
   PRIVATE tabulation
   PRIVATE tile_node
-  PRIVATE boost_system
   )
 
 target_link_libraries(ConcurrentSolver

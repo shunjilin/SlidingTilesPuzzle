@@ -60,7 +60,7 @@ if (Boost_FOUND)
     INTERFACE concurrent_open_array
     INTERFACE concurrent_closed_open_address_pool
     INTERFACE pthread
-    INTERFACE boost_system
+    INTERFACE ${Boost_LIBRARIES}
     )
 
   target_compile_features(concurrent_astar INTERFACE cxx_std_17)

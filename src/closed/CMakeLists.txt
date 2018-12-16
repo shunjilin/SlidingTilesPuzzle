@@ -35,7 +35,9 @@ if (Boost_FOUND)
   target_include_directories(closed_open_address_pool
     INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
     INTERFACE ${Boost_INCLUDE_DIRS}
-    INTERFACE boost_system
+    )
+  target_link_libraries(closed_open_address_pool
+    INTERFACE ${Boost_LIBRARIES}
     )
 else()
     message(WARNING "Requires Boost")
