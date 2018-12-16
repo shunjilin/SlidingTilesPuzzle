@@ -36,17 +36,24 @@ int main(int argc, char *argv[]) {
     cxxopts::Options options("Sliding Tiles Puzzle Search",
                              "Search algorithms for solving the sliding tiles puzzle.");
     // command line options
-    options.add_options()
+    options.add_options("Search")
         ("d,domain", "domain",
          cxxopts::value<std::string>()->default_value("tiles"))
-        ("i,initial_state", "initial state configuration",
+        ("i,initial_state", "initial state configuration "
+         "e.g. \"0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15\"",
          cxxopts::value<std::string>()->default_value("null")) // prevent segfault
-        ("s,search_algorithm", "search algorithm",
-         cxxopts::value<std::string>()->default_value("astar"));
-    
+        ("s,search_algorithm", "search algorithm [astar, astar_pool, idastar]",
+         cxxopts::value<std::string>()->default_value("astar"))
+        ("h,help", "print help");
+
     // parse command line
     auto result = options.parse(argc, argv);
-    
+
+    if (result.count("h")) {
+        std::cout << options.help({"", "Search"}) << std::endl;
+        return EXIT_SUCCESS;
+    }
+
     auto timer = SteadyClockTimer();
     timer.start();
 
@@ -71,7 +78,7 @@ int main(int argc, char *argv[]) {
         // search algorithm
         auto search_string = result["search_algorithm"].as<std::string>();
         std::unique_ptr<Search<Node> > search_algo;
-        
+
         if (search_string == "astar") {
             search_algo = std::make_unique<DefaultAStar>();
         } else if (search_string == "astar_pool") {
@@ -103,10 +110,10 @@ int main(int argc, char *argv[]) {
         std::cerr << "Invalid argument for initial state: "
                   << ia.what() << " : "
                   <<  "\"" << initial_tiles_string << "\"\n";
-        return EXIT_FAILURE;      
+        return EXIT_FAILURE;
     }
     catch (const std::bad_alloc& ba) {
-        std::cerr << "Memory allocation failed : " << ba.what() << "\n";     
+        std::cerr << "Memory allocation failed : " << ba.what() << "\n";
     }
     catch (const std::exception &e) {
         std::cerr << "Search failed: " << e.what() << "\n";

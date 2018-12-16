@@ -30,14 +30,21 @@ int main(int argc, char *argv[]) {
     options.add_options()
         ("d,domain", "domain",
          cxxopts::value<std::string>()->default_value("tiles"))
-        ("i,initial_state", "initial state configuration",
-         cxxopts::value<std::string>()->default_value("wrong")) // prevent segfault
-        ("s,search_algorithm", "search algorithm",
-         cxxopts::value<std::string>()->default_value("concurrent_astar"));
-    
+        ("i,initial_state", "initial state configuration"
+         "e.g. \"0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15\"",
+         cxxopts::value<std::string>()->default_value("null")) // prevent segfault
+        ("s,search_algorithm", "search algorithm [concurrent_astar]",
+         cxxopts::value<std::string>()->default_value("concurrent_astar"))
+        ("h,help", "print help");
+
     // parse command line
     auto result = options.parse(argc, argv);
-    
+
+    if (result.count("h")) {
+        std::cout << options.help({"", "Search"}) << std::endl;
+        return EXIT_SUCCESS;
+    }
+
     auto timer = SteadyClockTimer();
     timer.start();
 
@@ -62,7 +69,7 @@ int main(int argc, char *argv[]) {
         // search algorithm
         auto search_string = result["search_algorithm"].as<std::string>();
         std::unique_ptr<ConcurrentSearch<Node> > concurrent_search_algo;
-        
+
         if (search_string == "concurrent_astar") {
             concurrent_search_algo =
                 std::make_unique<ConcurrentAStar<Node, Heuristic, HashFunction, 512927357> >();
@@ -76,7 +83,7 @@ int main(int argc, char *argv[]) {
                   << " ms to initialize\n";
 
         auto path = concurrent_search_algo->search(initial_node);
-            
+
         std::cout << timer.getElapsedTime<milliseconds>()
                   << " ms to solve (including initialization)\n"
                   << *concurrent_search_algo << "\n"
@@ -92,10 +99,10 @@ int main(int argc, char *argv[]) {
         std::cerr << "Invalid argument for initial state: "
                   << ia.what() << " : "
                   <<  "\"" << initial_tiles_string << "\"\n";
-        return EXIT_FAILURE;      
+        return EXIT_FAILURE;
     }
     catch (const std::bad_alloc& ba) {
-        std::cerr << "Memory allocation failed : " << ba.what() << "\n";     
+        std::cerr << "Memory allocation failed : " << ba.what() << "\n";
     }
     catch (const std::exception &e) {
         std::cerr << "Search failed: " << e.what() << "\n";

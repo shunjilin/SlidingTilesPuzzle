@@ -33,7 +33,16 @@ Default heuristic: manhattan distance heuristic
 
 Default hash function: simple tabulation hash (zobrist)
 
-The above parameters can be configured in ./solver.cpp
+Incremental heuristics or in-place modification is not supported at the moment as they
+introduce coupling of domain and search algorithm.
+
+The above parameters can be configured in ./src/solver.cpp and ./src/concurrent_solver.cpp
+
+For help:
+```
+./src/Solver -h
+./src/ConcurrentSolver -h
+```
 
 To run solvers:
 
