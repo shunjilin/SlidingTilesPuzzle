@@ -8,9 +8,9 @@
 #include "steady_clock_timer.hpp"
 #include "tabulation.hpp"
 #include "tile_node.hpp"
+#include "util.hpp"
 #include <array>
 #include <iostream>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 
@@ -31,18 +31,6 @@ using AStarPool =
     AStar<Node, Heuristic, HashFunction,
           ClosedOpenAddressPool<Node, HashFunction, ClosedEntries>,
           OpenArray<Node, MaxMoves>>;
-
-std::array<uint8_t, N_TILES>
-getBoardFromString(std::string const &board_string) {
-  std::array<uint8_t, N_TILES> board;
-  std::istringstream iss(board_string);
-  for (int i = 0; i < N_TILES; ++i) {
-    std::string tile_string;
-    iss >> tile_string;
-    board[i] = std::stoi(tile_string);
-  }
-  return board;
-}
 
 int main(int argc, char *argv[]) {
 
@@ -82,9 +70,9 @@ int main(int argc, char *argv[]) {
   try {
     // read initial tiles
     // for generic node perhaps modify constructor to take in string
-    auto initial_node = Node(getBoardFromString(initial_tiles_string));
+    auto initial_node = Node(getBoardFromString<N_TILES>(initial_tiles_string));
     if (!goal_tiles_string.empty()) {
-      Node::setGoalBoard(getBoardFromString(goal_tiles_string));
+      Node::setGoalBoard(getBoardFromString<N_TILES>(goal_tiles_string));
     }
 
     // search algorithm
