@@ -20,6 +20,7 @@ int const N_TILES = WIDTH * HEIGHT;
 using Node = TileNode<WIDTH, HEIGHT>;
 using Heuristic = ManhattanDistanceHeuristic<WIDTH, HEIGHT>;
 using HashFunction = TabulationHash<Node, WIDTH * HEIGHT>;
+size_t const ClosedEntries = 512927357;
 // using HashFunction = std::hash<Node>;
 
 int main(int argc, char *argv[]) {
@@ -50,9 +51,6 @@ int main(int argc, char *argv[]) {
     return EXIT_SUCCESS;
   }
 
-  auto timer = SteadyClockTimer();
-  timer.start();
-
   auto initial_tiles_string = result["initial_state"].as<std::string>();
   auto goal_tiles_string = result["goal_state"].as<std::string>();
 
@@ -68,9 +66,12 @@ int main(int argc, char *argv[]) {
     auto search_string = result["search_algorithm"].as<std::string>();
     std::unique_ptr<ConcurrentSearch<Node>> concurrent_search_algo;
 
+    auto timer = SteadyClockTimer();
+    timer.start();
+
     if (search_string == "concurrent_astar") {
       concurrent_search_algo = std::make_unique<
-          ConcurrentAStar<Node, Heuristic, HashFunction, 512927357>>();
+          ConcurrentAStar<Node, Heuristic, HashFunction, ClosedEntries>>();
     } else {
       std::cerr << "Invalid search algorithm option: "
                 << "\"" << search_string << "\"\n";

@@ -61,9 +61,6 @@ int main(int argc, char *argv[]) {
     return EXIT_SUCCESS;
   }
 
-  auto timer = SteadyClockTimer();
-  timer.start();
-
   auto initial_tiles_string = result["initial_state"].as<std::string>();
   auto goal_tiles_string = result["goal_state"].as<std::string>();
 
@@ -78,6 +75,9 @@ int main(int argc, char *argv[]) {
     // search algorithm
     auto search_string = result["search_algorithm"].as<std::string>();
     std::unique_ptr<Search<Node>> search_algo;
+
+    auto timer = SteadyClockTimer();
+    timer.start();
 
     if (search_string == "astar") {
       search_algo = std::make_unique<DefaultAStar>();
