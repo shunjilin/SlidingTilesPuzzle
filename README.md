@@ -10,6 +10,9 @@ git clone https://github.com/shunjilin/SlidingTilesPuzzle --recurse-submodules
 ## Dependencies
 Boost
 
+## Formatting
+clang-format, google
+
 ## Usage
 In root folder, make directory ./build
 
@@ -58,7 +61,7 @@ Iterative Deepening A Star Search
 ```
 ./src/Solver -s "idastar" -i "[initial state configuration]"
 ```
-Concurrent A Star Search (default 6 threads):
+Concurrent A Star Search (default 6 threads) [Experimental Feature]:
 ```
 ./src/ConcurrentSolver -s "concurrent_astar" -i "[initial state configuration]"
 ```

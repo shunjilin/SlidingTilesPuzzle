@@ -41,6 +41,15 @@ TEST_F(FifteenPuzzleNode, InitializeTileNode) {
                                      12, 13, 14, 15));
 }
 
+TEST_F(FifteenPuzzleNode, InitializeGoalNode) {
+    std::array<uint8_t, N_TILES> goal_board(
+        {{1, 2, 3, 7, 4, 5, 6, 0, 8, 9, 10, 11, 12, 13, 14, 15}}
+        );
+    TileNode<WIDTH, HEIGHT>::setGoalBoard(goal_board);
+    ASSERT_THAT((TileNode<WIDTH, HEIGHT>::goal_node.board),
+                testing::ElementsAreArray(goal_board));
+}
+
 TEST_F(FifteenPuzzleNode, GetCost) {
     ASSERT_EQ(getG(node), 0);
 }
@@ -132,6 +141,16 @@ TEST_F(TwentyFourPuzzleNode, InitializeTileNode) {
                                      10, 11, 12, 13, 14,
                                      15, 16, 17, 18, 19,
                                      20, 21, 22, 23, 24));
+}
+
+TEST_F(TwentyFourPuzzleNode, InitializeGoalNode) {
+    std::array<uint8_t, N_TILES> goal_board(
+        {{1, 2, 3, 4, 0, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
+          15, 16, 17, 18, 19, 20, 21, 22, 23, 24}}
+        );
+    TileNode<WIDTH, HEIGHT>::setGoalBoard(goal_board);
+    ASSERT_THAT((TileNode<WIDTH, HEIGHT>::goal_node.board),
+                testing::ElementsAreArray(goal_board));
 }
 
 TEST_F(TwentyFourPuzzleNode, GetCost) {
